@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from 'react-router-dom';
-import { MantineProvider, LoadingOverlay } from '@mantine/core';
+import { MantineProvider, LoadingOverlay, createStyles } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import useStore from '../store';
@@ -26,11 +26,21 @@ const protectedRoutes = createBrowserRouter(
 	)
 );
 
+const useStyles = createStyles((theme) => {
+	return {
+		modalHeader: {
+			borderBottom: `1px solid ${theme.colors.gray[3]}`,
+		}
+	}
+})
+
 function App() {
 	const token = useStore(state => state.auth.token);
 	const loading = useStore(state => state.loading);
 	const setLoading = useStore(state => state.setLoading);
 	const store = useStore();
+
+	const { classes } = useStyles();
 
 	React.useEffect(() => {
 		if (loading) {
@@ -74,7 +84,18 @@ function App() {
 				autoClose={20_000}
 				position={'top-right'}
 			/>
-			<ModalsProvider>
+			<ModalsProvider
+				modalProps={{
+					classNames: {
+						header: classes.modalHeader
+					},
+					styles: {
+						title: {
+							fontWeight: 600
+						}
+					}
+				}}
+			>
 				<RouterProvider router={token ? protectedRoutes : authRoutes} />
 			</ModalsProvider>
 			<LoadingOverlay visible={loading}/>

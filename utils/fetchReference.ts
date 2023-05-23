@@ -5,7 +5,7 @@ export default function fetchReference(refCode: string, parent?: string): Promis
     return new Promise(async resolve => {
         const params = {
             filter: {
-                parent: parent ?? undefined,
+                parent: parent ?? refCode,
                 root: refCode
             }
         } as const;

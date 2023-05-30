@@ -68,7 +68,7 @@ export const getInitialValue = (field: IFormField, initialValue?: any) => {
                 return undefined;
             }
             const date = dayjs(initialValue);
-            return date.isValid() ? date.toDate() : undefined
+            return date.isValid() ? date.format(field.format ?? 'YYYY-MM-DD') : undefined
         }
         case 'checkbox': {
             return false;

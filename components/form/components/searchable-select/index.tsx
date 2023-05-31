@@ -6,6 +6,7 @@ import qs from "qs";
 import { IconSearch } from "@tabler/icons-react";
 import { useStyles } from './styles';
 import type { IResponse } from '@/backoffice-common/types/api';
+import { FormLabel } from '@/backoffice-common/components/form/components';
 
 interface DataItem {
     label: string;
@@ -100,22 +101,10 @@ function SearchableSelect<T>({
         <Popover opened={!!data.length} onClose={() => setData([])} width={width} zIndex={1000}>
             <Popover.Target>
                 <div>
-                    <div className={classes.label}>
-                        {
-                            label && (
-                                <Text fz='sm' fw={500}>
-                                    {label}
-                                </Text>
-                            )
-                        }
-                        {
-                            withAsterisk && (
-                                <Text fz='sm' fw={500} c='red'>
-                                    &nbsp;*
-                                </Text>
-                            )
-                        }
-                    </div>
+                    <FormLabel
+                        label={label}
+                        withAsterisk={withAsterisk}
+                    />
                     <div className={classes.inputWrapper} onClick={() => inputRef?.current?.focus?.()} ref={ref}>
                         <div className={classes.icon}>
                             {

@@ -12,6 +12,9 @@ export const useStyles = createStyles((theme) => {
                 borderColor: theme.colors[theme.primaryColor]
             }
         },
+        label: {
+            display: 'flex'
+        },
         dropdown: {
             maxHeight: 500,
             overflowY: 'auto',

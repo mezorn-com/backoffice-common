@@ -27,6 +27,13 @@ export interface IFormField {
     element?: IFormField;
     renderType?: IFieldRenderType;
     uri?: string;
+    retrieveApi?: {
+        uri: string;
+    };
+    suggestApi?: {
+        uri: string;
+        searchKey: string;
+    }
     // Custom Properties
     parentFields?: IFormField[]; // not necessary now
     isArrayElement?: boolean;
@@ -66,4 +73,6 @@ export type UiType =
     'checkbox' |
     'select'|
     'date'|
-    'cascading-select';
+    'cascading-select' |
+    'map-address-picker'
+    ;

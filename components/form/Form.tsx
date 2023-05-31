@@ -24,7 +24,7 @@ import {
     SEPARATOR
 } from './helper';
 import { randomId } from '@mantine/hooks';
-import { CascadingSelect, FetchSelect } from './components';
+import { CascadingSelect, FetchSelect, MapAddressPicker } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
 import { validator } from './helper';
 import { DatePickerInput } from '@mantine/dates';
@@ -33,6 +33,7 @@ import { clone } from 'ramda';
 import dayjs from 'dayjs';
 import { useFormStyles } from './styles';
 import { useTranslation } from 'react-i18next';
+import { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
 
 interface IFormProps {
     fields: IFormField[];
@@ -59,7 +60,7 @@ const Form = ({
     });
 
     // console.log('form initial Values>>>>', getFormInitialValues(fields, values));
-    // console.log('FORM VALUES>>>>', form.values);
+    console.log('FORM VALUES>>>>', form.values);
 
     const handleError = (validationErrors: any, _values: any, _event: any) => {
         console.log('Form Error>>>', { validationErrors, '_values' : _values, '_event': _event });
@@ -333,6 +334,17 @@ const Form = ({
                 }
                 return (
                     <Checkbox {...props}/>
+                )
+            }
+            case 'map-address-picker': {
+                return (
+                    <MapAddressPicker
+                        key={valueKey}
+                        field={field}
+                        onChange={(value) => form.setFieldValue(valueKey, value)}
+                        // value={form.values[valueKey]}
+                        value={getFormValueByKey(valueKey, form.values) as IMapAddressValue | undefined}
+                    />
                 )
             }
             default: {

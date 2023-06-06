@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Marker as LeafletMarker, MarkerProps } from 'react-leaflet';
 import { Icon, Point } from 'leaflet';
+import defaultMarker from '@/assets/defaultMarker';
 
 type IconType = string | MarkerProps['icon'];
 
@@ -19,7 +20,12 @@ const IconMarker = ({
 
     const marker: MarkerProps['icon'] = React.useMemo(() => {
         if (!icon) {
-            return new Icon.Default();
+            return new Icon.Default({
+                iconUrl: defaultMarker,
+                iconSize: [25, 41],
+                iconAnchor: [12, 40],
+                className: 'svg-icon'
+            });
         }
         if (typeof icon === 'string') {
             return new Icon({

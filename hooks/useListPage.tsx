@@ -14,9 +14,14 @@ import { openConfirmModal } from '@mantine/modals';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
 
+type IRowActionButtonKey = 'edit' | 'delete' | 'detail';
+
 interface IConfig {
     apiRoute: string;
+    rowActionButtons?: IRowActionButtonKey[];
 }
+
+type IRowActionButtons = ({label(row: Record<string, any>): React.ReactNode} | {label: React.ReactNode, onClick: (record: Record<string, any>) => void})[]
 
 type SetListResponse = {
     type: 'SET_LIST_RESPONSE',
@@ -75,7 +80,8 @@ const reducer = produce(
 );
 
 const useListPage = ({
-    apiRoute
+    apiRoute,
+    rowActionButtons = ['edit', 'delete', 'detail']
 }: IConfig) => {
 
     const navigate = useNavigate();
@@ -114,8 +120,9 @@ const useListPage = ({
         })
     };
 
-    const baseRowActionButtons = [
-        ...state.subResources.map((subResource) => {
+    const baseRowActionButtons = React.useMemo(() => {
+
+        const rowActionButtonList: IRowActionButtons = state.subResources.map((subResource) => {
             return {
                 label(row: Record<string, any>) {
                     return (
@@ -133,56 +140,66 @@ const useListPage = ({
                     )
                 }
             }
+        });
 
-        }),
-        {
-            label: (
-                <ActionIcon variant="light" color={'primary'}>
-                    <IconEdit size={18}/>
-                </ActionIcon>
-            ),
-            onClick: (record: Record<string, any>) => {
-                navigate(`${pathname}/${record._id}/edit`)
-            }
-        },
-        {
-            label: (
-                <ActionIcon variant="light" color={'red'}>
-                    <IconTrash size={18}/>
-                </ActionIcon>
-            ),
-            onClick: (record: Record<string, any>) => {
-                openConfirmModal({
-                    title: t('delete.modalTitle', { ns: 'common' }),
-                    children: t('delete.description', { ns: 'common' }),
-                    labels: {
-                        confirm: t('delete.title', { ns: 'common' }),
-                        cancel: t('cancel', { ns: 'common' })
-                    },
-                    confirmProps: {
-                        color: 'red',
-                    },
-                    async onConfirm() {
-                        const { data } = await axios.delete<IResponse<any>>(`${apiRoute}/${record._id}`);
-                        if (data.success) {
-                            showMessage(t('success', { ns: 'common' }), 'green');
-                            void fetchData();
+        if (rowActionButtons?.includes('edit')) {
+            rowActionButtonList.push({
+                label: (
+                    <ActionIcon variant="light" color={'primary'}>
+                        <IconEdit size={18}/>
+                    </ActionIcon>
+                ),
+                onClick: (record: Record<string, any>) => {
+                    navigate(`${pathname}/${record._id}/edit`)
+                }
+            })
+        }
+
+        if (rowActionButtons?.includes('delete')) {
+            rowActionButtonList.push({
+                label: (
+                    <ActionIcon variant="light" color={'red'}>
+                        <IconTrash size={18}/>
+                    </ActionIcon>
+                ),
+                onClick: (record: Record<string, any>) => {
+                    openConfirmModal({
+                        title: t('delete.modalTitle', { ns: 'common' }),
+                        children: t('delete.description', { ns: 'common' }),
+                        labels: {
+                            confirm: t('delete.title', { ns: 'common' }),
+                            cancel: t('cancel', { ns: 'common' })
+                        },
+                        confirmProps: {
+                            color: 'red',
+                        },
+                        async onConfirm() {
+                            const { data } = await axios.delete<IResponse<any>>(`${apiRoute}/${record._id}`);
+                            if (data.success) {
+                                showMessage(t('success', { ns: 'common' }), 'green');
+                                void fetchData();
+                            }
                         }
-                    }
-                })
-            }
-        },
-        {
-            label: (
-                <ActionIcon variant="light" color={'primary'}>
-                    <IconEye size={18}/>
-                </ActionIcon>
-            ),
-            onClick: (record: Record<string, any>) => {
-                navigate(`${pathname}/${record._id}`)
-            }
-        },
-    ];
+                    })
+                }
+            })
+        }
+
+        if (rowActionButtons?.includes('detail')) {
+            rowActionButtonList.push({
+                label: (
+                    <ActionIcon variant="light" color={'primary'}>
+                        <IconEye size={18}/>
+                    </ActionIcon>
+                ),
+                onClick: (record: Record<string, any>) => {
+                    navigate(`${pathname}/${record._id}`)
+                }
+            })
+        }
+
+        return rowActionButtonList;
+    }, [ rowActionButtons ])
 
     return {
         state,

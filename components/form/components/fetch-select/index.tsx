@@ -1,23 +1,25 @@
 import * as React from 'react';
 import axios from 'axios';
-import { MultiSelect, SelectItem, Loader, MultiSelectProps } from '@mantine/core';
+import { MultiSelect, SelectItem, Loader, MultiSelectProps, Select } from '@mantine/core';
 import type { ISelectOption } from '@/backoffice-common/types/api';
 import type { IResponse } from '@/backoffice-common/types/api';
-import { IReference } from '@/backoffice-common/types/api';
+import type { IReference } from '@/backoffice-common/types/api';
+import { SelectValue, getTransformedValue } from './helper';
+import { GetInputProps } from '@mantine/form/lib/types';
 
 interface CommonProps {
     multiple?: boolean;
-    onChange: (value: string | string[]) => void;
-    value: unknown;
+    onChange: (value: SelectValue) => void;
+    value: SelectValue;
 }
 
-type IURIFetchSelect = Omit<MultiSelectProps, 'onChange' | 'value'> & {
+type IURIFetchSelect = Omit<ReturnType<GetInputProps<any>>, 'onChange' | 'value'> & {
     uri: string;
     fetchReference: undefined;
     refCode: undefined;
 }
 
-type IRefCodeFetchSelect = Omit<MultiSelectProps, 'onChange' | 'value'> & {
+type IRefCodeFetchSelect = Omit<ReturnType<GetInputProps<any>>, 'onChange' | 'value'> & {
     fetchReference?: (code: string, parent?: string) => Promise<any[]>;
     refCode: string;
     uri: undefined;
@@ -29,7 +31,7 @@ type Props = CommonProps & TruncateProps;
 
 const FetchSelect = ({
     uri,
-    multiple,
+    multiple = false,
     fetchReference,
     refCode,
     ...props
@@ -69,17 +71,26 @@ const FetchSelect = ({
         void fetchData();
     }, []);
 
-    const handleChange = (value: string[]) => {
-        const v = multiple ? value : value[0];
-        props?.onChange?.(v);
+    const handleChange = (value: SelectValue) => {
+        props?.onChange?.(getTransformedValue(value, multiple));
     }
 
-    let value: string[] | undefined = [];
-    if (multiple) {
-        value = props.value as string[] ?? [];
-    } else if (props.value) {
-        value = [ (props.value as string) ];
+    if (!multiple) {
+        const value = getTransformedValue(props.value, multiple) as string | null;
+        return (
+            <Select
+                {...props}
+                clearable
+                data={options}
+                icon={isLoading && <Loader variant='oval' size='xs'/>}
+                onChange={handleChange}
+                value={value}
+                maxDropdownHeight={undefined}
+            />
+        )
     }
+
+    const value = getTransformedValue(props.value, multiple) as string[] | null;
 
     return (
         <MultiSelect
@@ -88,7 +99,7 @@ const FetchSelect = ({
             data={options}
             icon={isLoading && <Loader variant='oval' size='xs'/>}
             onChange={handleChange}
-            value={value}
+            value={value ?? []}
         />
     )
 };

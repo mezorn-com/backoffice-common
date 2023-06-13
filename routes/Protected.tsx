@@ -42,6 +42,7 @@ const ProtectedRoutes = () => {
             // footer={<Footer/>}
             // header={<Header opened={opened} setOpened={setOpened}/>}
             padding={0}
+            className={classes.shell}
         >
             <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
                     <div className={classes.mobileBurgerContainer}>
@@ -69,6 +70,9 @@ const useStyles = createStyles((theme) => {
             padding: '10px',
             borderBottom: '1px solid ' + theme.colors.gray[2],
             justifyContent: 'start'
+        },
+        shell: {
+            overflow: 'hidden'
         }
     }
  });

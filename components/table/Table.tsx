@@ -94,6 +94,9 @@ const Table = ({
                             break;
                         }
                         case 'boolean': {
+                            // TODO: change this.
+                            // it should not render 'NO' when value is null or undefined.
+                            // also display some icon or something;
                             value = value ? 'Yes' : 'No';
                             break;
                         }

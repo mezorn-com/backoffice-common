@@ -16,7 +16,7 @@ export interface IFormField {
     multiLine?: boolean;
     secret?: boolean;
     visibility?: IVisibility;
-    value?: null;
+    value?: any;
     multiple?: boolean;
     optionsApi?: {
         uri: string;
@@ -33,7 +33,13 @@ export interface IFormField {
     suggestApi?: {
         uri: string;
         searchKey: string;
-    }
+    };
+
+    mimeType?: string;
+    useFileName?: boolean;
+    uploadFolderPath?: string;
+    uploadPrefix?: string;
+
     // Custom Properties
     parentFields?: IFormField[]; // not necessary now
     isArrayElement?: boolean;
@@ -52,11 +58,6 @@ export interface IVisibility {
     valueNotEquals?: string | number | boolean;
 }
 
-// export type IVisibility =
-//     { key: string; value: string | number; } |
-//     { key: string; hasValue: boolean; } |
-//     { key: string; valueNotEquals: string | number; };
-
 export type FormType =
     'normal' |
     'tabbed';
@@ -69,10 +70,11 @@ export type FieldType =
     'group';
 
 export type UiType =
-    'text-input' |
-    'checkbox' |
-    'select'|
-    'date'|
-    'cascading-select' |
-    'map-address-picker'
+    'text-input'
+    | 'checkbox'
+    | 'select'
+    | 'date'
+    | 'cascading-select'
+    | 'map-address-picker'
+    | 'file-upload'
     ;

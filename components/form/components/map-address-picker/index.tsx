@@ -99,8 +99,6 @@ const MapAddressPicker = ({
     const [ searchValue, setSearchValue ] = React.useState('');
     const [ suggestions, setSuggestions ] = React.useState<ISuggestion[]>([]);
 
-    console.log('MAP FIELD>>>>', field);
-
     const handleSearch = async () => {
         if (field.suggestApi) {
             const params = {

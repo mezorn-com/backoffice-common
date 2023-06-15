@@ -51,7 +51,7 @@ const Detail = ({
                 fields.filter(field => field.type === 'render').map((field) => {
                     const value = getDetailValue(field);
                     return (
-                        <SimpleGrid key={field.key} cols={2} spacing={'xl'} verticalSpacing={'xl'}>
+                        <SimpleGrid key={field.key} cols={2} spacing={50} verticalSpacing={'xl'} className={classes.grid}>
                             <span className={classes.label}>{field.label}</span>
                             <span className={classes.value}>{value}</span>
                         </SimpleGrid>
@@ -64,10 +64,14 @@ const Detail = ({
 
 const useStyles = createStyles((theme) => {
     return {
+        grid: {
+            borderBottom: `1px solid ${theme.colors.gray[1]}`,
+            marginTop: theme.spacing.sm
+        },
         label: {
-            textAlign: 'left',
+            textAlign: 'right',
             fontWeight: 700,
-            color: theme.colors.gray[5],
+            color: theme.colors.gray[6],
             fontSize: 12,
             textTransform: 'uppercase'
         },
@@ -79,7 +83,7 @@ const useStyles = createStyles((theme) => {
             borderRadius: theme.radius.lg,
             padding: '20px',
             border: `1px solid ${theme.colors.gray[2]}`,
-            margin: '1rem'
+            margin: '1rem',
         }
     }
 })

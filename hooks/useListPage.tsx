@@ -243,7 +243,8 @@ const useListPage = ({
         state,
         dispatch,
         baseRowActionButtons,
-        handleInteract
+        handleInteract,
+        fetchData
     }
 }
 

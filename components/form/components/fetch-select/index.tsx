@@ -37,15 +37,15 @@ const FetchSelect = ({
     ...props
 }: Props) => {
 
-    const isFetchedRef = React.useRef<boolean>(false);
+    const isFetchedRef = React.useRef<boolean | string>(false);
     const [ options, setOptions ] = React.useState<SelectItem[]>([]);
     const [ isLoading, setIsLoading ] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         const fetchData = async () => {
             if (uri) {
-                if (!isFetchedRef.current) {
-                    isFetchedRef.current = true;
+                if (isFetchedRef.current === false || (isFetchedRef.current && isFetchedRef.current !== uri)) {
+                    isFetchedRef.current = uri;
                     setIsLoading(true);
                     const { data } = await axios.get<IResponse<ISelectOption[]>>(uri, { silent: true });
                     setOptions(data.data ?? []);
@@ -69,7 +69,7 @@ const FetchSelect = ({
             }
         }
         void fetchData();
-    }, []);
+    }, [uri]);
 
     const handleChange = (value: SelectValue) => {
         props?.onChange?.(getTransformedValue(value, multiple));

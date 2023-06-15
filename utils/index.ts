@@ -1,6 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
-import { clone } from 'ramda';
+import { clone, isEmpty } from 'ramda';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { IColumn, IResponse } from '@/backoffice-common/types/api';
 import type { MetaType } from '@/backoffice-common/types/api/meta';
@@ -37,6 +37,9 @@ export const replaceString = (string: string, pattern: IStringReplacer[]): strin
 }
 
 export const combineURL = (url: string, parameters: Record<string, unknown>): string => {
+    if (isEmpty(parameters)) {
+        return url;
+    }
     return `${url}?${qs.stringify(parameters)}`;
 };
 

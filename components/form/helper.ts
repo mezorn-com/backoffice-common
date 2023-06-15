@@ -1,9 +1,10 @@
 import { produce } from 'immer';
-import { assocPath, clone, path, map, is, values as objectValues } from 'ramda';
+import { clone, is, map, path, values as objectValues } from 'ramda';
 import i18n from '@/config/i18n';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { replaceString } from '@/backoffice-common/utils';
 import dayjs from 'dayjs';
+import { uploadFile } from '@/backoffice-common/utils/file-upload';
 
 const { t, language } = i18n;
 
@@ -268,6 +269,81 @@ export const getFormValueByKey = (key: string, values: IFormValues, separator = 
     return path(key.split(separator), values);
 };
 
+const getTransformedValue = (field: IFormField, value: IFormField['value']): Promise<IFormField['value']> => {
+    return new Promise(async (resolve) => {
+        if (!value && value !== false) {
+            resolve(undefined);
+            return;
+        }
+        switch (field.uiType) {
+            case 'file-upload': {
+                const url = await uploadFile(value, {
+                    useFileName: !!field.useFileName,
+                    prefix: field.uploadPrefix ?? '',
+                    folderPath: field.uploadFolderPath ?? ''
+                });
+                resolve(url);
+                return;
+            }
+            case 'checkbox': {
+                resolve(!!value);
+                return;
+            }
+            default: {
+                resolve(value);
+                return;
+            }
+        }
+    })
+}
+
+export const transformValuesAsync = (fields: IFormField[], values: IFormValues): Promise<IFormValues | undefined> => {
+    return new Promise(async (resolve) => {
+        let transformedValues: IFormValues = {};
+        for (const field of fields) {
+            switch(field.type) {
+                case 'object': {
+                    if (field.fields) {
+                        if (field.isArrayElement) {
+                            // not sure if isArrayElement works
+                            resolve(transformValuesAsync(field.fields, values[field.key]))
+                            return;
+                        }
+                        transformedValues[field.key] = await transformValuesAsync(field.fields, values[field.key]);
+                    }
+                    break;
+                }
+                case 'array': {
+                    if (field.element) {
+                        const fieldElement = clone(field.element);
+                        fieldElement.isArrayElement = true;
+                        const arrayValues: any = [];
+                        if (field.element.fields) {
+                            for await (const elementValue of values[field.key]) {
+                                const transformedElementValue = await transformValuesAsync(field.element.fields, elementValue);
+                                if (transformedElementValue) {
+                                    arrayValues.push(transformedElementValue);
+                                }
+                            }
+                        }
+                        transformedValues[field.key] = arrayValues;
+                    }
+                    break;
+                }
+                case 'normal':
+                default: {
+                    transformedValues[field.key] = await getTransformedValue(field, values[field.key]);
+                }
+            }
+        }
+        if (objectValues(transformedValues).every(value => value === undefined)) {
+            resolve(undefined);
+            return;
+        }
+        resolve(transformedValues)
+    })
+}
+
 export const transformValues = <T>(values: T): Record<string, any> => {
     return map((value) => {
         if (is(Object, value)) {
@@ -283,42 +359,3 @@ export const transformValues = <T>(values: T): Record<string, any> => {
         return value;
     }, values);
 }
-
-// export const getGroupKey = (field:IFormField): string | null => {
-//     let groupKey: string | null = null;
-//     const { key, groupPath } = field;
-//     if (!groupPath) {
-//         return null;
-//     }
-//     if (key.startsWith(groupPath)) {
-//         const remainder = key.slice((`${groupPath}${SEPARATOR}`).length);
-//         const firstLetter = remainder[0];
-//         if (/^[0-9\b]+$/.test(firstLetter)) { // make sure if first letter is number
-//             // TODO: combine separate regexp into 1 and make this code shorter
-//             const result = /(\d+)/.exec(remainder);
-//             if (result) {
-//                 const index = result[0];
-//                 groupKey = `${groupPath}${SEPARATOR}${index}`
-//             }
-//         }
-//     }
-//     return groupKey;
-// };if (!field.visibility) {
-//         return true;
-//     }
-//     const targetKey = field?.visibility?.key ?? null;
-//     if (!targetKey) {
-//         return true;
-//     }
-//     const targetPath = getFormItemPathByKey(targetKey);
-//     const targetValue = path(targetPath, values) as string | number | boolean;
-//     if (field.visibility?.hasValue === true) {
-//         return !!targetValue;
-//     }
-//     if (field.visibility.value) {
-//         return targetValue === field.visibility.value;
-//     }
-//     if (field.visibility.valueNotEquals) {
-//         return targetValue !== field.visibility.value;
-//     }
-//     return false;

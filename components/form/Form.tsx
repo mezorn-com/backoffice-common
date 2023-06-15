@@ -11,7 +11,8 @@ import {
     ActionIcon,
     NumberInput,
     Card,
-    Title, Flex
+    Title,
+    Flex, FileInput
 } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
 import {
@@ -21,7 +22,7 @@ import {
     isFieldRequired,
     isFieldVisible,
     transformValues,
-    SEPARATOR
+    SEPARATOR, transformValuesAsync
 } from './helper';
 import { randomId } from '@mantine/hooks';
 import { CascadingSelect, FetchSelect, MapAddressPicker } from './components';
@@ -53,7 +54,7 @@ const Form = ({
 
     const form = useForm<IFormValues>({
         initialValues: getFormInitialValues(fields, values),
-        transformValues,
+        // transformValues,
         validate(values) {
             return validator(values, fields)
         },
@@ -342,8 +343,15 @@ const Form = ({
                         key={valueKey}
                         field={field}
                         onChange={(value) => form.setFieldValue(valueKey, value)}
-                        // value={form.values[valueKey]}
                         value={getFormValueByKey(valueKey, form.values) as IMapAddressValue | undefined}
+                    />
+                )
+            }
+            case 'file-upload': {
+                return (
+                    <FileInput
+                        {...props}
+                        accept={field.mimeType}
                     />
                 )
             }
@@ -368,9 +376,14 @@ const Form = ({
         return renderFields;
     };
 
+    const handleSubmit = async (values: typeof form.values) => {
+        const transformed = await transformValuesAsync(fields, values);
+        onSubmit(transformed ?? {});
+    }
+
     return (
         <div style={{ padding: '1rem' }}> {/** TODO: remove temporary inline style **/}
-            <form onSubmit={form.onSubmit(onSubmit, handleError)} onReset={form.onReset}>
+            <form onSubmit={form.onSubmit(handleSubmit, handleError)} onReset={form.onReset}>
                 <Stack>
                     {
                         renderFormFields()

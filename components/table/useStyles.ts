@@ -14,7 +14,8 @@ export const useStyles = createStyles((theme) => {
         },
         table: {
             borderSpacing: 0,
-            width: '100%',
+            width: 'fit-content',
+            maxWidth: '100%',
             overflowY: 'hidden',
             overflowX: 'scroll',
             marginTop: theme.spacing.md,
@@ -36,13 +37,13 @@ export const useStyles = createStyles((theme) => {
         },
         headerCell: {
             ...commonBorderStyle,
-            // padding: `1rem ${theme.spacing.md}`,
+            padding: `1rem ${theme.spacing.md}`,
             backgroundColor: theme.colors.gray[1],
             fontSize: '12px',
             textAlign: 'left',
             color: theme.colors.gray[6],
             // width: '100%',
-            // minWidth: '200px',
+            minWidth: '200px',
         },
         pagination: {
             textAlign: 'right',
@@ -95,6 +96,10 @@ export const useStyles = createStyles((theme) => {
             gap: '5px',
             justifyContent:'end'
         },
-       
+        totalPage: {
+            display: 'flex',
+            alignItems: 'flex-end',
+            gap: theme.spacing.sm
+        }
     }
 })

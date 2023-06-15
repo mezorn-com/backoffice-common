@@ -3,7 +3,7 @@ import axios from 'axios';
 import { IListResponse, IResponse } from '@/backoffice-common/types/api';
 import { formatColumns, getMeta } from '@/backoffice-common/utils';
 import { IListMetaResponse, ISubResource } from '@/backoffice-common/types/api/meta';
-import { Column } from 'react-table';
+import type { ColumnDef } from '@tanstack/react-table';
 import { IListState } from '@/backoffice-common/types/common/list';
 import { produce } from 'immer';
 import { ActionIcon, Button } from '@mantine/core';
@@ -13,6 +13,7 @@ import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { openConfirmModal } from '@mantine/modals';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
+import { ITableState } from '@/backoffice-common/components/table/types';
 
 type IRowActionButtonKey = 'edit' | 'delete' | 'detail';
 
@@ -21,7 +22,16 @@ interface IConfig {
     rowActionButtons?: IRowActionButtonKey[];
 }
 
-type IRowActionButtons = ({label(row: Record<string, any>): React.ReactNode} | {label: React.ReactNode, onClick: (record: Record<string, any>) => void})[]
+export type IRowActionButton =
+    {
+        label(row: Record<string, any>): React.ReactNode;
+        onClick?: (record: Record<string, any>) => void;
+    }
+    |
+    {
+        label: React.ReactNode;
+        onClick?: (record: Record<string, any>) => void;
+    }
 
 type SetListResponse = {
     type: 'SET_LIST_RESPONSE',
@@ -36,25 +46,36 @@ type SetListResponse = {
 type SetMetaData = {
     type: 'SET_META_DATA',
     payload: {
-        columns: Column<Record<string, any>>[];
+        columns: ColumnDef<Record<string, any>>[];
         subResources: ISubResource[];
         pageTitle?: string;
     };
 }
 
+type HandleTableInteract = {
+    type: 'HANDLE_TABLE_INTERACT',
+    payload: ITableState;
+}
+
 export type Action =
-    SetListResponse |
-    SetMetaData
+    SetListResponse
+    | SetMetaData
+    | HandleTableInteract
     ;
 
 const initialState: IListState = {
     page: 1,
-    limit: 20,
+    pageSize: 20,
     totalPage: 1,
     docs: [],
     columns: [],
     subResources: [],
     pageTitle: undefined,
+}
+
+interface IBaseListParams {
+    page: number;
+    limit: number;
 }
 
 const reducer = produce(
@@ -63,7 +84,7 @@ const reducer = produce(
             case 'SET_LIST_RESPONSE': {
                 draft.docs = action.payload.docs;
                 draft.page = action.payload.page;
-                draft.limit = action.payload.limit;
+                draft.pageSize = action.payload.limit;
                 draft.totalPage = action.payload.totalPage;
                 break;
             }
@@ -71,6 +92,12 @@ const reducer = produce(
                 draft.columns = action.payload.columns;
                 draft.subResources = action.payload.subResources;
                 draft.pageTitle = action.payload.pageTitle;
+                break;
+            }
+            case 'HANDLE_TABLE_INTERACT': {
+                const { payload } = action;
+                draft.page = payload.page;
+                draft.pageSize = payload.pageSize;
                 break;
             }
             default:
@@ -106,7 +133,7 @@ const useListPage = ({
         void fetchData();
     }, []);
 
-    const fetchData = async (params?: Record<string, any>) => {
+    const fetchData = async (params?: Partial<IBaseListParams>) => {
         const { data } = await axios.post<IListResponse>(`${apiRoute}/list`, params);
 
         dispatch({
@@ -122,7 +149,7 @@ const useListPage = ({
 
     const baseRowActionButtons = React.useMemo(() => {
 
-        const rowActionButtonList: IRowActionButtons = state.subResources.map((subResource) => {
+        const rowActionButtonList: IRowActionButton[] = state.subResources.map((subResource) => {
             return {
                 label(row: Record<string, any>) {
                     return (
@@ -199,13 +226,24 @@ const useListPage = ({
         }
 
         return rowActionButtonList;
-    }, [ rowActionButtons ])
+    }, [ rowActionButtons ]);
+
+    const handleInteract = (state: ITableState) => {
+        dispatch({
+            type: 'HANDLE_TABLE_INTERACT',
+            payload: state
+        });
+        fetchData({
+            page: state.page,
+            limit: state.pageSize,
+        })
+    }
 
     return {
         state,
         dispatch,
-        fetchData,
-        baseRowActionButtons
+        baseRowActionButtons,
+        handleInteract
     }
 }
 

@@ -1,12 +1,10 @@
-import { Column } from 'react-table';
+import type { ColumnDef, TableState } from '@tanstack/react-table';
 import type { ISubResource } from '../api/meta';
+import type { ITableState } from '@/backoffice-common/components/table/types';
 
-export interface IListState {
-    page: number;
-    limit: number;
-    totalPage: number;
+export interface IListState extends ITableState {
     docs: Record<string, unknown>[];
     pageTitle?: string;
-    columns: Column[];
+    columns: ColumnDef<Record<string, any>>[];
     subResources: ISubResource[];
 }

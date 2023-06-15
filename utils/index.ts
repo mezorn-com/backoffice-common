@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 import { clone } from 'ramda';
-import type { Column } from 'react-table';
+import type { ColumnDef } from '@tanstack/react-table';
 import type { IColumn, IResponse } from '@/backoffice-common/types/api';
 import type { MetaType } from '@/backoffice-common/types/api/meta';
 import { IStringReplacer } from '@/backoffice-common/types/utils';
@@ -12,13 +12,14 @@ export const getMeta = <T>(url: string, action: MetaType): Promise<T> => {
         resolve(data.data);
     })
 }
-export const formatColumns = (columns: IColumn[]): Column<Record<string, unknown>>[] => {
-    const formattedColumns: Column<Record<string, unknown>>[] = [];
+
+export const formatColumns = (columns: IColumn[]): ColumnDef<Record<string, unknown>>[] => {
+    const formattedColumns: ColumnDef<Record<string, unknown>>[] = [];
     for (const column of columns) {
         if (column.type === 'render') {
-            const tableColumn: Column<Record<string, unknown>> = {
-                accessor: column.key,
-                Header: column.label,
+            const tableColumn: ColumnDef<Record<string, unknown>> = {
+                accessorKey: column.key,
+                header: column.label,
                 ...clone(column)
             };
             formattedColumns.push(tableColumn);

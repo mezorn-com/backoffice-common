@@ -6,8 +6,9 @@ import axios from 'axios';
 import { IResponse } from '@/backoffice-common/types/api';
 import { IFormValues } from '@/backoffice-common/components/form/helper';
 import { showMessage } from '@/backoffice-common/lib/notification';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { dropLast } from 'ramda';
 
 interface IConfig {
     apiRoute: string;
@@ -29,6 +30,7 @@ const useEditPage = ({
 
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { pathname, ...rest } = useLocation();
 
     const [ state, setState ] = React.useState<IEditPageState>({
         fields: [],
@@ -49,11 +51,21 @@ const useEditPage = ({
         void fetchData();
     }, []);
 
+    React.useEffect(() => {
+
+    }, [])
+
     const submitHandler = async (values: IFormValues) => {
         const { data } = await axios.put<IResponse<any>>(`${apiRoute}/${id}`, values);
         if (data.success) {
             showMessage(t('success', { ns: 'common' }), 'green');
-            navigate(clientRoute);
+            const uriParts = pathname.split('/');
+            if (uriParts[uriParts.length - 1] === 'edit') {
+                const redirectPath = dropLast(2, uriParts).join('/');
+                navigate(redirectPath)
+            } else {
+                navigate(clientRoute);
+            }
         } else {
             showMessage(t('error.title', { ns: 'common' }));
         }

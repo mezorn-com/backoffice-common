@@ -90,52 +90,8 @@ const Table = ({
         return cols;
     }, [ columns, rowActionButtons ]);
 
-<<<<<<< HEAD
     const table = useReactTable({
         data,
-=======
-    const tableRecords = React.useMemo(() => {
-        return data.map(record => {
-            let recordClone = clone(record);
-            for (const column of tableColumns) {
-                // @ts-expect-error
-                const valuePath = (column.key ?? '').split('.');
-                // @ts-expect-error
-                const renderType = column.renderType ?? 'text' as IFieldRenderType;
-                let value: any = clone(path(valuePath, recordClone));
-                if (renderType) {
-                    switch(renderType) {
-                        case 'text': {
-                            break;
-                        }
-                        case 'boolean': {
-                            // TODO: change this.
-                            // it should not render 'NO' when value is null or undefined.
-                            // also display some icon or something;
-                            value = value ? 'Yes' : 'No';
-                            break;
-                        }
-                        case 'link': {
-                            // @ts-expect-error
-                            const uri: string = column.uri ?? '';
-                            value = (
-                                <Anchor target={'_blank'} href={getSubResourceUrl(uri, [ { match: '{_id}', replace: recordClone?._id ?? '' } ])}>{value}</Anchor>
-                            );
-                            break;
-                        }
-                        default: {
-                            return recordClone;
-                        }
-                    }
-                }
-                recordClone = assocPath(valuePath, value, recordClone);
-            }
-            return recordClone;
-        });
-    }, [data, tableColumns]);
-
-    const tableInstance = useTable({
->>>>>>> a408ece6fd06f27e66afc331d4a9518d6cf58e03
         columns: tableColumns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -220,6 +176,9 @@ const Table = ({
     //                         break;
     //                     }
     //                     case 'boolean': {
+    //                          TODO: change this.
+    //                          it should not render 'NO' when value is null or undefined.
+    //                          also display some icon or something;
     //                         value = value ? 'Yes' : 'No';
     //                         break;
     //                     }

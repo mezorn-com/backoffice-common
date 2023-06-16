@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { useForm } from '@mantine/form';
 import {
-    TextInput,
+    ActionIcon,
     Button,
+    Card,
+    Checkbox,
+    FileInput,
+    Flex,
+    NumberInput,
     PasswordInput,
-    Textarea,
     Select,
     Stack,
-    Checkbox,
-    ActionIcon,
-    NumberInput,
-    Card,
-    Title,
-    Flex, FileInput
+    Textarea,
+    TextInput,
+    Title
 } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
 import {
@@ -21,20 +22,21 @@ import {
     IFormValues,
     isFieldRequired,
     isFieldVisible,
-    transformValues,
-    SEPARATOR, transformValuesAsync
+    SEPARATOR,
+    transformValuesAsync,
+    validator
 } from './helper';
 import { randomId } from '@mantine/hooks';
 import { CascadingSelect, FetchSelect, MapAddressPicker } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
-import { validator } from './helper';
 import { DatePickerInput } from '@mantine/dates';
-import { IconPlus, IconMinus } from '@tabler/icons-react';
+import { IconMinus, IconPlus } from '@tabler/icons-react';
 import { clone } from 'ramda';
 import dayjs from 'dayjs';
 import { useFormStyles } from './styles';
 import { useTranslation } from 'react-i18next';
 import { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
+import { useLocation } from 'react-router-dom';
 
 interface IFormProps {
     fields: IFormField[];
@@ -51,6 +53,7 @@ const Form = ({
 }: IFormProps) => {
     const { t } = useTranslation();
     const { classes } = useFormStyles();
+    const { pathname } = useLocation();
 
     const form = useForm<IFormValues>({
         initialValues: getFormInitialValues(fields, values),
@@ -270,6 +273,11 @@ const Form = ({
 
                     for (const queryParamKey of field.optionsApi.queryParams ?? []) {
                         params[queryParamKey] = getFormValueByKey(queryParamKey, form.values);
+                    }
+
+                    if (field.optionsApi.queryParams?.includes('parentId')) {
+                        // back-end tei yariad iim shiideld hurev
+                        params.parentId = pathname.split('/')?.[3] ?? '';
                     }
 
                     const uri = combineURL(field.optionsApi?.uri, params);

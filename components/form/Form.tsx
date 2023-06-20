@@ -277,7 +277,7 @@ const Form = ({
 
                     if (field.optionsApi.queryParams?.includes('parentId')) {
                         // back-end tei yariad iim shiideld hurev
-                        params.parentId = pathname.split('/')?.[3] ?? '';
+                        params.parentId = pathname.split('/')?.[2] ?? '';
                     }
 
                     const uri = combineURL(field.optionsApi?.uri, params);

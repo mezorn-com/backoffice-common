@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Button, createStyles, Flex, Title } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { IconChevronLeft } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+import { last } from 'ramda';
 
 interface ISubHeaderProps {
     title?: string;
@@ -18,6 +19,17 @@ const SubHeader = ({
     const { classes } = useStyles();
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const goBack = () => {
+        const { pathname } = location;
+        const pathParts = pathname.split('/');
+        const lastPart = last(pathParts);
+        if (lastPart) {
+            const lastPartLength = ('/' + lastPart).length;
+            navigate(pathname.slice(0, -1 * lastPartLength));
+        }
+    }
 
     return (
         <div className={classes.pageHeader}>
@@ -30,7 +42,7 @@ const SubHeader = ({
                 {
                     backButton && (
                         <Button
-                            onClick={() => navigate(-1)}
+                            onClick={goBack}
                             leftIcon={<IconChevronLeft size={16}/>}
                             variant={'light'}
                         >

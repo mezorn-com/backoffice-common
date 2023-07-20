@@ -22,12 +22,10 @@ const SubHeader = ({
     const location = useLocation();
 
     const goBack = () => {
-        // const { pathname } = location;
         const pathname = location.pathname.endsWith('/') ? location.pathname.slice(0, -1) : location.pathname;
         const pathParts = pathname.split('/');
         const lastPart = last(pathParts);
         if (lastPart) {
-            // what if path ends with / ???
             const lastPartLength = ('/' + lastPart).length;
             navigate(pathname.slice(0, -1 * lastPartLength));
         }

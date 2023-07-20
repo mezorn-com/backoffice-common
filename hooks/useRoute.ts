@@ -31,7 +31,7 @@ const useRoute = ({
     }, [params]);
 
     const routes = {
-        new: `${pathname}/new`
+        new: `${pathname}${pathname.endsWith('/') ? '' : '/'}new`
     }
 
     return {

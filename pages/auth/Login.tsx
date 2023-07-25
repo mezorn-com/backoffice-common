@@ -12,7 +12,18 @@ import { showMessage } from '@/backoffice-common/lib/notification';
 import type { IResponse } from '@/backoffice-common/types/api';
 import type { ILoginResponse } from '@/types';
 
-const Login = () => {
+interface IRightSection {
+	children?: React.ReactNode;
+	background?: `#${string}`;
+}
+
+interface ILoginProps {
+	right?: IRightSection;
+}
+
+const Login = ({
+	right
+}: ILoginProps) => {
 	const { t } = useTranslation();
 	const { classes } = useStyles();
 
@@ -133,10 +144,12 @@ const Login = () => {
 			<div
 				style={{
 					flex: 3,
-					backgroundColor: '#2ca1b9',
+					backgroundColor: right?.background ?? '#2ca1b9',
 				}}
 				className={classes.image}
-			/>
+			>
+				{right?.children}
+			</div>
 			<ChangePassword
 				opened={!!loginResponse}
 				onClose={() => setLoginResponse(null)}

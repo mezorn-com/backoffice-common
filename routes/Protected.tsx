@@ -45,15 +45,15 @@ const ProtectedRoutes = () => {
             className={classes.shell}
         >
             <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
-                    <div className={classes.mobileBurgerContainer}>
-                        <Burger 
-                            opened={!opened}
-                            onClick={() => setOpened((o: boolean) => !o)}
-                            size="sm"
-                            color={theme.colors.gray[6]}
-                            mr="xl"
-                        />
-                    </div>
+                <div className={classes.mobileBurgerContainer}>
+                    <Burger
+                        opened={!opened}
+                        onClick={() => setOpened((o: boolean) => !o)}
+                        size="sm"
+                        color={theme.colors.gray[6]}
+                        mr="xl"
+                    />
+                </div>
             </MediaQuery>
             <Routes>
                 {getRoutes()}

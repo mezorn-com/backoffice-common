@@ -4,7 +4,7 @@ import { MantineProvider, LoadingOverlay, createStyles } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import useStore from '../store';
-import AuthRoutes from './routes/Auth';
+import AuthRouter from './routes/AuthRouter';
 import ProtectedRoutes from './routes/Protected';
 import 'dayjs/locale/mn';
 
@@ -12,7 +12,7 @@ const authRoutes = createBrowserRouter(
 	createRoutesFromElements(
 		<Route
 			path={'*'}
-			element={<AuthRoutes />}
+			element={<AuthRouter />}
 		/>
 	)
 );

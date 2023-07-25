@@ -12,10 +12,10 @@ interface ISubHeaderProps {
 }
 
 const SubHeader = ({
-                       title,
-                       backButton = true,
-                       children
-                   }: ISubHeaderProps) => {
+   title,
+   backButton = true,
+   children
+}: ISubHeaderProps) => {
     const { classes } = useStyles();
     const { t } = useTranslation();
     const navigate = useNavigate();

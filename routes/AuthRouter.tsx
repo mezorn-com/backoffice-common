@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { USE_CUSTOM_AUTH_ROUTES } from '@/config';
+
+const Loader = () => {
+    return (
+        <div>...</div>
+    )
+}
 
 const DynamicRouter = React.lazy(() => {
     if (USE_CUSTOM_AUTH_ROUTES) {
@@ -18,8 +23,7 @@ const AuthRouter = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        // return navigate maybe
+    React.useEffect(() => {
         if (location.pathname !== '/') {
             navigate('/', {
                 replace: true
@@ -28,7 +32,9 @@ const AuthRouter = () => {
     }, [location.pathname]);
 
     return (
-        <DynamicRouter/>
+        <React.Suspense fallback={<Loader/>}>
+            <DynamicRouter/>
+        </React.Suspense>
     );
 };
 

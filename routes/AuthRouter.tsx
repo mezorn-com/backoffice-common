@@ -11,7 +11,7 @@ const Loader = () => {
 const DynamicRouter = React.lazy(() => {
     if (USE_CUSTOM_AUTH_ROUTES) {
         // @ts-ignore
-        return import(`../../routes/AuthRoutes.tsx`).catch(e => {
+        return import(/* @vite-ignore */`../../routes/AuthRoutes.tsx`).catch(e => {
             console.error('Error trying to import custom auth routes. Make sure your routes file is in "/src/routes/AuthRoutes.tsx:" directory: ', e.message);
             return import('./DefaultAuthRoutes.tsx');
         });

@@ -22,6 +22,8 @@ const SubHeader = ({
     const location = useLocation();
 
     const goBack = () => {
+        navigate(-1);
+        return;
         const pathname = location.pathname.endsWith('/') ? location.pathname.slice(0, -1) : location.pathname;
         const pathParts = pathname.split('/');
         const lastPart = last(pathParts);

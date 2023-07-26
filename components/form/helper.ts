@@ -344,18 +344,18 @@ export const transformValuesAsync = (fields: IFormField[], values: IFormValues):
     })
 }
 
-export const transformValues = <T>(values: T): Record<string, any> => {
-    return map((value) => {
-        if (is(Object, value)) {
-            const transformedValues =  transformValues(value);
-            if (objectValues(transformedValues).every(value => value === undefined)) {
-                return undefined;
-            }
-            return transformedValues;
-        }
-        if (!value && value !== false) {
-            return undefined;
-        }
-        return value;
-    }, values);
-}
+// export const transformValues = <T>(values: T): Record<string, any> => {
+//     return map((value) => {
+//         if (is(Object, value)) {
+//             const transformedValues =  transformValues(value);
+//             if (objectValues(transformedValues).every(value => value === undefined)) {
+//                 return undefined;
+//             }
+//             return transformedValues;
+//         }
+//         if (!value && value !== false) {
+//             return undefined;
+//         }
+//         return value;
+//     }, values);
+// }

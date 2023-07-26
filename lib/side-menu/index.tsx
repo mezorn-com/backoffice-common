@@ -6,10 +6,15 @@ import routes from '@/routes';
 import { useTranslation } from 'react-i18next';
 import { IconBuilding, IconSettings, IconUser } from '@tabler/icons-react';
 import { APP_NAME } from '@/config';
+import { IRoute } from '@/backoffice-common/types';
 
 interface SideMenuProps {
     opened: boolean;
     setOpened: (opened: any) => void;
+}
+
+const getRouteObjectByPath = (path: string): IRoute | undefined  => {
+    return routes.find(route => route.path === path);
 }
 
 const SideMenu = ({
@@ -25,7 +30,24 @@ const SideMenu = ({
     const { t, i18n  } = useTranslation();
 
     const currentRoute = React.useMemo(() => {
-        return routes.find(route => route.path === location.pathname);
+        const routeObject = getRouteObjectByPath(location.pathname);
+        if (routeObject) {
+            return routeObject;
+        }
+
+        const splitPath = location.pathname.split('/').reverse();
+        let pathname = location.pathname;
+        for (const urlPart of splitPath) {
+            // adding 1 because forward slash has to be removed too.
+            pathname = pathname.slice(0, -1 * (1 + urlPart.length));
+            if (pathname) {
+                const ro = getRouteObjectByPath(pathname);
+                if (ro) {
+                    return ro;
+                }
+            }
+        }
+        return undefined;
     }, [location.pathname]);
 
     return (

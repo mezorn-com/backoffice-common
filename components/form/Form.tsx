@@ -27,7 +27,7 @@ import {
     validator
 } from './helper';
 import { randomId } from '@mantine/hooks';
-import { CascadingSelect, FetchSelect, MapAddressPicker } from './components';
+import { CascadingSelect, FetchSelect, MapAddressPicker, FormRTE } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
 import { DatePickerInput } from '@mantine/dates';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
@@ -360,6 +360,16 @@ const Form = ({
                     <FileInput
                         {...props}
                         accept={field.mimeType}
+                    />
+                )
+            }
+            case 'html-input': {
+                return (
+                    <FormRTE
+                        key={valueKey}
+                        field={field}
+                        value={getFormValueByKey(valueKey, form.values) as string | undefined}
+                        onChange={(value) => form.setFieldValue(valueKey, value)}
                     />
                 )
             }

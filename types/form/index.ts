@@ -77,4 +77,5 @@ export type UiType =
     | 'cascading-select'
     | 'map-address-picker'
     | 'file-upload'
+    | 'html-input'
     ;

@@ -16,13 +16,13 @@ const SideMenu = ({
     opened, setOpened
 }: SideMenuProps) => {
 
-    const { classes } = useStyles()
+    const { classes } = useStyles();
     const theme = useMantineTheme();
     const location = useLocation();
     const menu = useStore(state => state.auth.sideMenu);
     const userName = useStore(state => state.auth.name);
     const clearStore = useStore(state => state.clearStore);
-    const { t } = useTranslation();
+    const { t, i18n  } = useTranslation();
 
     const currentRoute = React.useMemo(() => {
         return routes.find(route => route.path === location.pathname);
@@ -75,18 +75,18 @@ const SideMenu = ({
                 <div className={classes.menus}>
                     {
                         menu.map(menuItem => {
-                            const menuKey = menuItem?.resource?.key ?? menuItem?.path;
+                            const menuKey = menuItem?.resource ?? menuItem?.path;
                             const isActive = currentRoute?.key === menuKey || currentRoute?.menuKey === menuKey;
                             const menuItemRoute = routes.find(route => route.key === menuKey);
                             const path = menuItemRoute?.path ?? '404';
                             const redirectPath = path.endsWith('/*') ? path.slice(0, -2) : path;
+                            const label = menuItem.localizedNames[i18n.language] ?? menuItem.name;
                             return (
                                 <NavLink
                                     active={isActive}
                                     key={menuKey}
-                                    label={menuItem.name}
+                                    label={label}
                                     component={Link}
-                                    // to={'/'}
                                     to={redirectPath}
                                     icon={<IconBuilding size={16}/>}
                                     classNames={{

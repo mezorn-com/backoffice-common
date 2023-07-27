@@ -20,7 +20,7 @@ const AuthRouter = () => {
             {
                 authRoutes.map(route => {
                     return (
-                        <Route path={route.path} element={route.element}/>
+                        <Route key={route.path} path={route.path} element={route.element}/>
                     )
                 })
             }

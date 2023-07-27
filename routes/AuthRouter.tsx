@@ -1,23 +1,7 @@
 import * as React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { USE_CUSTOM_AUTH_ROUTES } from '@/config';
-
-const Loader = () => {
-    return (
-        <div>...</div>
-    )
-}
-
-const DynamicRouter = React.lazy(() => {
-    if (USE_CUSTOM_AUTH_ROUTES) {
-        // @ts-ignore
-        return import(/* @vite-ignore */`../../routes/AuthRoutes.tsx`).catch(e => {
-            console.error('Error trying to import custom auth routes. Make sure your routes file is in "/src/routes/AuthRoutes.tsx:" directory: ', e.message);
-            return import('./DefaultAuthRoutes.tsx');
-        });
-    }
-    return import('./DefaultAuthRoutes.tsx');
-});
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+// import Login from '@/backoffice-common/pages/auth/Login.tsx';
+import authRoutes from '@/routes/authRoutes.ts';
 
 const AuthRouter = () => {
 
@@ -33,9 +17,15 @@ const AuthRouter = () => {
     }, [location.pathname]);
 
     return (
-        <React.Suspense fallback={<Loader/>}>
-            <DynamicRouter/>
-        </React.Suspense>
+        <Routes>
+            {
+                authRoutes.map(route => {
+                    return (
+                        <Route path={route.path} element={route.element}/>
+                    )
+                })
+            }
+        </Routes>
     );
 };
 

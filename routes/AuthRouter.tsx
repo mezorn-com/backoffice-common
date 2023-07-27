@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-// import Login from '@/backoffice-common/pages/auth/Login.tsx';
-import authRoutes from '@/routes/authRoutes.ts';
+import authRoutes from '@/routes/AuthRoutes';
 
 const AuthRouter = () => {
 

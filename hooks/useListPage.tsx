@@ -16,23 +16,24 @@ import { useTranslation } from 'react-i18next';
 import { ITableState } from '@/backoffice-common/components/table/types';
 import { IVisibility } from '@/backoffice-common/types/form';
 
-type IRowActionButtonKey = 'edit' | 'delete' | 'detail';
+type IRowActionButtonKey = 'update' | 'delete' | 'get';
 
 interface IConfig {
     apiRoute: string;
     rowActionButtons?: IRowActionButtonKey[];
 }
 
-export type IRowActionButton =
-    {
+export type IRowActionButton = {
+    onClick?: (record: Record<string, any>) => void;
+    visibility?: IVisibility;
+} &
+    ({
         label(row: Record<string, any>): React.ReactNode;
-        onClick?: (record: Record<string, any>) => void;
     }
     |
     {
         label: React.ReactNode;
-        onClick?: (record: Record<string, any>) => void;
-    }
+    })
 
 type SetListResponse = {
     type: 'SET_LIST_RESPONSE',
@@ -115,7 +116,7 @@ const reducer = produce(
 
 const useListPage = ({
     apiRoute,
-    rowActionButtons = ['edit', 'delete', 'detail']
+    // rowActionButtons = ['update', 'delete', 'get']
 }: IConfig) => {
 
     const navigate = useNavigate();
@@ -178,7 +179,7 @@ const useListPage = ({
             }
         });
 
-        if (rowActionButtons?.includes('edit')) {
+        if (state.listActions.includes('update')) {
             rowActionButtonList.push({
                 label: (
                     <ActionIcon variant="light" color={'primary'}>
@@ -187,11 +188,12 @@ const useListPage = ({
                 ),
                 onClick: (record: Record<string, any>) => {
                     navigate(`${pathname}/${record._id}/edit`)
-                }
+                },
+                visibility: state.itemActions?.update
             })
         }
 
-        if (rowActionButtons?.includes('delete')) {
+        if (state.listActions.includes('delete')) {
             rowActionButtonList.push({
                 label: (
                     <ActionIcon variant="light" color={'red'}>
@@ -217,11 +219,13 @@ const useListPage = ({
                             }
                         }
                     })
-                }
+                },
+                visibility: state.itemActions?.delete
             })
         }
 
-        if (rowActionButtons?.includes('detail')) {
+
+        if (state.listActions.includes('get')) {
             rowActionButtonList.push({
                 label: (
                     <ActionIcon variant="light" color={'primary'}>
@@ -230,12 +234,13 @@ const useListPage = ({
                 ),
                 onClick: (record: Record<string, any>) => {
                     navigate(`${pathname}/${record._id}`)
-                }
+                },
+                visibility: state.itemActions?.get
             })
         }
 
         return rowActionButtonList;
-    }, [ rowActionButtons ]);
+    }, [ state.subResources, state.listActions, apiRoute ]);
 
     const handleInteract = (state: ITableState) => {
         dispatch({

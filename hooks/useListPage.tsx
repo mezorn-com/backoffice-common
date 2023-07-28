@@ -2,7 +2,7 @@ import * as React from 'react';
 import axios from 'axios';
 import { IListResponse, IResponse } from '@/backoffice-common/types/api';
 import { formatColumns, getMeta } from '@/backoffice-common/utils';
-import { IListMetaResponse, ISubResource } from '@/backoffice-common/types/api/meta';
+import { IListMetaResponse, ISubResource, MetaType } from '@/backoffice-common/types/api/meta';
 import type { ColumnDef } from '@tanstack/react-table';
 import { IListState } from '@/backoffice-common/types/common/list';
 import { produce } from 'immer';
@@ -14,6 +14,7 @@ import { openConfirmModal } from '@mantine/modals';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
 import { ITableState } from '@/backoffice-common/components/table/types';
+import { IVisibility } from '@/backoffice-common/types/form';
 
 type IRowActionButtonKey = 'edit' | 'delete' | 'detail';
 
@@ -49,6 +50,8 @@ type SetMetaData = {
         columns: ColumnDef<Record<string, any>>[];
         subResources: ISubResource[];
         pageTitle?: string;
+        listActions: MetaType[];
+        itemActions?: Record<MetaType, IVisibility>;
     };
 }
 
@@ -71,6 +74,8 @@ const initialState: IListState = {
     columns: [],
     subResources: [],
     pageTitle: undefined,
+    itemActions: undefined,
+    listActions: []
 }
 
 interface IBaseListParams {
@@ -92,6 +97,8 @@ const reducer = produce(
                 draft.columns = action.payload.columns;
                 draft.subResources = action.payload.subResources;
                 draft.pageTitle = action.payload.pageTitle;
+                draft.listActions = action.payload.listActions;
+                draft.itemActions = action.payload.itemActions;
                 break;
             }
             case 'HANDLE_TABLE_INTERACT': {
@@ -125,7 +132,9 @@ const useListPage = ({
                 payload: {
                     columns: formatColumns(response.form.fields),
                     subResources: response.subResources ?? [],
-                    pageTitle: response.form.title
+                    pageTitle: response.form.title,
+                    listActions: response.listActions,
+                    itemActions: response.itemActions
                 },
             })
         }
@@ -233,7 +242,7 @@ const useListPage = ({
             type: 'HANDLE_TABLE_INTERACT',
             payload: state
         });
-        fetchData({
+        void fetchData({
             page: state.page,
             limit: state.pageSize,
         })

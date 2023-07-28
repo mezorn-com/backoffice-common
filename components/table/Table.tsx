@@ -86,7 +86,6 @@ const Table = ({
                 );
             }
         }
-
         return cols;
     }, [ columns, rowActionButtons ]);
 

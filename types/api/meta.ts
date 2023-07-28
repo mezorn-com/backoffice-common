@@ -1,4 +1,4 @@
-import { FormType, IFormField } from '../form';
+import { FormType, IFormField, IVisibility } from '../form';
 import { IColumn } from './index';
 
 export type IMetaType = 'normal';
@@ -15,13 +15,15 @@ export interface IListMetaResponse {
         title?: string;
     };
     subResources: ISubResource[];
+    listActions: MetaType[];
+    itemActions?: Record<MetaType, IVisibility>;
 }
+
 export interface IFormResponseData {
     type: FormType;
     title?: string;
     fields: IFormField[];
 }
-
 
 export interface IFormMetaResponse {
     form: IFormResponseData;
@@ -34,4 +36,3 @@ export type MetaType =
     'delete' |
     'list' |
     'get';
-

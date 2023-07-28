@@ -51,12 +51,12 @@ export interface IFormOption {
     value: string;
 }
 
-export interface IVisibility {
-    key: string;
-    value?: string | number | boolean;
-    hasValue?: boolean;
-    valueNotEquals?: string | number | boolean;
-}
+type VisibilityType =
+    { value: unknown; }
+|   { hasValue: boolean }
+|   { valueNotEquals: unknown };
+
+export type IVisibility = VisibilityType & { key: string; };
 
 export type FormType =
     'normal' |

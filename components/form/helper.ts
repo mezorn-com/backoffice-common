@@ -224,14 +224,16 @@ export const isFieldVisible = (field: IFormField, values: IFormValues): boolean 
     }
     const targetPath = getFormItemPathByKey(targetKey);
     const targetValue = path(targetPath, values) as string | number | boolean;
-    if (field.visibility?.hasValue === true) {
-        return !!targetValue;
-    }
-    if (field.visibility.value) {
-        return targetValue === field.visibility.value;
-    }
-    if (field.visibility.valueNotEquals) {
-        return targetValue !== field.visibility.value;
+    if (field.visibility) {
+        if ('hasValue' in field.visibility) {
+            return !!targetValue;
+        }
+        if ('value' in field.visibility) {
+            return targetValue === field.visibility.value;
+        }
+        if ('valueNotEquals' in field.visibility) {
+            return targetValue !== field.visibility.valueNotEquals;
+        }
     }
     return false;
 };

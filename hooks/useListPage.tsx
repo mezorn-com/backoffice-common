@@ -187,7 +187,14 @@ const useListPage = ({
                     </ActionIcon>
                 ),
                 onClick: (record: Record<string, any>) => {
-                    navigate(`${pathname}/${record._id}/edit`)
+                    let editPath = '';
+                    const { _id } = record;
+                    if (pathname.endsWith('/')) {
+                        editPath = `${pathname}${_id}/edit`;
+                    } else {
+                        editPath = `${pathname}/${_id}/edit`;
+                    }
+                    navigate(editPath);
                 },
                 visibility: state.itemActions?.update
             })
@@ -233,7 +240,14 @@ const useListPage = ({
                     </ActionIcon>
                 ),
                 onClick: (record: Record<string, any>) => {
-                    navigate(`${pathname}/${record._id}`)
+                    let detailPath = '';
+                    const { _id } = record;
+                    if (pathname.endsWith('/')) {
+                        detailPath = `${pathname}${_id}`
+                    } else {
+                        detailPath = `${pathname}/${_id}`
+                    }
+                    navigate(detailPath);
                 },
                 visibility: state.itemActions?.get
             })

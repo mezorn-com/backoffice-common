@@ -43,6 +43,9 @@ const ProtectedRoutes = () => {
             // header={<Header opened={opened} setOpened={setOpened}/>}
             padding={0}
             className={classes.shell}
+            classNames={{
+                main: classes.main
+            }}
         >
             <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
                 <div className={classes.mobileBurgerContainer}>
@@ -72,7 +75,11 @@ const useStyles = createStyles((theme) => {
             justifyContent: 'start'
         },
         shell: {
-            overflow: 'hidden'
+            overflow: 'hidden',
+        },
+        main: {
+            display: 'flex',
+            flexDirection: 'column'
         }
     }
  });

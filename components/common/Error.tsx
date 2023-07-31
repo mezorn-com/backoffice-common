@@ -23,6 +23,14 @@ const ErrorPage = () => {
     const { classes } = useStyles();
     const { t } = useTranslation();
 
+    const handleReload = () => {
+        window.location.reload()
+    }
+
+    const handleBackHome = () => {
+        window.location.href = '/';
+    }
+
     return (
         <div className={classes.body}>
             <div>
@@ -33,12 +41,14 @@ const ErrorPage = () => {
                     <Button
                         color='yellow'
                         leftIcon={<IconReload/>}
+                        onClick={handleReload}
                     >
                         {t('action.reload', { ns: 'common' })}!
                     </Button>
                     <Button
                         color='cyan'
                         leftIcon={<IconHome/>}
+                        onClick={handleBackHome}
                     >
                         {t('action.backHome', { ns: 'common' })}!
                     </Button>

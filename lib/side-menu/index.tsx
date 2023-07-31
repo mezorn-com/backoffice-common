@@ -102,7 +102,7 @@ const SideMenu = ({
                             const menuItemRoute = routes.find(route => route.key === menuKey);
                             const path = menuItemRoute?.path ?? '404';
                             const redirectPath = path.endsWith('/*') ? path.slice(0, -2) : path;
-                            const label = menuItem.localizedNames[i18n.language] ?? menuItem.name;
+                            const label = menuItem?.localizedNames?.[i18n?.language] ?? menuItem.name;
                             return (
                                 <NavLink
                                     active={isActive}

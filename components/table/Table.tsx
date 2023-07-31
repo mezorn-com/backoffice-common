@@ -86,7 +86,6 @@ const Table = ({
                 );
             }
         }
-
         return cols;
     }, [ columns, rowActionButtons ]);
 
@@ -141,6 +140,23 @@ const Table = ({
     }));
 
     const renderActionButton = (actionButton: IRowActionButton, index: number, props: CellContext<any, any>) => {
+        if (actionButton.visibility) {
+            if ('hasValue' in actionButton.visibility) {
+                if (!props.row.original[actionButton.visibility.key]) {
+                    return null;
+                }
+            }
+            if ('value' in actionButton.visibility) {
+                if (props.row.original[actionButton.visibility.key] !== actionButton.visibility.value) {
+                    return null;
+                }
+            }
+            if ('valueNotEquals' in actionButton.visibility) {
+                if (props.row.original[actionButton.visibility.key] === actionButton.visibility.valueNotEquals) {
+                    return null;
+                }
+            }
+        }
         if (typeof actionButton.label === 'function') {
             return (
                 <div

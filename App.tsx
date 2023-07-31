@@ -6,11 +6,13 @@ import { Notifications } from '@mantine/notifications';
 import useStore from '../store';
 import AuthRouter from './routes/AuthRouter';
 import ProtectedRoutes from './routes/Protected';
+import ErrorPage from '@/backoffice-common/components/common/Error';
 import 'dayjs/locale/mn';
 
 const authRoutes = createBrowserRouter(
 	createRoutesFromElements(
 		<Route
+			errorElement={<ErrorPage/>}
 			path={'*'}
 			element={<AuthRouter />}
 		/>
@@ -20,6 +22,7 @@ const authRoutes = createBrowserRouter(
 const protectedRoutes = createBrowserRouter(
 	createRoutesFromElements(
 		<Route
+			errorElement={<ErrorPage/>}
 			path={'*'}
 			element={<ProtectedRoutes />}
 		/>

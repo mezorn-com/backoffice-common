@@ -150,6 +150,10 @@ export const refactorFields = (fields: IFormField[], parentFields?: IFormField[]
 export const validator = (values: IFormValues, fields: IFormField[]) => {
     let errors: { [key: string]: string | null; } = {};
     for (const field of fields) {
+        const isVisible = isFieldVisible(field, values);
+        if (!isVisible) {
+            continue;
+        }
         const targetPath = getFormItemPathByKey(field.key);
         const value: any = path(targetPath, values);
         const isRequired = isFieldRequired(field, values);

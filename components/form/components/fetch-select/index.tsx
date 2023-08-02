@@ -47,9 +47,14 @@ const FetchSelect = ({
                 if (isFetchedRef.current === false || (isFetchedRef.current && isFetchedRef.current !== uri)) {
                     isFetchedRef.current = uri;
                     setIsLoading(true);
-                    const { data } = await axios.get<IResponse<ISelectOption[]>>(uri, { silent: true });
-                    setOptions(data.data ?? []);
-                    setIsLoading(false);
+                    try {
+                        const { data } = await axios.get<IResponse<ISelectOption[]>>(uri, { silent: true });
+                        setOptions(data.data ?? []);
+                    } catch (e) {
+                        console.log('Fetch Select Error: ', e)
+                    } finally {
+                        setIsLoading(false);
+                    }
                 }
             }
             if (refCode && fetchReference) {

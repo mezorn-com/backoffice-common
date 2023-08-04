@@ -285,8 +285,8 @@ const getTransformedValue = (field: IFormField, value: IFormField['value']): Pro
             case 'file-upload': {
                 const url = await uploadFile(value, {
                     useFileName: !!field.useFileName,
-                    prefix: field.uploadPrefix ?? '',
-                    folderPath: field.uploadFolderPath ?? ''
+                    prefix: field.prefix ?? '',
+                    folderPath: field.folderPath ?? ''
                 });
                 resolve(url);
                 return;

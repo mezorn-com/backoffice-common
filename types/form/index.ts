@@ -37,13 +37,20 @@ export interface IFormField {
 
     mimeType?: string;
     useFileName?: boolean;
-    uploadFolderPath?: string;
-    uploadPrefix?: string;
+    folderPath?: string;
+    prefix?: string;
 
     // Custom Properties
     parentFields?: IFormField[]; // not necessary now
     isArrayElement?: boolean;
     groupPath?: string;
+}
+
+interface IUploadForm {
+    mimeType?: string;
+    useFileName?: boolean;
+    folderPath?: string
+    prefix?: string;
 }
 
 export interface IFormOption {

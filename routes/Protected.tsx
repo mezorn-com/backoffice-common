@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Routes, Route, useLocation, matchRoutes, useNavigate } from "react-router-dom";
+import { Routes, Route, useLocation, matchRoutes, useNavigate, Navigate } from "react-router-dom";
 import { AppShell, Burger, createStyles, MediaQuery, useMantineTheme } from '@mantine/core';
 import routes from '../../routes';
 import Footer from '../lib/footer';
@@ -33,6 +33,10 @@ const ProtectedRoutes = () => {
     const theme = useMantineTheme();
 
     const [ opened, setOpened ] = React.useState<boolean>(false);
+
+    if (location.pathname.endsWith('/') && location.pathname !== '/') {
+        return <Navigate to={location.pathname.slice(0, -1)} replace={true}/>
+    }
 
     return (
         <AppShell

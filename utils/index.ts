@@ -6,9 +6,10 @@ import type { IColumn, IResponse } from '@/backoffice-common/types/api';
 import type { MetaType } from '@/backoffice-common/types/api/meta';
 import { IStringReplacer } from '@/backoffice-common/types/utils';
 
-export const getMeta = <T>(url: string, action: MetaType): Promise<T> => {
+export const getMeta = <T>(url: string, action: MetaType, queryParams?: Record<string, string>): Promise<T> => {
     return new Promise(async (resolve) => {
-        const { data } = await axios.get<IResponse<T>>(`${url}/meta?action=${action}`);
+        const queryParameters = qs.stringify(queryParams);
+        const { data } = await axios.get<IResponse<T>>(`${url}/meta?action=${action}&${queryParameters}`);
         resolve(data.data);
     })
 }

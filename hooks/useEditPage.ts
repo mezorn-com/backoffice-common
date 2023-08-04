@@ -40,7 +40,7 @@ const useEditPage = ({
 
     React.useEffect(() => {
         const fetchData = async () => {
-            const data = await getMeta<IFormMetaResponse>(apiRoute, 'update');
+            const data = await getMeta<IFormMetaResponse>(apiRoute, 'update', { resourceId: id });
             const { data: formValuesResponse } = await axios.get<IResponse<Record<string, any>>>(`${apiRoute}/${id}`);
             setState({
                 title: data?.form?.title ?? '',

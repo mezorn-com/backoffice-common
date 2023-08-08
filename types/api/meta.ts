@@ -28,6 +28,7 @@ export interface IFormResponseData {
 export interface IFormMetaResponse {
     form: IFormResponseData;
     subResources?: ISubResource[];
+    actions: MetaType[];
 }
 
 export type MetaType =

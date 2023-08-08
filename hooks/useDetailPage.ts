@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IFormField } from '@/backoffice-common/types/form';
-import { IFormMetaResponse, ISubResource } from '@/backoffice-common/types/api/meta';
+import { IFormMetaResponse, ISubResource, MetaType } from '@/backoffice-common/types/api/meta';
 import { getMeta } from '@/backoffice-common/utils';
 import axios from 'axios';
 import { IResponse } from '@/backoffice-common/types/api';
@@ -15,6 +15,7 @@ interface IDetailPageState {
     details: IFormField[];
     values: Record<string, any>;
     subResources: ISubResource[];
+    actions: MetaType[];
 }
 
 const useDetailPage = ({
@@ -26,7 +27,8 @@ const useDetailPage = ({
         title: '',
         details: [],
         subResources: [],
-        values: {}
+        values: {},
+        actions: [],
     });
 
     React.useEffect(() => {
@@ -38,6 +40,7 @@ const useDetailPage = ({
                 details: data.form.fields,
                 subResources: data.subResources ?? [],
                 title: data.form.title ?? '',
+                actions: data.actions ?? [],
             }))
         };
         void fetchData();

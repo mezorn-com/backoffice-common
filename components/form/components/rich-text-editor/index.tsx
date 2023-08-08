@@ -3,10 +3,10 @@ import { createStyles } from '@mantine/core';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { FormLabel } from '@/backoffice-common/components/form/components';
-import type { IFormField } from '@/backoffice-common/types/form';
+import type { HtmlInput, IFormField } from '@/backoffice-common/types/form';
 
 interface IProps {
-    field: IFormField;
+    field: HtmlInput;
     onChange: (value: string) => void;
     value: string | undefined;
 }

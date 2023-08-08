@@ -14,7 +14,7 @@ import { openConfirmModal } from '@mantine/modals';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
 import { ITableState } from '@/backoffice-common/components/table/types';
-import { IVisibility } from '@/backoffice-common/types/form';
+import { IVisibility, WithVisibility } from '@/backoffice-common/types/form';
 
 type IRowActionButtonKey = 'update' | 'delete' | 'get';
 

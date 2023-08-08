@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { path } from 'ramda';
-import { SimpleGrid, createStyles, Anchor } from '@mantine/core';
+import { Anchor, createStyles, SimpleGrid } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
+import { FieldType } from '@/backoffice-common/types/form';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 
 interface IDetailProps {
     fields: IFormField[];
-    values: {
-        [key: string]: any
-    };
+    // values: {
+    //     [key: string]: any
+    // };
+    values: Record<string, any>
     head?: React.ReactNode;
 }
 
@@ -20,8 +22,11 @@ const Detail = ({
 
     const { classes } = useStyles();
 
-    const getDetailValue = (field: IFormField): React.ReactNode => {
-        const value = path(field.key.split('.'), values) as string;
+    const getDetailValue = (field: IFormField, detailValues: Record<string, any>): React.ReactNode => {
+        if (field.type !== FieldType.RENDER) {
+            return null;
+        }
+        const value = path(field.key.split('.'), detailValues) as string;
 
         switch (field.renderType) {
             case 'text': {
@@ -40,6 +45,36 @@ const Detail = ({
                 return value;
             }
         }
+
+        // console.log('field>>>', field, value);
+
+
+    }
+
+    const renderDetails = (q: IFormField[], w: Record<string, any>) => {
+        return (
+            <div style={{ padding: '1rem', border: '1px solid red' }}>
+                {
+                    q
+                        // .filter(field => field.type === 'render')
+                        .map((field) => {
+                            if (field.type === FieldType.OBJECT) {
+                                return renderDetails(field.fields ?? [], w[field.key])
+                            }
+                            if (field.type === FieldType.GROUP) {
+                                return null
+                            }
+                            const value = getDetailValue(field, w);
+                            return (
+                                <SimpleGrid key={field.key} cols={2} spacing={50} verticalSpacing={'xl'} className={classes.grid}>
+                                    <span className={classes.label}>{field.label}</span>
+                                    <span className={classes.value}>{value}</span>
+                                </SimpleGrid>
+                            )
+                        })
+                }
+            </div>
+        );
     }
 
     return (
@@ -48,16 +83,21 @@ const Detail = ({
                 {head}
             </div>
             {
-                fields.filter(field => field.type === 'render').map((field) => {
-                    const value = getDetailValue(field);
-                    return (
-                        <SimpleGrid key={field.key} cols={2} spacing={50} verticalSpacing={'xl'} className={classes.grid}>
-                            <span className={classes.label}>{field.label}</span>
-                            <span className={classes.value}>{value}</span>
-                        </SimpleGrid>
-                    )
-                })
+                renderDetails(fields, values)
             }
+            {/*{*/}
+            {/*    fields*/}
+            {/*        // .filter(field => field.type === 'render')*/}
+            {/*        .map((field) => {*/}
+            {/*        const value = getDetailValue(field, values);*/}
+            {/*        return (*/}
+            {/*            <SimpleGrid key={field.key} cols={2} spacing={50} verticalSpacing={'xl'} className={classes.grid}>*/}
+            {/*                <span className={classes.label}>{field.label}</span>*/}
+            {/*                <span className={classes.value}>{value}</span>*/}
+            {/*            </SimpleGrid>*/}
+            {/*        )*/}
+            {/*    })*/}
+            {/*}*/}
         </div>
     )
 };

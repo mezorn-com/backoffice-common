@@ -16,6 +16,7 @@ import {
     Title
 } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
+import { FieldType, UiType } from '@/backoffice-common/types/form';
 import {
     getFormInitialValues,
     getFormValueByKey,
@@ -27,7 +28,7 @@ import {
     validator
 } from './helper';
 import { randomId } from '@mantine/hooks';
-import { CascadingSelect, FetchSelect, MapAddressPicker, FormRTE } from './components';
+import { CascadingSelect, FetchSelect, FormRTE, MapAddressPicker } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
 import { DatePickerInput } from '@mantine/dates';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
@@ -59,7 +60,7 @@ const Form = ({
         initialValues: getFormInitialValues(fields, values),
         // transformValues,
         validate(values) {
-            return validator(values, fields)
+            return validator(fields, values)
         },
     });
 
@@ -79,7 +80,7 @@ const Form = ({
         }
 
         switch (field.type) {
-            case 'array': {
+            case FieldType.ARRAY: {
                 if (field.element) {
                     const { key } = field
                     const fieldElement = clone(field.element);
@@ -154,7 +155,7 @@ const Form = ({
                 }
                 return null;
             }
-            case 'object': {
+            case FieldType.OBJECT: {
                 const { key } = field;
                 let groupPath = field.groupPath ?? '';
                 if (!field.isArrayElement) {
@@ -189,7 +190,7 @@ const Form = ({
                     </Card>
                 )
             }
-            case 'group': {
+            case FieldType.GROUP: {
                 let groupPath = field.groupPath ?? '';
                 const clonedField = (field.fields ?? []).map(f => {
                     const child = clone(f);
@@ -212,6 +213,9 @@ const Form = ({
                     </Card>
                 )
             }
+            case FieldType.RENDER: {
+                return null;
+            }
         }
 
         const valueKey = (field.groupPath ? field.groupPath + SEPARATOR : '') + field.key;
@@ -221,11 +225,11 @@ const Form = ({
             label: field.label ?? '-',
             withAsterisk: isFieldRequired(field, form.values),
             ...form.getInputProps(valueKey, {
-                type: field.uiType === 'checkbox' ? 'checkbox' : 'input'
+                type: field.uiType === UiType.CHECKBOX ? 'checkbox' : 'input'
             }),
         };
         switch(field.uiType) {
-            case 'text-input': {
+            case UiType.TEXT_INPUT: {
                 if (field.secret) {
                     return (
                         <PasswordInput
@@ -267,8 +271,9 @@ const Form = ({
                     />
                 )
             }
-            case 'select': {
-                if (field.optionsApi?.uri) {
+            case UiType.SELECT: {
+                if ('optionsApi' in field) {
+                // if (field.optionsApi?.uri) {
                     const params: Record<string, unknown> = {};
 
                     for (const queryParamKey of field.optionsApi.queryParams ?? []) {
@@ -290,7 +295,7 @@ const Form = ({
                         />
                     )
                 }
-                if (field.refCode) {
+                if ('refCode' in field) {
                     return (
                         <FetchSelect
                             {...props}
@@ -311,7 +316,7 @@ const Form = ({
                 }
                 return null;
             }
-            case 'cascading-select': {
+            case UiType.CASCADING_SELECT: {
                 return (
                     <CascadingSelect
                         key={valueKey}
@@ -322,7 +327,7 @@ const Form = ({
                     />
                 )
             }
-            case 'date': {
+            case UiType.DATE: {
                 const format = field.format ?? 'YYYY/MM/DD';
                 const value = props.value ? new Date(props.value) : props.value;
                 return (
@@ -337,7 +342,7 @@ const Form = ({
                     />
                 );
             }
-            case 'checkbox': {
+            case UiType.CHECKBOX: {
                 if (props.withAsterisk) {
                     props.withAsterisk = undefined;
                 }
@@ -345,7 +350,7 @@ const Form = ({
                     <Checkbox {...props}/>
                 )
             }
-            case 'map-address-picker': {
+            case UiType.MAP_ADDRESS_PICKER: {
                 return (
                     <MapAddressPicker
                         key={valueKey}
@@ -355,7 +360,7 @@ const Form = ({
                     />
                 )
             }
-            case 'file-upload': {
+            case UiType.FILE_UPLOAD: {
                 return (
                     <FileInput
                         {...props}
@@ -363,7 +368,7 @@ const Form = ({
                     />
                 )
             }
-            case 'html-input': {
+            case UiType.HTML_INPUT: {
                 return (
                     <FormRTE
                         key={valueKey}

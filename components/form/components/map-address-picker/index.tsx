@@ -2,7 +2,7 @@ import * as React from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { TextInput, Button, Modal, createStyles, Text } from '@mantine/core';
-import { IFormField } from '@/backoffice-common/types/form';
+import { IFormField, MapAddressPicker } from '@/backoffice-common/types/form';
 import { IResponse } from '@/backoffice-common/types/api';
 import { INITIAL_ZOOM, MAP_STARTING_POINT, MAX_ZOOM, MIN_ZOOM } from '@/config';
 import { MapContainer, ZoomControl } from 'react-leaflet';
@@ -13,7 +13,7 @@ import { IconSearch } from '@tabler/icons-react';
 import { FormLabel } from '@/backoffice-common/components/form/components';
 
 interface IProps {
-    field: IFormField;
+    field: MapAddressPicker;
     onChange?: (value: IMapAddressValue) => void;
     value?: IMapAddressValue;
 }

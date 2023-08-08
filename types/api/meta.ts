@@ -1,4 +1,4 @@
-import { FormType, IFormField, IVisibility } from '../form';
+import { FormType, IFormField, IVisibility, WithVisibility } from '../form';
 import { IColumn } from './index';
 
 export type IMetaType = 'normal';

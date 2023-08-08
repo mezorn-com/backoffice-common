@@ -10,12 +10,12 @@ interface IConfig {
     id: string;
 }
 
-interface IDetailPageState {
+export interface IDetailPageState {
     title: string;
     details: IFormField[];
     values: Record<string, any>;
     subResources: ISubResource[];
-    actions: MetaType[];
+    actions: (MetaType | string)[];
 }
 
 const useDetailPage = ({
@@ -53,7 +53,6 @@ const useDetailPage = ({
             values: formValuesResponse.data
         }))
     }
-
 
     return {
         state,

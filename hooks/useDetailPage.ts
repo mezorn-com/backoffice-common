@@ -32,7 +32,7 @@ const useDetailPage = ({
     React.useEffect(() => {
         const fetchData = async () => {
             void fetchDetails();
-            const data = await getMeta<IFormMetaResponse>(apiRoute, 'get');
+            const data = await getMeta<IFormMetaResponse>(apiRoute, 'get', { resourceId: id });
             setState(prev => ({
                 ...prev,
                 details: data.form.fields,

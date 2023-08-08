@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { path } from 'ramda';
 import { Anchor, createStyles, SimpleGrid } from '@mantine/core';
-import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType } from '@/backoffice-common/types/form';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
+import type { IFormField } from '@/backoffice-common/types/form';
 
 interface IDetailProps {
     fields: IFormField[];
-    // values: {
-    //     [key: string]: any
-    // };
     values: Record<string, any>
     head?: React.ReactNode;
 }
@@ -45,26 +42,21 @@ const Detail = ({
                 return value;
             }
         }
-
-        // console.log('field>>>', field, value);
-
-
     }
 
-    const renderDetails = (q: IFormField[], w: Record<string, any>) => {
+    const renderDetails = (renderFields: IFormField[], renderValues: Record<string, any>) => {
         return (
-            <div style={{ padding: '1rem', border: '1px solid red' }}>
+            <div className={classes.group} key='group'>
                 {
-                    q
-                        // .filter(field => field.type === 'render')
+                    renderFields
                         .map((field) => {
                             if (field.type === FieldType.OBJECT) {
-                                return renderDetails(field.fields ?? [], w[field.key])
+                                return renderDetails(field.fields ?? [], renderValues[field.key])
                             }
                             if (field.type === FieldType.GROUP) {
                                 return null
                             }
-                            const value = getDetailValue(field, w);
+                            const value = getDetailValue(field, renderValues);
                             return (
                                 <SimpleGrid key={field.key} cols={2} spacing={50} verticalSpacing={'xl'} className={classes.grid}>
                                     <span className={classes.label}>{field.label}</span>
@@ -85,19 +77,6 @@ const Detail = ({
             {
                 renderDetails(fields, values)
             }
-            {/*{*/}
-            {/*    fields*/}
-            {/*        // .filter(field => field.type === 'render')*/}
-            {/*        .map((field) => {*/}
-            {/*        const value = getDetailValue(field, values);*/}
-            {/*        return (*/}
-            {/*            <SimpleGrid key={field.key} cols={2} spacing={50} verticalSpacing={'xl'} className={classes.grid}>*/}
-            {/*                <span className={classes.label}>{field.label}</span>*/}
-            {/*                <span className={classes.value}>{value}</span>*/}
-            {/*            </SimpleGrid>*/}
-            {/*        )*/}
-            {/*    })*/}
-            {/*}*/}
         </div>
     )
 };
@@ -124,6 +103,15 @@ const useStyles = createStyles((theme) => {
             padding: '20px',
             border: `1px solid ${theme.colors.gray[2]}`,
             margin: '1rem',
+        },
+        group: {
+            borderWidth: 1,
+            borderStyle: 'solid',
+            borderColor: theme.colors.gray[1],
+            borderRadius: theme.radius.md,
+            marginTop: theme.spacing.md,
+            marginBottom: theme.spacing.md,
+            padding: theme.spacing.md
         }
     }
 })

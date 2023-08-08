@@ -2,7 +2,7 @@ import * as React from 'react';
 import axios from 'axios';
 import { IListResponse, IResponse } from '@/backoffice-common/types/api';
 import { formatColumns, getMeta } from '@/backoffice-common/utils';
-import { IListMetaResponse, ISubResource, MetaType } from '@/backoffice-common/types/api/meta';
+import { IActionMeta, IListMetaResponse, ISubResource, MetaType } from '@/backoffice-common/types/api/meta';
 import type { ColumnDef } from '@tanstack/react-table';
 import { IListState } from '@/backoffice-common/types/common/list';
 import { produce } from 'immer';
@@ -54,6 +54,7 @@ type SetMetaData = {
         listActions: MetaType[];
         itemActions?: Record<MetaType, IVisibility>;
         itemSubResources?: Record<string, IVisibility>;
+        actionMetas?: Record<string, IActionMeta>;
     };
 }
 
@@ -79,6 +80,7 @@ const initialState: IListState = {
     itemActions: undefined,
     listActions: [],
     itemSubResources: undefined,
+    actionMetas: undefined
 }
 
 interface IBaseListParams {
@@ -103,6 +105,7 @@ const reducer = produce(
                 draft.listActions = action.payload.listActions;
                 draft.itemActions = action.payload.itemActions;
                 draft.itemSubResources = action.payload.itemSubResources;
+                draft.actionMetas = action.payload.actionMetas;
                 break;
             }
             case 'HANDLE_TABLE_INTERACT': {
@@ -119,7 +122,6 @@ const reducer = produce(
 
 const useListPage = ({
     apiRoute,
-    // rowActionButtons = ['update', 'delete', 'get']
 }: IConfig) => {
 
     const navigate = useNavigate();
@@ -140,6 +142,7 @@ const useListPage = ({
                     listActions: response.listActions,
                     itemActions: response.itemActions,
                     itemSubResources: response.itemSubResources,
+                    actionMetas: response.actionMetas,
                 },
             })
         }
@@ -215,9 +218,9 @@ const useListPage = ({
                 onClick: (record: Record<string, any>) => {
                     openConfirmModal({
                         title: t('delete.modalTitle', { ns: 'common' }),
-                        children: t('delete.description', { ns: 'common' }),
+                        children: state.actionMetas?.delete?.confirmation?.dialogText ?? t('delete.description', { ns: 'common' }),
                         labels: {
-                            confirm: t('delete.title', { ns: 'common' }),
+                            confirm: state.actionMetas?.delete?.confirmation?.buttonText ?? t('delete.title', { ns: 'common' }),
                             cancel: t('cancel', { ns: 'common' })
                         },
                         confirmProps: {

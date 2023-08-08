@@ -8,6 +8,22 @@ export interface ISubResource {
     label: string;
 }
 
+export interface IActionMeta {
+    confirmation?: {
+        dialogText?: string;
+        buttonText?: string;
+    };
+    icon?: {
+        type: string;
+        value: string;
+        color: string;
+    };
+    api?: {
+        uri: string;
+        method: string;
+    }
+}
+
 export interface IListMetaResponse {
     form: {
         type: IMetaType;
@@ -18,6 +34,7 @@ export interface IListMetaResponse {
     listActions: MetaType[];
     itemActions?: Record<MetaType, IVisibility>;
     itemSubResources?: Record<string, IVisibility>;
+    actionMetas?: Record<string, IActionMeta>
 }
 
 export interface IFormResponseData {

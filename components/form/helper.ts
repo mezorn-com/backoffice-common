@@ -311,19 +311,27 @@ const getTransformedValue = (field: IFormField, value: unknown): Promise<unknown
     })
 }
 
-export const transformValuesAsync = (fields: IFormField[], values: IFormValues): Promise<IFormValues | undefined> => {
+export const transformValuesAsync = (fields: IFormField[], values: IFormValues, allValues: IFormValues): Promise<IFormValues | undefined> => {
     return new Promise(async (resolve) => {
         let transformedValues: IFormValues = {};
         for (const field of fields) {
+            const isVisible = isFieldVisible(field, allValues);
+            if (!isVisible) {
+                continue;
+            }
             switch(field.type) {
+                case FieldType.GROUP: {
+                    resolve(undefined);
+                    return;
+                }
                 case FieldType.OBJECT: {
                     if (field.fields) {
                         if (field.isArrayElement) {
                             // not sure if isArrayElement works
-                            resolve(transformValuesAsync(field.fields, values[field.key]))
+                            resolve(transformValuesAsync(field.fields, values[field.key], allValues))
                             return;
                         }
-                        transformedValues[field.key] = await transformValuesAsync(field.fields, values[field.key]);
+                        transformedValues[field.key] = await transformValuesAsync(field.fields, values[field.key], allValues);
                     }
                     break;
                 }
@@ -334,7 +342,7 @@ export const transformValuesAsync = (fields: IFormField[], values: IFormValues):
                         const arrayValues: any = [];
                         if ('fields' in field.element && field.element.fields) {
                             for await (const elementValue of values[field.key]) {
-                                const transformedElementValue = await transformValuesAsync(field.element.fields, elementValue);
+                                const transformedElementValue = await transformValuesAsync(field.element.fields, elementValue, allValues);
                                 if (transformedElementValue) {
                                     arrayValues.push(transformedElementValue);
                                 }
@@ -346,9 +354,7 @@ export const transformValuesAsync = (fields: IFormField[], values: IFormValues):
                 }
                 case FieldType.NORMAL:
                 default: {
-                    if ('key' in field) {
-                        transformedValues[field.key] = await getTransformedValue(field, values[field.key]);
-                    }
+                    transformedValues[field.key] = await getTransformedValue(field, values[field.key]);
                 }
             }
         }

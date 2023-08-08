@@ -400,7 +400,7 @@ const Form = ({
     };
 
     const handleSubmit = async (values: typeof form.values) => {
-        const transformed = await transformValuesAsync(fields, values);
+        const transformed = await transformValuesAsync(fields, values, values);
         onSubmit(transformed ?? {});
     }
 

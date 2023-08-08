@@ -10,4 +10,5 @@ export interface IListState extends ITableState {
     subResources: ISubResource[];
     listActions: MetaType[];
     itemActions?: Record<MetaType, IVisibility>;
+    itemSubResources?: Record<string, IVisibility>;
 }

@@ -17,6 +17,7 @@ export interface IListMetaResponse {
     subResources: ISubResource[];
     listActions: MetaType[];
     itemActions?: Record<MetaType, IVisibility>;
+    itemSubResources?: Record<string, IVisibility>;
 }
 
 export interface IFormResponseData {

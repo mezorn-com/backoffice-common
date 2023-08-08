@@ -14,7 +14,7 @@ import { openConfirmModal } from '@mantine/modals';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
 import { ITableState } from '@/backoffice-common/components/table/types';
-import { IVisibility, WithVisibility } from '@/backoffice-common/types/form';
+import { IVisibility } from '@/backoffice-common/types/form';
 
 type IRowActionButtonKey = 'update' | 'delete' | 'get';
 
@@ -53,6 +53,7 @@ type SetMetaData = {
         pageTitle?: string;
         listActions: MetaType[];
         itemActions?: Record<MetaType, IVisibility>;
+        itemSubResources?: Record<string, IVisibility>;
     };
 }
 
@@ -76,7 +77,8 @@ const initialState: IListState = {
     subResources: [],
     pageTitle: undefined,
     itemActions: undefined,
-    listActions: []
+    listActions: [],
+    itemSubResources: undefined,
 }
 
 interface IBaseListParams {
@@ -100,6 +102,7 @@ const reducer = produce(
                 draft.pageTitle = action.payload.pageTitle;
                 draft.listActions = action.payload.listActions;
                 draft.itemActions = action.payload.itemActions;
+                draft.itemSubResources = action.payload.itemSubResources;
                 break;
             }
             case 'HANDLE_TABLE_INTERACT': {
@@ -135,7 +138,8 @@ const useListPage = ({
                     subResources: response.subResources ?? [],
                     pageTitle: response.form.title,
                     listActions: response.listActions,
-                    itemActions: response.itemActions
+                    itemActions: response.itemActions,
+                    itemSubResources: response.itemSubResources,
                 },
             })
         }
@@ -175,7 +179,8 @@ const useListPage = ({
                             {subResource.label}
                         </Button>
                     )
-                }
+                },
+                visibility: state?.itemSubResources?.[subResource.resource] ?? undefined,
             }
         });
 

@@ -24,12 +24,6 @@ export const getFormInitialValues = (fields: IFormField[], initialValues?: Recor
     let values: IFormValues = {};
     for (const field of fields) {
         switch(field.type) {
-            case FieldType.NORMAL: {
-                // TODO: value[] use field groupPath later
-                const initVal = initialValues?.[field.key] ?? undefined;
-                values[field.key] = getInitialValue(field, initVal);
-                break;
-            }
             case FieldType.OBJECT: {
                 if (field.fields) {
                     if (field.isArrayElement) {
@@ -46,6 +40,16 @@ export const getFormInitialValues = (fields: IFormField[], initialValues?: Recor
                     const value = getFormInitialValues([fieldElement]);
                     values[field.key] = [value];
                 }
+                break;
+            }
+            case FieldType.RENDER:
+            case FieldType.GROUP: {
+                break;
+            }
+            case FieldType.NORMAL:
+            default: {
+                const initVal = initialValues?.[field.key] ?? undefined;
+                values[field.key] = getInitialValue(field, initVal);
                 break;
             }
         }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { ITableProps, ITableState } from './types';
+import type { ITableInteraction, ITableProps, ITableState } from './types';
 import { append, assocPath, clone, path, prepend, eqProps, allPass } from 'ramda';
 import type { ArrayElement } from '@/backoffice-common/types/common';
 import { useStyles } from './useStyles';
@@ -9,6 +9,9 @@ import { IFieldRenderType } from '@/backoffice-common/types/api';
 import { useTranslation } from 'react-i18next';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
+import TableFilter from './filter';
+
+import Form from '@/backoffice-common/components/form/Form';
 
 // react-table props below
 // columnFilters: [],
@@ -44,12 +47,11 @@ import {
     CellContext
 } from '@tanstack/react-table'
 import { IRowActionButton } from '@/backoffice-common/hooks/useListPage';
+import { IFormValues } from '@/backoffice-common/components/form/helper';
 
 const pageSizes = [10, 20, 30, 40, 50];
 
 const Table = ({
-    data,
-    columns,
     onInteract,
     rowActionButtons,
     rowActionButtonPosition = TABLE_ROW_ACTION_BUTTON_POSITION,
@@ -59,9 +61,9 @@ const Table = ({
     const { classes } = useStyles();
 
     const tableColumns = React.useMemo(() => {
-        let cols = clone(columns);
+        let cols = clone(state.columns);
         if (rowActionButtons?.length) {
-            const actionButtonsColumn: ColumnDef<any> = {
+            const actionButtonsColumn: ColumnDef<Record<string, any>> = {
                 header: '',
                 id: 'table-actions-column',
                 cell(props) {
@@ -77,20 +79,20 @@ const Table = ({
             if (rowActionButtonPosition === 'right') {
                 cols = append(
                     actionButtonsColumn,
-                    columns
+                    state.columns
                 );
             } else {
                 cols = prepend(
                     actionButtonsColumn,
-                    columns
+                    state.columns
                 );
             }
         }
         return cols;
-    }, [ columns, rowActionButtons ]);
+    }, [ state.columns, rowActionButtons ]);
 
     const table = useReactTable({
-        data,
+        data: state.docs,
         columns: tableColumns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -104,7 +106,7 @@ const Table = ({
         onStateChange: (updater) => {
             if (updater instanceof Function) {
                 const newState = updater(table.getState());
-                handleTableInteraction(newState);
+                handleTableStateChange(newState);
             }
         },
     })
@@ -118,14 +120,27 @@ const Table = ({
         eqProps('pageSize'),
     ])
 
-    const handleTableInteraction = (updatedTableState: TableState) => {
+    const handleTableStateChange = (updatedTableState: TableState) => {
         const updatedState: ITableState = {
             page: updatedTableState.pagination.pageIndex + 1,
             pageSize: updatedTableState.pagination.pageSize,
         }
         if (!check(state, updatedState)) {
-            onInteract(updatedState);
+            handleInteraction({ state: updatedState })
         }
+    }
+
+    const handleInteraction = (value: Partial<ITableInteraction>) => {
+        const params: ITableInteraction = {
+            state: {
+                page: state.page,
+                pageSize: state.pageSize,
+                totalPage: state.totalPage,
+            },
+            filter: undefined,
+            ...value,
+        }
+        onInteract(params)
     }
 
     table.setOptions(prev => ({
@@ -217,8 +232,37 @@ const Table = ({
     //     });
     // }, [data, tableColumns]);
 
+    const handleFilterChange = (values: IFormValues) => {
+        handleInteraction({
+            filter: values,
+            state: {
+                page: 1,
+                pageSize: state.pageSize,
+                totalPage: state.totalPage
+            }
+        })
+    }
+
     return (
         <div className={classes.tableWrapper}>
+            <div>
+                {
+                    state.filter && (
+                        <Form
+                            fields={state.filter ?? []}
+                            submitButtonProps={{
+                                style: {
+                                    display: 'none'
+                                }
+                            }}
+                            onSubmit={() => {
+                                console.log('HAHASHAGASDASD')
+                            }}
+                            onChange={handleFilterChange}
+                        />
+                    )
+                }
+            </div>
             <table className={classes.table}>
                 <thead>
                 {table.getHeaderGroups().map(headerGroup => (

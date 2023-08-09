@@ -47,7 +47,7 @@ export enum Locale {
 interface IFieldCore {
     key: string;
     label?: string;
-    required: boolean;
+    required?: boolean;
     uiType?: UiType;
 }
 

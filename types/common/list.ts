@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import type { IActionMeta, ISubResource, MetaType } from '../api/meta';
 import type { ITableState } from '@/backoffice-common/components/table/types';
-import { IVisibility } from '@/backoffice-common/types/form';
+import { INormalField, IVisibility } from '@/backoffice-common/types/form';
 
 export interface IListState extends ITableState {
     docs: Record<string, unknown>[];
@@ -11,5 +11,6 @@ export interface IListState extends ITableState {
     listActions: MetaType[];
     itemActions?: Record<MetaType, IVisibility>;
     itemSubResources?: Record<string, IVisibility>;
-    actionMetas?: Record<string, IActionMeta>
+    actionMetas?: Record<string, IActionMeta>;
+    filter?: INormalField[];
 }

@@ -1,4 +1,4 @@
-import { FormType, IFormField, IVisibility, WithVisibility } from '../form';
+import { FormType, IFormField, INormalField, IVisibility, WithVisibility } from '../form';
 import { IColumn } from './index';
 
 export type IMetaType = 'normal';
@@ -34,7 +34,8 @@ export interface IListMetaResponse {
     listActions: MetaType[];
     itemActions?: Record<MetaType, IVisibility>;
     itemSubResources?: Record<string, IVisibility>;
-    actionMetas?: Record<string, IActionMeta>
+    actionMetas?: Record<string, IActionMeta>;
+    filter?: INormalField[];
 }
 
 export interface IFormResponseData {

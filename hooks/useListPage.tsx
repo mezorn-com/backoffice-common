@@ -13,8 +13,8 @@ import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { openConfirmModal } from '@mantine/modals';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
-import { ITableState } from '@/backoffice-common/components/table/types';
-import { IVisibility } from '@/backoffice-common/types/form';
+import { ITableInteraction, ITableState } from '@/backoffice-common/components/table/types';
+import { INormalField, IVisibility } from '@/backoffice-common/types/form';
 
 type IRowActionButtonKey = 'update' | 'delete' | 'get';
 
@@ -55,12 +55,13 @@ type SetMetaData = {
         itemActions?: Record<MetaType, IVisibility>;
         itemSubResources?: Record<string, IVisibility>;
         actionMetas?: Record<string, IActionMeta>;
+        filter?: INormalField[];
     };
 }
 
 type HandleTableInteract = {
     type: 'HANDLE_TABLE_INTERACT',
-    payload: ITableState;
+    payload: ITableInteraction;
 }
 
 export type Action =
@@ -86,6 +87,7 @@ const initialState: IListState = {
 interface IBaseListParams {
     page: number;
     limit: number;
+    filter?: Record<string, any>;
 }
 
 const reducer = produce(
@@ -106,12 +108,13 @@ const reducer = produce(
                 draft.itemActions = action.payload.itemActions;
                 draft.itemSubResources = action.payload.itemSubResources;
                 draft.actionMetas = action.payload.actionMetas;
+                draft.filter = action.payload.filter;
                 break;
             }
             case 'HANDLE_TABLE_INTERACT': {
                 const { payload } = action;
-                draft.page = payload.page;
-                draft.pageSize = payload.pageSize;
+                draft.page = payload.state.page;
+                draft.pageSize = payload.state.pageSize;
                 break;
             }
             default:
@@ -143,6 +146,7 @@ const useListPage = ({
                     itemActions: response.itemActions,
                     itemSubResources: response.itemSubResources,
                     actionMetas: response.actionMetas,
+                    filter: response.filter
                 },
             })
         }
@@ -264,14 +268,16 @@ const useListPage = ({
         return rowActionButtonList;
     }, [ state.subResources, state.listActions, apiRoute ]);
 
-    const handleInteract = (state: ITableState) => {
+    const handleInteract = (payload: ITableInteraction) => {
+        const { state: payloadState } = payload;
         dispatch({
             type: 'HANDLE_TABLE_INTERACT',
-            payload: state
+            payload: payload
         });
         void fetchData({
-            page: state.page,
-            limit: state.pageSize,
+            page: payloadState.page,
+            limit: payloadState.pageSize,
+            filter: payload.filter
         })
     }
 

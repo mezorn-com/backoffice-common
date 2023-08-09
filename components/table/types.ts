@@ -1,5 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import type { IRowActionButton } from '@/backoffice-common/hooks/useListPage';
+import { IListState } from '@/backoffice-common/types/common/list';
 
 export interface ITableState {
     page: number;
@@ -7,11 +8,14 @@ export interface ITableState {
     totalPage?: number;
 }
 
+export interface ITableInteraction {
+    state: ITableState;
+    filter?: Record<string, any>;
+}
+
 export interface ITableProps {
-    data: any[];
-    columns: ColumnDef<any>[];
-    onInteract: (state: ITableState) => void;
+    onInteract: (state: ITableInteraction) => void;
     rowActionButtons?: IRowActionButton[];
     rowActionButtonPosition?: 'left' | 'right';
-    state: ITableState
+    state: IListState;
 }

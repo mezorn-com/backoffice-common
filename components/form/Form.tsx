@@ -13,7 +13,8 @@ import {
     Stack,
     Textarea,
     TextInput,
-    Title
+    Title,
+    ButtonProps
 } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, UiType } from '@/backoffice-common/types/form';
@@ -32,7 +33,7 @@ import { CascadingSelect, FetchSelect, FormRTE, MapAddressPicker } from './compo
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
 import { DatePickerInput } from '@mantine/dates';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
-import { clone } from 'ramda';
+import { clone, omit } from 'ramda';
 import dayjs from 'dayjs';
 import { useFormStyles } from './styles';
 import { useTranslation } from 'react-i18next';
@@ -44,13 +45,17 @@ interface IFormProps {
     onSubmit: (values: IFormValues) => void;
     values?: Record<string, any>;
     getReferences?: (code: string, parent?: string) => Promise<any[]>;
+    submitButtonProps?: ButtonProps;
+    onChange?: (value: IFormValues) => void;
 }
 
 const Form = ({
     fields,
     onSubmit,
     getReferences,
-    values
+    values,
+    submitButtonProps,
+    onChange
 }: IFormProps) => {
     const { t } = useTranslation();
     const { classes } = useFormStyles();
@@ -64,7 +69,13 @@ const Form = ({
         },
     });
 
-    // console.log('form initial Values>>>>', getFormInitialValues(fields, values));
+    React.useEffect(() => {
+        if (onChange) {
+            onChange(form.values);
+        }
+    }, [form.values])
+
+    console.log('form initial Values>>>>', getFormInitialValues(fields, values));
     console.log('FORM VALUES>>>>', form.values);
 
     const handleError = (validationErrors: any, _values: any, _event: any) => {
@@ -343,11 +354,8 @@ const Form = ({
                 );
             }
             case UiType.CHECKBOX: {
-                if (props.withAsterisk) {
-                    props.withAsterisk = undefined;
-                }
                 return (
-                    <Checkbox {...props}/>
+                    <Checkbox {...omit(['withAsterisk'], props)}/>
                 )
             }
             case UiType.MAP_ADDRESS_PICKER: {
@@ -407,14 +415,19 @@ const Form = ({
     return (
         <div style={{ padding: '1rem' }}> {/** TODO: remove temporary inline style **/}
             <form onSubmit={form.onSubmit(handleSubmit, handleError)} onReset={form.onReset}>
-                <Stack>
+                <Flex
+                    direction={'column'}
+                >
                     {
                         renderFormFields()
                     }
-                </Stack>
+                </Flex>
                 <Button
                     type='submit'
                     mt={'sm'}
+                    {
+                        ...submitButtonProps
+                    }
                 >
                     {t('action.submit', { ns: 'common' })}
                 </Button>

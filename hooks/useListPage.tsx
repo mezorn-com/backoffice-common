@@ -2,14 +2,20 @@ import * as React from 'react';
 import axios from 'axios';
 import { IListResponse, IResponse } from '@/backoffice-common/types/api';
 import { formatColumns, getMeta } from '@/backoffice-common/utils';
-import { IActionMeta, IListMetaResponse, ISubResource, MetaType } from '@/backoffice-common/types/api/meta';
+import {
+    IListMetaResponse,
+    ListAction,
+    ListActionKey,
+    ListItemAction,
+    ListItemActionKey,
+} from '@/backoffice-common/types/api/meta';
 import type { ColumnDef } from '@tanstack/react-table';
 import { IListState } from '@/backoffice-common/types/common/list';
 import { produce } from 'immer';
 import { ActionIcon, Button } from '@mantine/core';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
-import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconEye, IconTrash, IconFilePlus } from '@tabler/icons-react';
 import { openConfirmModal } from '@mantine/modals';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
@@ -49,12 +55,10 @@ type SetMetaData = {
     type: 'SET_META_DATA',
     payload: {
         columns: ColumnDef<Record<string, any>>[];
-        subResources: ISubResource[];
         pageTitle?: string;
-        listActions: MetaType[];
-        itemActions?: Record<MetaType, IVisibility>;
-        itemSubResources?: Record<string, IVisibility>;
-        actionMetas?: Record<string, IActionMeta>;
+        subResources?: IListMetaResponse['subResources'];
+        listActions?: IListMetaResponse['listActions'];
+        listItemActions?: IListMetaResponse['listItemActions'];
         filter?: INormalField[];
     };
 }
@@ -76,12 +80,11 @@ const initialState: IListState = {
     totalPage: 1,
     docs: [],
     columns: [],
-    subResources: [],
+    subResources: undefined,
     pageTitle: undefined,
-    itemActions: undefined,
-    listActions: [],
-    itemSubResources: undefined,
-    actionMetas: undefined
+    listActions: undefined,
+    listItemActions: undefined,
+    filter: undefined,
 }
 
 interface IBaseListParams {
@@ -102,12 +105,10 @@ const reducer = produce(
             }
             case 'SET_META_DATA': {
                 draft.columns = action.payload.columns;
-                draft.subResources = action.payload.subResources;
                 draft.pageTitle = action.payload.pageTitle;
                 draft.listActions = action.payload.listActions;
-                draft.itemActions = action.payload.itemActions;
-                draft.itemSubResources = action.payload.itemSubResources;
-                draft.actionMetas = action.payload.actionMetas;
+                draft.listItemActions = action.payload.listItemActions;
+                draft.subResources = action.payload.subResources;
                 draft.filter = action.payload.filter;
                 break;
             }
@@ -140,12 +141,10 @@ const useListPage = ({
                 type: 'SET_META_DATA',
                 payload: {
                     columns: formatColumns(response.form.fields),
-                    subResources: response.subResources ?? [],
                     pageTitle: response.form.title,
                     listActions: response.listActions,
-                    itemActions: response.itemActions,
-                    itemSubResources: response.itemSubResources,
-                    actionMetas: response.actionMetas,
+                    listItemActions: response.listItemActions,
+                    subResources: response.subResources ?? [],
                     filter: response.filter
                 },
             })
@@ -168,37 +167,15 @@ const useListPage = ({
         })
     };
 
-    const baseRowActionButtons = React.useMemo(() => {
+    const getRowActionButton = (key: ListItemActionKey, action: ListItemAction): IRowActionButton => {
+        let icon: React.ReactNode = null;
+        let label: React.ReactNode = null;
+        let actionFn: undefined | ((record: Record<string, any>) => void);
+        switch(key) {
+            case 'update': {
+                icon = <IconEdit size={18}/>;
 
-        const rowActionButtonList: IRowActionButton[] = state.subResources.map((subResource) => {
-            return {
-                label(row: Record<string, any>) {
-                    return (
-                        <Button
-                            compact
-                            component={Link}
-                            to={getSubResourceUrl(subResource.resource, [
-                                { match: '{_id}', replace: row._id },
-                            ])}
-                            radius={'sm'}
-                            variant={'light'}
-                        >
-                            {subResource.label}
-                        </Button>
-                    )
-                },
-                visibility: state?.itemSubResources?.[subResource.resource] ?? undefined,
-            }
-        });
-
-        if (state.listActions.includes('update')) {
-            rowActionButtonList.push({
-                label: (
-                    <ActionIcon variant="light" color={'primary'}>
-                        <IconEdit size={18}/>
-                    </ActionIcon>
-                ),
-                onClick: (record: Record<string, any>) => {
+                actionFn = (record: Record<string, any>) => {
                     let editPath = '';
                     const { _id } = record;
                     if (pathname.endsWith('/')) {
@@ -207,24 +184,18 @@ const useListPage = ({
                         editPath = `${pathname}/${_id}/edit`;
                     }
                     navigate(editPath);
-                },
-                visibility: state.itemActions?.update
-            })
-        }
+                }
+                break;
+            }
+            case 'delete': {
+                icon = <IconTrash size={18}/>;
 
-        if (state.listActions.includes('delete')) {
-            rowActionButtonList.push({
-                label: (
-                    <ActionIcon variant="light" color={'red'}>
-                        <IconTrash size={18}/>
-                    </ActionIcon>
-                ),
-                onClick: (record: Record<string, any>) => {
+                actionFn = (record: Record<string, any>) => {
                     openConfirmModal({
                         title: t('delete.modalTitle', { ns: 'common' }),
-                        children: state.actionMetas?.delete?.confirmation?.dialogText ?? t('delete.description', { ns: 'common' }),
+                        children: t('delete.description', { ns: 'common' }),
                         labels: {
-                            confirm: state.actionMetas?.delete?.confirmation?.buttonText ?? t('delete.title', { ns: 'common' }),
+                            confirm: t('delete.title', { ns: 'common' }),
                             cancel: t('cancel', { ns: 'common' })
                         },
                         confirmProps: {
@@ -238,20 +209,12 @@ const useListPage = ({
                             }
                         }
                     })
-                },
-                visibility: state.itemActions?.delete
-            })
-        }
-
-
-        if (state.listActions.includes('get')) {
-            rowActionButtonList.push({
-                label: (
-                    <ActionIcon variant="light" color={'primary'}>
-                        <IconEye size={18}/>
-                    </ActionIcon>
-                ),
-                onClick: (record: Record<string, any>) => {
+                }
+                break;
+            }
+            case 'get': {
+                icon = <IconEye size={18}/>;
+                actionFn = (record: Record<string, any>) => {
                     let detailPath = '';
                     const { _id } = record;
                     if (pathname.endsWith('/')) {
@@ -260,11 +223,101 @@ const useListPage = ({
                         detailPath = `${pathname}/${_id}`
                     }
                     navigate(detailPath);
-                },
-                visibility: state.itemActions?.get
-            })
+                }
+                break;
+            }
+            default: {
+                // write logic to assign dynamic icon if there is given
+                label = action === true ? undefined : action.label;
+                if (action !== true && action.api) {
+                    actionFn = async (record: Record<string, any>) => {
+                        const { data } = await axios<IResponse<any>>({
+                            url: action.api?.uri,
+                            method: action.api?.method
+                        });
+                        if (data.success) {
+                            showMessage(t('success', { ns: 'common' }), 'green');
+                            void fetchData();
+                        }
+                    }
+                }
+                break;
+            }
         }
 
+        return {
+            label: (
+                <Button
+                    leftIcon={icon}
+                >
+                    {label}
+                </Button>
+            ),
+            onClick: (record: Record<string, any>) => {
+                if (typeof actionFn === 'function') {
+                    actionFn(record);
+                } else {
+                    if (action !== true) {
+                        if (action.confirmation) {
+                            openConfirmModal({
+                                title: '',
+                                children: action.confirmation.dialogText,
+                                labels: {
+                                    confirm: action.confirmation.buttonText ?? 'confirm',
+                                    cancel: t('cancel', { ns: 'common' })
+                                },
+                                confirmProps: {
+                                    color: key === 'delete' ? 'red' : undefined,
+                                },
+                                async onConfirm() {
+                                    typeof actionFn === 'function' && actionFn(record);
+                                    actionFn = undefined;
+                                }
+                            })
+                        }
+                    }
+                }
+            },
+            visibility: action === true ? undefined : action?.condition,
+        }
+    }
+
+    const rowActionButtons = React.useMemo(() => {
+
+        const rowActionButtonList: IRowActionButton[] = [];
+
+        for (const subResourceKey in state.subResources) {
+            const subResource = state.subResources[subResourceKey];
+            if (subResource) {
+                rowActionButtonList.push({
+                    label(row: Record<string, any>) {
+                        return (
+                            <Button
+                                compact
+                                component={Link}
+                                to={getSubResourceUrl(subResourceKey, [
+                                    { match: '{_id}', replace: row._id },
+                                ])}
+                                radius={'sm'}
+                                variant={'light'}
+                            >
+                                {subResource.label}
+                            </Button>
+                        )
+                    },
+                    visibility: subResource.condition
+                })
+            }
+        }
+
+        if (state.listItemActions) {
+            for (const listItemActionKey in state.listItemActions) {
+                const action = state.listItemActions[listItemActionKey];
+                if (action) {
+                    rowActionButtonList.push(getRowActionButton(listItemActionKey, action))
+                }
+            }
+        }
         return rowActionButtonList;
     }, [ state.subResources, state.listActions, apiRoute ]);
 
@@ -281,12 +334,92 @@ const useListPage = ({
         })
     }
 
+    const getListAction = (key: ListActionKey, action: ListAction): React.ReactNode => {
+        let icon: React.ReactNode;
+        let label: React.ReactNode;
+        let actionFn: undefined | (() => void);
+        switch(key) {
+            case 'create': {
+                icon = <IconFilePlus size={16}/>;
+                label = t('create', { ns: 'common' });
+                actionFn = () => {
+                    navigate(pathname + '/new');
+                }
+                break;
+            }
+            default: {
+                // icon = logic to get icon
+                label = action === true ? undefined : action.label;
+                if (action !== true && action.api) {
+                    actionFn = async () => {
+                        const { data } = await axios<IResponse<any>>({
+                            url: action.api?.uri,
+                            method: action.api?.method
+                        });
+                        if (data.success) {
+                            showMessage(t('success', { ns: 'common' }), 'green');
+                            void fetchData();
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        return (
+            <Button
+                key={key}
+                radius={'md'}
+                leftIcon={icon}
+                onClick={() => {
+                    if (typeof actionFn === 'function') {
+                        actionFn();
+                    } else {
+                        if (action !== true) {
+                            if (action.confirmation) {
+                                openConfirmModal({
+                                    title: '',
+                                    children: action.confirmation.dialogText,
+                                    labels: {
+                                        confirm: action.confirmation.buttonText ?? 'confirm',
+                                        cancel: t('cancel', { ns: 'common' })
+                                    },
+                                    async onConfirm() {
+                                        typeof actionFn === 'function' && actionFn();
+                                        actionFn = undefined;
+                                    }
+                                })
+                            }
+                        }
+                    }
+                }}
+            >
+                {label}
+            </Button>
+        );
+    }
+
+    const listActionButtons: React.ReactNode = React.useMemo(() => {
+        const buttonList: React.ReactNode[] = [];
+
+        if (state.listActions) {
+            for (const listActionKey in state.listActions) {
+                const listAction = state.listActions[listActionKey];
+                if (listAction) {
+                    buttonList.push(getListAction(listActionKey, listAction))
+                }
+            }
+        }
+
+        return buttonList;
+    }, [ state.listActions ]);
+
     return {
         state,
         dispatch,
-        baseRowActionButtons,
         handleInteract,
-        fetchData
+        fetchData,
+        rowActionButtons,
+        listActionButtons
     }
 }
 

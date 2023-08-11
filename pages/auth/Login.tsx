@@ -19,10 +19,12 @@ interface IRightSection {
 
 interface ILoginProps {
 	right?: IRightSection;
+	forgotPasswordButton?: React.ReactNode;
 }
 
 const Login = ({
-	right
+	right,
+	forgotPasswordButton
 }: ILoginProps) => {
 	const { t } = useTranslation();
 	const { classes } = useStyles();
@@ -123,6 +125,8 @@ const Login = ({
 							}}
 							{...form.getInputProps('password')}
 						/>
+
+						{forgotPasswordButton}
 
 						<Group
 							position='right'

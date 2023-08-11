@@ -176,7 +176,7 @@ const useDetailPage = ({
                 }
             }
         }
-        return buttonList;
+        return buttonList as React.ReactNode;
     }, [ state.actions ]);
 
 

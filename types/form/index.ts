@@ -276,7 +276,8 @@ export enum RenderType {
     TEXT = 'text',
     IMAGE = 'image',
     BOOLEAN = 'boolean',
-    LINK = 'link'
+    LINK = 'link',
+    TABLE = 'table'
 }
 
 interface RenderFieldCore extends WithOptionalLabel {
@@ -307,7 +308,12 @@ interface ImageRender extends RenderFieldCore {
     multiple?: boolean
 }
 
-export type RenderField = TextRender | BooleanRender | ImageRender | LinkRender
+interface TableRender extends RenderFieldCore {
+    renderType: RenderType.TABLE;
+    columns: { key: string; label: string; }[];
+}
+
+export type RenderField = TextRender | BooleanRender | ImageRender | LinkRender | TableRender;
 
 export interface ArrayField extends FieldCore {
     type: FieldType.ARRAY

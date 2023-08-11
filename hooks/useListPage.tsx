@@ -232,7 +232,9 @@ const useListPage = ({
                 if (action !== true && action.api) {
                     actionFn = async (record: Record<string, any>) => {
                         const { data } = await axios<IResponse<any>>({
-                            url: action.api?.uri,
+                            url: getSubResourceUrl(action.api?.uri ?? '', [
+                                { match: '{_id}', replace: record._id }
+                            ]),
                             method: action.api?.method
                         });
                         if (data.success) {

@@ -8,7 +8,8 @@ const AuthRouter = () => {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        if (location.pathname !== '/') {
+        const pathArray: string[] = authRoutes.map(route => route.path);
+        if (!pathArray.includes(location.pathname)) {
             navigate('/', {
                 replace: true
             });

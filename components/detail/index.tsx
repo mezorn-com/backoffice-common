@@ -86,54 +86,54 @@ const Detail = ({
         );
     }
 
-    const getActionButtons = () => {
-        const actionButtons: React.ReactNode[] = [];
-        if (actions.includes('update')) {
-            actionButtons.push(
-                <Button
-                    key={'action-edit'}
-                    leftIcon={<IconEdit size={18}/>}
-                    component={Link}
-                    to={`${location.pathname}/edit`}
-                >
-                    {t('action.edit', { ns: 'common' })}
-                </Button>
-            )
-        }
-        if (actions.includes('delete')) {
-            actionButtons.push(
-                <Button
-                    key={'action-delete'}
-                    leftIcon={<IconTrash size={18}/>}
-                    color={'red'}
-                    onClick={() => {
-                        openConfirmModal({
-                            title: t('delete.modalTitle', { ns: 'common' }),
-                            children: t('delete.description', { ns: 'common' }),
-                            labels: {
-                                confirm: t('delete.title', { ns: 'common' }),
-                                cancel: t('cancel', { ns: 'common' })
-                            },
-                            confirmProps: {
-                                color: 'red',
-                            },
-                            async onConfirm() {
-                                const { data } = await axios.delete<IResponse<any>>(`${apiUrl}/${id}`);
-                                if (data.success) {
-                                    showMessage(t('success', { ns: 'common' }), 'green');
-                                    navigate(-1);
-                                }
-                            }
-                        })
-                    }}
-                >
-                    {t('delete.title', { ns: 'common' })}
-                </Button>
-            )
-        }
-
-        return actionButtons;
-    }
+    // const getActionButtons = () => {
+    //     const actionButtons: React.ReactNode[] = [];
+    //     if (actions.includes('update')) {
+    //         actionButtons.push(
+    //             <Button
+    //                 key={'action-edit'}
+    //                 leftIcon={<IconEdit size={18}/>}
+    //                 component={Link}
+    //                 to={`${location.pathname}/edit`}
+    //             >
+    //                 {t('action.edit', { ns: 'common' })}
+    //             </Button>
+    //         )
+    //     }
+    //     if (actions.includes('delete')) {
+    //         actionButtons.push(
+    //             <Button
+    //                 key={'action-delete'}
+    //                 leftIcon={<IconTrash size={18}/>}
+    //                 color={'red'}
+    //                 onClick={() => {
+    //                     openConfirmModal({
+    //                         title: t('delete.modalTitle', { ns: 'common' }),
+    //                         children: t('delete.description', { ns: 'common' }),
+    //                         labels: {
+    //                             confirm: t('delete.title', { ns: 'common' }),
+    //                             cancel: t('cancel', { ns: 'common' })
+    //                         },
+    //                         confirmProps: {
+    //                             color: 'red',
+    //                         },
+    //                         async onConfirm() {
+    //                             const { data } = await axios.delete<IResponse<any>>(`${apiUrl}/${id}`);
+    //                             if (data.success) {
+    //                                 showMessage(t('success', { ns: 'common' }), 'green');
+    //                                 navigate(-1);
+    //                             }
+    //                         }
+    //                     })
+    //                 }}
+    //             >
+    //                 {t('delete.title', { ns: 'common' })}
+    //             </Button>
+    //         )
+    //     }
+    //
+    //     return actionButtons;
+    // }
 
     return (
         <div className={classes.container}>
@@ -146,7 +146,7 @@ const Detail = ({
                 wrap='wrap'
             >
                 {
-                    getActionButtons()
+
                 }
             </Flex>
             {

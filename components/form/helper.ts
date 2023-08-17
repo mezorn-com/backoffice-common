@@ -28,13 +28,9 @@ export const getFormInitialValues = (fields: IFormField[], initialValues?: Recor
 				if (field.fields) {
 					if (field.isArrayElement) {
 						// TODO: Getting object values
-						if (initialValues && Array.isArray(initialValues)) {
-							for (const objValue of initialValues) {
-								return getFormInitialValues(field.fields, objValue ?? {});
-							}
-						}
+						return getFormInitialValues(field.fields, initialValues ?? {});
 						// Old code below
-						return getFormInitialValues(field.fields, initialValues?.[field.key] ?? {});
+						// return getFormInitialValues(field.fields, initialValues?.[field.key] ?? {});
 					}
 					values[field.key] = getFormInitialValues(field.fields, initialValues?.[field.key] ?? {});
 				}
@@ -44,11 +40,15 @@ export const getFormInitialValues = (fields: IFormField[], initialValues?: Recor
 				if (field.element) {
 					const fieldElement = clone(field.element);
 					fieldElement.isArrayElement = true;
-					// TODO: Added value to get initialValues for array
-					const value = getFormInitialValues([fieldElement], initialValues?.[field.key]);
+					// TODO: Using loop in Array to get all values
+					const arrayInitialValues = initialValues?.[field.key] ?? [];
+					const arrayValues = arrayInitialValues.map((arrayValue: Record<string, any>) => {
+						return getFormInitialValues([fieldElement], arrayValue);
+					});
+					values[field.key] = arrayValues;
 					// Old code below
 					// const value = getFormInitialValues([fieldElement]);
-					values[field.key] = [value];
+					// values[field.key] = [value];
 				}
 				break;
 			}

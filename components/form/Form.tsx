@@ -366,7 +366,6 @@ const Form = ({ fields, onSubmit, getReferences, values, submitButtonProps, onCh
 					<TimeInput
 						{...props}
 						withSeconds={field.format === 'HH:mm' ? false : true}
-						defaultValue={props.value}
 					/>
 				);
 			}

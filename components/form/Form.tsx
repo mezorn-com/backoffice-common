@@ -15,7 +15,7 @@ import {
 	TextInput,
 	Title,
 	ButtonProps,
-	MultiSelect,
+	MultiSelect
 } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, UiType } from '@/backoffice-common/types/form';
@@ -39,9 +39,18 @@ interface IFormProps {
 	getReferences?: (code: string, parent?: string) => Promise<any[]>;
 	submitButtonProps?: ButtonProps;
 	onChange?: (value: IFormValues) => void;
+	direction?: React.CSSProperties['flexDirection'];
 }
 
-const Form = ({ fields, onSubmit, getReferences, values, submitButtonProps, onChange }: IFormProps) => {
+const Form = ({
+	fields,
+	onSubmit,
+	getReferences,
+	values,
+	submitButtonProps,
+	onChange,
+	direction = 'column'
+}: IFormProps) => {
 	const { t } = useTranslation();
 	const { classes } = useFormStyles();
 	const { pathname } = useLocation();
@@ -442,14 +451,12 @@ const Form = ({ fields, onSubmit, getReferences, values, submitButtonProps, onCh
 	};
 
 	return (
-		<div style={{ padding: '1rem' }}>
-			{' '}
-			{/** TODO: remove temporary inline style **/}
+		<div className={direction === 'row' ? undefined : classes.wrapper}>
 			<form
 				onSubmit={form.onSubmit(handleSubmit, handleError)}
 				onReset={form.onReset}
 			>
-				<Flex direction={'column'}>{renderFormFields()}</Flex>
+				<Flex direction={direction} gap='xs'>{renderFormFields()}</Flex>
 				<Button
 					type='submit'
 					mt={'sm'}

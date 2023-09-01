@@ -255,6 +255,7 @@ const Table = ({
                                     display: 'none'
                                 }
                             }}
+                            direction={'row'}
                             onSubmit={() => {
                                 console.log('HAHASHAGASDASD')
                             }}

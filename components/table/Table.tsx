@@ -256,9 +256,7 @@ const Table = ({
                                 }
                             }}
                             direction={'row'}
-                            onSubmit={() => {
-                                console.log('HAHASHAGASDASD')
-                            }}
+                            onSubmit={() => undefined}
                             onChange={handleFilterChange}
                         />
                     )

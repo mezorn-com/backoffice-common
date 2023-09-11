@@ -263,7 +263,7 @@ export enum FieldType {
 //     'object' |
 //     'group';
 
-export type INormalField = TextInputField | CheckboxField | SelectField | DateInput | TimeInput | CascadingSelectField | MapAddressPicker | FileUpload | HtmlInput;
+export type INormalField = TextInputField | CheckboxField | SelectField | DateInput | TimeInput | DatetimeInput | CascadingSelectField | MapAddressPicker | FileUpload | HtmlInput;
 
 export type IFormField = (RenderField | INormalField | ArrayField | ObjectField | FieldGroup) & {
 	// TODO: try to remove these

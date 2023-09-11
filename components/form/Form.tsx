@@ -23,7 +23,7 @@ import { getFormInitialValues, getFormValueByKey, IFormValues, isFieldRequired, 
 import { randomId } from '@mantine/hooks';
 import { CascadingSelect, FetchSelect, FormRTE, MapAddressPicker } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
-import { DatePickerInput, TimeInput } from '@mantine/dates';
+import { DatePickerInput, TimeInput, DateTimePicker } from '@mantine/dates';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
 import { clone, omit } from 'ramda';
 import dayjs from 'dayjs';
@@ -383,6 +383,21 @@ const Form = ({
 				const value = props.value ? new Date(props.value) : props.value;
 				return (
 					<DatePickerInput
+						{...props}
+						valueFormat={format}
+						onChange={(value: Date) => {
+							const v = dayjs(value).format(format);
+							props?.onChange?.(v);
+						}}
+						value={value}
+					/>
+				);
+			}
+			case UiType.DATETIME: {
+				const format = field.format ?? 'YYYY/MM/DD HH:mm';
+				const value = props.value ? new Date(props.value) : props.value;
+				return (
+					<DateTimePicker
 						{...props}
 						valueFormat={format}
 						onChange={(value: Date) => {

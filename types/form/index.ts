@@ -108,7 +108,7 @@ export interface WithDescription {
 	localizedDescription?: Partial<Record<Locale, string>>;
 }
 
-interface SelectOption extends WithLabel, WithOptionalDescription {
+export interface SelectOption extends WithLabel, WithOptionalDescription {
 	value: string | number;
 }
 

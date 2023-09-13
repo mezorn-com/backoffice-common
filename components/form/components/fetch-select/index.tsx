@@ -1,9 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 import { MultiSelect, SelectItem, Loader, MultiSelectProps, Select } from '@mantine/core';
-import type { ISelectOption } from '@/backoffice-common/types/api';
-import type { IResponse } from '@/backoffice-common/types/api';
-import type { IReference } from '@/backoffice-common/types/api';
+import type { ISelectOption, IResponse, IReference } from '@/backoffice-common/types/api';
 import { SelectValue, getTransformedValue } from './helper';
 import { GetInputProps } from '@mantine/form/lib/types';
 

@@ -1,8 +1,8 @@
-import { clone, path, values as objectValues } from 'ramda';
+import { clone, path, values as objectValues, drop, head } from 'ramda';
 import i18n from '@/config/i18n';
 import type { IFormField, INormalField } from '@/backoffice-common/types/form';
 import { FieldType, UiType } from '@/backoffice-common/types/form';
-import { replaceString } from '@/backoffice-common/utils';
+import { replaceString, getArrayObjectByProp } from '@/backoffice-common/utils';
 import dayjs from 'dayjs';
 import { uploadFile } from '@/backoffice-common/utils/file-upload';
 
@@ -96,74 +96,6 @@ export const getInitialValue = (field: INormalField, initialValue?: any) => {
 	}
 };
 
-// export const refactorFields = (fields: IFormField[], parentFields?: IFormField[]): IFormField[] => {
-//     const array: IFormField[] = [];
-//     for (const originalField of fields) {
-//         let field = clone(originalField);
-//         let keyPrefix = field.key;
-//         let labelPrefix = field.label ?? '';
-//         const parentsClone = clone(parentFields);
-//         let groupPath = undefined;
-//         for (const parentField of (parentsClone ?? []).reverse()) {
-//             let parentKey = parentField.key;
-//             if (parentField.type === 'array') {
-//                 parentKey = `${parentKey}.0`; // TODO: 0 ??
-//             }
-//             keyPrefix = `${parentKey}${SEPARATOR}${keyPrefix}`;
-//
-//             if (parentField.label) {
-//                 labelPrefix = `${parentField.label}${LABEL_SEPARATOR}${labelPrefix}`;
-//             }
-//             if (parentField.groupPath) {
-//                 groupPath = parentField.groupPath;
-//             }
-//         }
-//         if (groupPath) {
-//             field.groupPath = groupPath;
-//         }
-//         switch(field.type) {
-//             case 'object': {
-//                 if (field.fields?.length) {
-//                     const parents = parentFields ? [ ...parentFields, field ] : [field];
-//                     array.push(...refactorFields(field.fields, parents));
-//                 }
-//                 break;
-//             }
-//             case 'array': {
-//                 if (field.element) {
-//                     const parents = parentFields ? [ ...parentFields, field ] : [field];
-//                     if (field.element.type === 'array') {
-//                         const elements = (field.element?.fields?? []).map(fieldItem => {
-//                             return produce(fieldItem, draft => {
-//                                 draft.groupPath = keyPrefix;
-//                             });
-//                         })
-//                         array.push(...refactorFields(elements, parents));
-//                     } else {
-//                         const element = produce(field.element, draft => {
-//                             draft.groupPath = keyPrefix;
-//                         });
-//                         array.push(...refactorFields([element], parents));
-//                     }
-//                 }
-//                 break;
-//             }
-//             default: {
-//                 array.push(
-//                     produce(field, draftState => {
-//                         draftState.key = keyPrefix;
-//                         draftState.label = labelPrefix;
-//                         if (parentFields) {
-//                             draftState.parentFields = parentFields;
-//                         }
-//                     })
-//                 );
-//             }
-//         }
-//     }
-//     return array;
-// };
-
 export const validator = (fields: IFormField[], values: IFormValues) => {
 	let errors: { [key: string]: string | null } = {};
 	for (const field of fields) {
@@ -174,7 +106,7 @@ export const validator = (fields: IFormField[], values: IFormValues) => {
 		}
 		const targetPath = getFormItemPathByKey(field.key);
 		const value: any = path(targetPath, values);
-		const isRequired = isFieldRequired(field, values);
+		const isRequired = isFieldRequired(field, fields, values);
 		if (isRequired) {
 			errors[field.key] = getErrorMessage(field, value);
 		}
@@ -254,32 +186,57 @@ export const isFieldVisible = (field: IFormField, values: IFormValues): boolean 
 	return false;
 };
 
-export const isFieldRequired = (field: IFormField, values: IFormValues): boolean => {
+const getPathFields = (fullPath: string[], fields: IFormField[]): IFormField[] => {
+	const result = [];
+	const selfPath = head(fullPath);
+	const rest = drop(1, fullPath);
+	if (!selfPath) {
+		return [];
+	}
+	const self = getArrayObjectByProp(fields, selfPath) as IFormField | undefined;
+	if (!self) {
+		return [];
+	}
+	result.push(self);
+	if ('fields' in self) {
+		const children = getPathFields(rest, self.fields ?? []);
+		result.push(...children)
+	}
+	return result;
+}
+
+export const isFieldRequired = (field: IFormField, fields: IFormField[], values: IFormValues): boolean => {
 	// case 1. buh parentuud ni required bas uuruu required uyed required bnaa.
 	// case 2. parentuudiin required hamaaralguigeer sibling ni value avsan uyed uuruu required bol required bnaa.
 	if ('required' in field && field.required) {
-		//
-		// if (!field.parentFields?.length) {
-		//     // uuruu required bas parentgui hamgiin gadna taliin objectod hamaarah uchir true butsaana.
-		//     return true;
-		// } else {
-		//     // case 1
-		//     if (field.parentFields.every(parentField =>  parentField.required)) {
-		//         return true;
-		//     }
-		//
-		//     // case2 sibling ni valuetai uguig shalgana.
-		//     const parentPath = field.parentFields.map((parentField) => parentField.key);
-		//     const parentValues = path(parentPath, values);
-		//
-		//     if (typeof parentValues === 'object' && parentValues !== null) {
-		//         for (const [ key, value ] of Object.entries(parentValues)) {
-		//             if (value) {
-		//                 return true;
-		//             }
-		//         }
-		//     }
-		// }
+		if (!field.groupPath) {
+		    // uuruu required bas parentgui hamgiin gadna taliin objectod hamaarah uchir true butsaana.
+		    return true;
+		} else {
+		    // case 1
+			const parentPath = field.groupPath.split(SEPARATOR);
+			const parentFields = getPathFields(parentPath, fields);
+			if (parentFields.every(parentField => {
+				if ('required' in parentField) {
+					return !!parentField?.required
+				}
+				return false;
+			})) {
+			    return true;
+			}
+		    // case2 sibling ni valuetai uguig shalgana.
+			// check case 2
+		    // const parentPath = parentFields.map((parentField) => parentField.key);
+		    const parentValues = path(parentPath, values);
+
+		    if (typeof parentValues === 'object' && parentValues !== null) {
+		        for (const [ key, value ] of Object.entries(parentValues)) {
+		            if (value) {
+		                return true;
+		            }
+		        }
+		    }
+		}
 	}
 	return false;
 };

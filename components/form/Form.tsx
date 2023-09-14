@@ -258,7 +258,7 @@ const Form = ({
 		const props: any = {
 			key: valueKey,
 			label: field.label ?? '-',
-			withAsterisk: isFieldRequired(field, form.values),
+			withAsterisk: isFieldRequired(field, fields, form.values),
 			...form.getInputProps(valueKey, {
 				type: field.uiType === UiType.CHECKBOX ? 'checkbox' : 'input',
 			}),

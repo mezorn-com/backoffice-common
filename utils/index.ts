@@ -59,3 +59,8 @@ export const isUserInputNumber = (value: string): boolean => {
     const re = /^[0-9\b]+$/;
     return value === "" || re.test(value);
 };
+
+export const getArrayObjectByProp = (array: Record<any, any>[], key: string, propertyKey: string = 'key'): Record<any, any> | undefined => {
+    const arrayClone = clone(array);
+    return arrayClone.find(item => item[propertyKey] === key);
+}

@@ -3,7 +3,7 @@ import type { ITableInteraction, ITableProps, ITableState } from './types';
 import { append, assocPath, clone, path, prepend, eqProps, allPass } from 'ramda';
 import type { ArrayElement } from '@/backoffice-common/types/common';
 import { useStyles } from './useStyles';
-import { IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight } from '@tabler/icons-react';
+import { IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight, IconDatabaseX } from '@tabler/icons-react';
 import { Anchor, NumberInput, Select, ActionIcon } from '@mantine/core';
 import { IFieldRenderType } from '@/backoffice-common/types/api';
 import { useTranslation } from 'react-i18next';
@@ -281,15 +281,27 @@ const Table = ({
                     ))}
                     </thead>
                     <tbody>
-                    {table.getRowModel().rows.map(row => (
-                        <tr key={row.id}>
-                            {row.getVisibleCells().map(cell => (
-                                <td key={cell.id} className={classes.cell}>
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
+                    {
+                        table.getRowModel().rows.length
+                            ?   table.getRowModel().rows.map(row => (
+                                    <tr key={row.id}>
+                                        {row.getVisibleCells().map(cell => (
+                                            <td key={cell.id} className={classes.cell}>
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))
+                            :   (
+                                <tr>
+                                    <td colSpan={1000}>
+                                        <div className={classes.noData}>
+                                            <IconDatabaseX size={50} color={'gray'}/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )
+                    }
                     </tbody>
                     <tfoot>
                     {table.getFooterGroups().map(footerGroup => (

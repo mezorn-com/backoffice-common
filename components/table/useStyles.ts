@@ -116,6 +116,13 @@ export const useStyles = createStyles((theme) => {
                 position: 'sticky',
                 left: 0
             }
+        },
+        noData: {
+            display: 'flex',
+            height: 200,
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center'
         }
     }
 })

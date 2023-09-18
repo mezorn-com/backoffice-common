@@ -19,10 +19,22 @@ export const useStyles = createStyles((theme) => {
             borderCollapse: 'collapse',
             borderSpacing: 0,
             borderRadius: theme.radius.md,
-            display: 'block',
             borderStyle: 'solid',
             borderColor: theme.colors.gray[2],
+            border: 0,
             width: '100%',
+            'thead > tr > th:first-child': {
+                borderTopLeftRadius: theme.radius.md
+            },
+            'thead > tr > th:last-child': {
+                borderTopRightRadius: theme.radius.md,
+            },
+            'tbody > tr > td:first-child': {
+                borderBottomLeftRadius: theme.radius.md,
+            },
+            'tbody > tr > td:last-child': {
+                borderBottomRightRadius: theme.radius.md,
+            }
         },
         cell: {
             ...commonBorderStyle,

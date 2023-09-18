@@ -2,8 +2,6 @@ import * as React from "react";
 import { Routes, Route, useLocation, matchRoutes, useNavigate, Navigate } from "react-router-dom";
 import { AppShell, Burger, createStyles, MediaQuery, useMantineTheme } from '@mantine/core';
 import routes from '../../routes';
-import Footer from '../lib/footer';
-import Header from '../lib/header';
 import SideMenu from '../lib/side-menu';
 import useStore from '@/store';
 

@@ -4,7 +4,7 @@ import { append, assocPath, clone, path, prepend, eqProps, allPass } from 'ramda
 import type { ArrayElement } from '@/backoffice-common/types/common';
 import { useStyles } from './useStyles';
 import { IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight } from '@tabler/icons-react';
-import { Anchor, NumberInput, Select } from '@mantine/core';
+import { Anchor, NumberInput, Select, ActionIcon } from '@mantine/core';
 import { IFieldRenderType } from '@/backoffice-common/types/api';
 import { useTranslation } from 'react-i18next';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
@@ -244,7 +244,7 @@ const Table = ({
     }
 
     return (
-        <div className={classes.tableWrapper}>
+        <div className={classes.container}>
             <div>
                 {
                     state.filter && (
@@ -262,81 +262,115 @@ const Table = ({
                     )
                 }
             </div>
-            <table className={classes.table}>
-                <thead>
-                {table.getHeaderGroups().map(headerGroup => (
-                    <tr key={headerGroup.id}>
-                        {headerGroup.headers.map(header => (
-                            <th key={header.id} colSpan={header.colSpan} className={classes.headerCell}>
-                                {header.isPlaceholder
-                                    ? null
-                                    : flexRender(
-                                        header.column.columnDef.header,
-                                        header.getContext()
-                                    )}
-                            </th>
-                        ))}
-                    </tr>
-                ))}
-                </thead>
-                <tbody>
-                {table.getRowModel().rows.map(row => (
-                    <tr key={row.id}>
-                        {row.getVisibleCells().map(cell => (
-                            <td key={cell.id} className={classes.cell}>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </td>
-                        ))}
-                    </tr>
-                ))}
-                </tbody>
-                <tfoot>
-                {table.getFooterGroups().map(footerGroup => (
-                    <tr key={footerGroup.id}>
-                        {footerGroup.headers.map(header => (
-                            <th key={header.id} colSpan={header.colSpan}>
-                                {header.isPlaceholder
-                                    ? null
-                                    : flexRender(
-                                        header.column.columnDef.footer,
-                                        header.getContext()
-                                    )}
-                            </th>
-                        ))}
-                    </tr>
-                ))}
-                </tfoot>
-            </table>
+            <div className={classes.tableWrapper}>
+                <table className={classes.table}>
+                    <thead>
+                    {table.getHeaderGroups().map(headerGroup => (
+                        <tr key={headerGroup.id}>
+                            {headerGroup.headers.map(header => (
+                                <th key={header.id} colSpan={header.colSpan} className={classes.headerCell}>
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext()
+                                        )}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                    </thead>
+                    <tbody>
+                    {table.getRowModel().rows.map(row => (
+                        <tr key={row.id}>
+                            {row.getVisibleCells().map(cell => (
+                                <td key={cell.id} className={classes.cell}>
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                    <tfoot>
+                    {table.getFooterGroups().map(footerGroup => (
+                        <tr key={footerGroup.id}>
+                            {footerGroup.headers.map(header => (
+                                <th key={header.id} colSpan={header.colSpan}>
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(
+                                            header.column.columnDef.footer,
+                                            header.getContext()
+                                        )}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                    </tfoot>
+                </table>
+            </div>
             <div className={classes.pagination}>
                 <div className={classes.paginationControls}>
-                    <button
-                        className={classes.paginationControlsButton}
+                    <ActionIcon
+                        variant='filled'
+                        color='color.primary'
                         onClick={() => table.setPageIndex(0)}
                         disabled={!table.getCanPreviousPage()}
                     >
                         <IconChevronsLeft size={16}/>
-                    </button>{' '}
-                    <button
-                        className={classes.paginationControlsButton}
+                    </ActionIcon>
+                    <ActionIcon
+                        variant='filled'
+                        color='color.primary'
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                     >
                         <IconChevronLeft size={16}/>
-                    </button>{' '}
-                    <button
-                        className={classes.paginationControlsButton}
+                    </ActionIcon>
+                    <ActionIcon
+                        variant='filled'
+                        color='color.primary'
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                     >
                         <IconChevronRight size={16}/>
-                    </button>{' '}
-                    <button
-                        className={classes.paginationControlsButton}
+                    </ActionIcon>
+                    <ActionIcon
+                        variant='filled'
+                        color='color.primary'
                         onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                         disabled={!table.getCanNextPage()}
                     >
                         <IconChevronsRight size={16}/>
-                    </button>{' '}
+                    </ActionIcon>
+                    {/*<button*/}
+                    {/*    className={classes.paginationControlsButton}*/}
+                    {/*    onClick={() => table.setPageIndex(0)}*/}
+                    {/*    disabled={!table.getCanPreviousPage()}*/}
+                    {/*>*/}
+                    {/*    <IconChevronsLeft size={16}/>*/}
+                    {/*</button>{' '}*/}
+                    {/*<button*/}
+                    {/*    className={classes.paginationControlsButton}*/}
+                    {/*    onClick={() => table.previousPage()}*/}
+                    {/*    disabled={!table.getCanPreviousPage()}*/}
+                    {/*>*/}
+                    {/*    <IconChevronLeft size={16}/>*/}
+                    {/*</button>{' '}*/}
+                    {/*<button*/}
+                    {/*    className={classes.paginationControlsButton}*/}
+                    {/*    onClick={() => table.nextPage()}*/}
+                    {/*    disabled={!table.getCanNextPage()}*/}
+                    {/*>*/}
+                    {/*    <IconChevronRight size={16}/>*/}
+                    {/*</button>{' '}*/}
+                    {/*<button*/}
+                    {/*    className={classes.paginationControlsButton}*/}
+                    {/*    onClick={() => table.setPageIndex(table.getPageCount() - 1)}*/}
+                    {/*    disabled={!table.getCanNextPage()}*/}
+                    {/*>*/}
+                    {/*    <IconChevronsRight size={16}/>*/}
+                    {/*</button>{' '}*/}
                 </div>
                 <div className={classes.totalPage}>
                     Page
@@ -363,6 +397,7 @@ const Table = ({
                         }
                     }}
                     value={state.pageSize.toString()}
+                    size='xs'
                 />
             </div>
         </div>

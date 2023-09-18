@@ -7,23 +7,22 @@ export const useStyles = createStyles((theme) => {
         borderColor: theme.colors.gray[3],
     }
     return {
-        tableWrapper: {
-            maxWidth: '100%',
+        container: {
+            height: '100%',
+            flex: 1,
             overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
             padding: '0 20px',
         },
         table: {
+            borderCollapse: 'collapse',
             borderSpacing: 0,
-            width: 'fit-content',
-            maxWidth: '100%',
-            overflowY: 'hidden',
-            overflowX: 'scroll',
-            marginTop: theme.spacing.md,
-            marginBottom: theme.spacing.md,
             borderRadius: theme.radius.md,
             display: 'block',
             borderStyle: 'solid',
             borderColor: theme.colors.gray[2],
+            width: '100%',
         },
         cell: {
             ...commonBorderStyle,
@@ -42,7 +41,7 @@ export const useStyles = createStyles((theme) => {
             fontSize: '12px',
             textAlign: 'left',
             color: theme.colors.gray[6],
-            // width: '100%',
+            width: '100%',
             minWidth: '200px',
         },
         pagination: {
@@ -52,6 +51,7 @@ export const useStyles = createStyles((theme) => {
             gap: '20px',
             justifyContent: 'end',
             alignItems: 'center',
+            marginBottom: theme.spacing.sm
         },
         paginationControls: {
             display: 'flex',
@@ -63,8 +63,8 @@ export const useStyles = createStyles((theme) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '35px',
-            height: '35px',
+            width: '30px',
+            height: '30px',
             borderRadius: theme.radius.sm,
             borderWidth: 1,
             borderColor: theme.colors.gray[2],
@@ -81,7 +81,7 @@ export const useStyles = createStyles((theme) => {
         paginationInput: {
             maxWidth: '50px',
             height: '35px',
-            border: `1px solid ${theme.colors.gray[2]}`,
+            // border: `1px solid ${theme.colors.gray[2]}`,
             textAlign: 'center',
             borderRadius: theme.radius.sm,
             ":disabled": {
@@ -98,8 +98,23 @@ export const useStyles = createStyles((theme) => {
         },
         totalPage: {
             display: 'flex',
-            alignItems: 'flex-end',
+            alignItems: 'center',
             gap: theme.spacing.sm
+        },
+        tableWrapper: {
+            marginTop: theme.spacing.md,
+            marginBottom: theme.spacing.md,
+            overflow: 'auto',
+            'thead th': {
+                position: 'sticky',
+                top: 0,
+                zIndex: 1,
+                overflow: 'hidden'
+            },
+            'tbody th': {
+                position: 'sticky',
+                left: 0
+            }
         }
     }
 })

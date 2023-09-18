@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { ActionIcon, Avatar, Burger, createStyles, Flex, MediaQuery, Menu, Navbar, NavLink, Title, useMantineTheme } from '@mantine/core';
 import useStore from '@/store';
 import routes from '@/routes';
 import { useTranslation } from 'react-i18next';
-import { IconBuilding, IconSettings, IconUser } from '@tabler/icons-react';
+import { IconSettings, IconUser } from '@tabler/icons-react';
 import { APP_NAME } from '@/config';
 import { IRoute } from '@/backoffice-common/types';
+import type { IMenu } from '@/store/types';
+import NavbarItem from '@/backoffice-common/lib/side-menu/NavbarItem';
 
 interface SideMenuProps {
     opened: boolean;
@@ -49,6 +51,37 @@ const SideMenu = ({
         }
         return undefined;
     }, [location.pathname]);
+
+    const getIsActive = (menuKey: string) => {
+        return currentRoute?.key === menuKey || currentRoute?.menuKey === menuKey;
+    }
+
+    const getMenuKey = (menuItem: IMenu) => menuItem?.resource ?? menuItem?.path;
+
+    const getNavbarItem = (menuItem: IMenu): React.ReactNode => {
+        const children = (menuItem.children ?? []).map(getNavbarItem);
+        const hasActiveChild = (menuItem.children ?? []).some((item) => {
+            const ccc = getMenuKey(item);
+            return getIsActive(ccc);
+        });
+        const menuKey = getMenuKey(menuItem);
+        const menuItemRoute = routes.find(route => route.key === menuKey);
+        const path = menuItemRoute?.path ?? '404';
+        const redirectPath = path.endsWith('/*') ? path.slice(0, -2) : path;
+        const label = menuItem?.localizedNames?.[i18n?.language] ?? menuItem.name;
+
+        const isActive = children.length ? hasActiveChild : getIsActive(menuKey);
+
+        return (
+            <NavbarItem
+                children={children}
+                label={label}
+                isActive={isActive}
+                path={redirectPath}
+                icon={menuItem.icon.value}
+            />
+        )
+    }
 
     return (
         <Navbar
@@ -96,27 +129,7 @@ const SideMenu = ({
            <Navbar.Section grow>
                 <div className={classes.menus}>
                     {
-                        menu.map(menuItem => {
-                            const menuKey = menuItem?.resource ?? menuItem?.path;
-                            const isActive = currentRoute?.key === menuKey || currentRoute?.menuKey === menuKey;
-                            const menuItemRoute = routes.find(route => route.key === menuKey);
-                            const path = menuItemRoute?.path ?? '404';
-                            const redirectPath = path.endsWith('/*') ? path.slice(0, -2) : path;
-                            const label = menuItem?.localizedNames?.[i18n?.language] ?? menuItem.name;
-                            return (
-                                <NavLink
-                                    active={isActive}
-                                    key={menuKey}
-                                    label={label}
-                                    component={Link}
-                                    to={redirectPath}
-                                    icon={<IconBuilding size={16}/>}
-                                    classNames={{
-                                        root: classes.menuItem
-                                    }}
-                                />
-                            )
-                        })
+                        menu.map(getNavbarItem)
                     }
                 </div>
            </Navbar.Section>

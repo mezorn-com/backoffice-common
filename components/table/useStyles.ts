@@ -102,6 +102,7 @@ export const useStyles = createStyles((theme) => {
             gap: theme.spacing.sm
         },
         tableWrapper: {
+            flex: 1,
             marginTop: theme.spacing.md,
             marginBottom: theme.spacing.md,
             overflow: 'auto',

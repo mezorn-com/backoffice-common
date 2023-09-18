@@ -12,7 +12,7 @@ import {
 import type { ColumnDef } from '@tanstack/react-table';
 import { IListState } from '@/backoffice-common/types/common/list';
 import { produce } from 'immer';
-import { ActionIcon, Button } from '@mantine/core';
+import { ActionIcon, Button, MantineColor, MANTINE_COLORS } from '@mantine/core';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { IconEdit, IconEye, IconTrash, IconFilePlus } from '@tabler/icons-react';
@@ -124,6 +124,12 @@ const reducer = produce(
     }
 );
 
+const color: Record<ListItemActionKey, MantineColor> = {
+    update: 'yellow',
+    get: 'primary',
+    delete: 'red',
+}
+
 const useListPage = ({
     apiRoute,
 }: IConfig) => {
@@ -227,7 +233,6 @@ const useListPage = ({
                 break;
             }
             default: {
-                // write logic to assign dynamic icon if there is given
                 label = action === true ? undefined : action.label;
                 if (action !== true && action.api) {
                     actionFn = async (record: Record<string, any>) => {
@@ -247,14 +252,21 @@ const useListPage = ({
             }
         }
 
+        let labelElement = <Button
+            leftIcon={icon}
+        >
+            {label}
+        </Button>
+        if (!label) {
+            labelElement = (
+                <ActionIcon variant='filled' color={color[key]}>
+                    {icon}
+                </ActionIcon>
+            )
+        }
+
         return {
-            label: (
-                <Button
-                    leftIcon={icon}
-                >
-                    {label}
-                </Button>
-            ),
+            label: labelElement,
             onClick: (record: Record<string, any>) => {
                 if (typeof actionFn === 'function') {
                     actionFn(record);

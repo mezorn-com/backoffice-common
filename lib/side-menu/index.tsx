@@ -58,11 +58,11 @@ const SideMenu = ({
 
     const getMenuKey = (menuItem: IMenu) => menuItem?.resource ?? menuItem?.path;
 
-    const getNavbarItem = (menuItem: IMenu): React.ReactNode => {
+    const getNavbarItem = (menuItem: IMenu, index: number): React.ReactNode => {
         const children = (menuItem.children ?? []).map(getNavbarItem);
         const hasActiveChild = (menuItem.children ?? []).some((item) => {
-            const ccc = getMenuKey(item);
-            return getIsActive(ccc);
+            const key = getMenuKey(item);
+            return getIsActive(key);
         });
         const menuKey = getMenuKey(menuItem);
         const menuItemRoute = routes.find(route => route.key === menuKey);
@@ -74,6 +74,7 @@ const SideMenu = ({
 
         return (
             <NavbarItem
+                key={index}
                 children={children}
                 label={label}
                 isActive={isActive}

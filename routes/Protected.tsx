@@ -5,6 +5,7 @@ import routes from '../../routes';
 import Footer from '../lib/footer';
 import Header from '../lib/header';
 import SideMenu from '../lib/side-menu';
+import useStore from '@/store';
 
 const standAloneRoutes = routes.filter(route => route.standAlone);
 
@@ -26,16 +27,25 @@ const getRoutes = () => {
 }
 
 const ProtectedRoutes = () => {
-    const { classes } = useStyles()
+    const { classes } = useStyles();
     const location = useLocation();
     const navigate = useNavigate();
     const isStandAlone: boolean = !!matchRoutes(standAloneRoutes, location)?.length;
     const theme = useMantineTheme();
+    const sideMenu = useStore(state => state.auth.sideMenu);
 
     const [ opened, setOpened ] = React.useState<boolean>(false);
 
+    if (location.pathname === '/') {
+        const redirectMenuItem = sideMenu?.[0];
+        if (redirectMenuItem) {
+            const redirectRoute = redirectMenuItem.resource ?? redirectMenuItem.path;
+            return <Navigate to={redirectRoute} replace={true}/>;
+        }
+    }
+
     if (location.pathname.endsWith('/') && location.pathname !== '/') {
-        return <Navigate to={location.pathname.slice(0, -1)} replace={true}/>
+        return <Navigate to={location.pathname.slice(0, -1)} replace={true}/>;
     }
 
     return (

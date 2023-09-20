@@ -258,6 +258,7 @@ const Form = ({
 		const props: any = {
 			key: valueKey,
 			label: field.label ?? '-',
+			size: 'sm',
 			withAsterisk: isFieldRequired(field, fields, form.values),
 			...form.getInputProps(valueKey, {
 				type: field.uiType === UiType.CHECKBOX ? 'checkbox' : 'input',
@@ -472,13 +473,19 @@ const Form = ({
 				onReset={form.onReset}
 			>
 				<Flex direction={direction} gap='xs'>{renderFormFields()}</Flex>
-				<Button
-					type='submit'
-					mt={'sm'}
-					{...submitButtonProps}
+				<Flex
+					justify='flex-end'
+					align='center'
+					wrap='wrap'
 				>
-					{t('action.submit', { ns: 'common' })}
-				</Button>
+					<Button
+						type='submit'
+						mt={'sm'}
+						{...submitButtonProps}
+					>
+						{t('action.submit', { ns: 'common' })}
+					</Button>
+				</Flex>
 			</form>
 		</div>
 	);

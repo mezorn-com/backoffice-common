@@ -4,6 +4,8 @@ export const useFormStyles = createStyles((theme) => {
     return {
         wrapper: {
             padding: '1rem',
+            maxWidth: 500,
+            margin: '0 auto'
         },
         card: {
             overflow: 'visible',

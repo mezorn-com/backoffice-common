@@ -16,25 +16,58 @@ export const useStyles = createStyles((theme) => {
             padding: '0 20px',
         },
         table: {
-            borderCollapse: 'collapse',
+            borderCollapse: 'separate',
             borderSpacing: 0,
             borderRadius: theme.radius.md,
             borderStyle: 'solid',
             borderColor: theme.colors.gray[2],
             border: 0,
             width: '100%',
-            'thead > tr > th:first-child': {
-                borderTopLeftRadius: theme.radius.md
+            '> thead': {
+                '> tr': {
+                    '&:first-of-type': {
+                        th: {
+                            borderStyle: 'solid',
+                            borderColor: theme.colors.gray[1],
+                            borderTopWidth: 1,
+                            '&:first-child': {
+                                borderTopLeftRadius: theme.radius.md,
+                                borderLeftWidth: 1,
+                            },
+                            '&:last-child': {
+                                borderTopRightRadius: theme.radius.md,
+                                borderRightWidth: 1,
+                            }
+                        }
+                    },
+                }
             },
-            'thead > tr > th:last-child': {
-                borderTopRightRadius: theme.radius.md,
+            '> tbody': {
+                '> tr': {
+                    td: {
+                        borderStyle: 'solid',
+                        borderColor: commonBorderStyle.borderColor,
+                        '&:first-child': {
+                            borderLeftWidth: 1,
+                        },
+                        '&:last-child': {
+                            borderRightWidth: 1,
+                        }
+                    },
+                    '&:last-of-type': {
+                        td: {
+                            borderBottomWidth: 1,
+                            '&:first-child': {
+                                borderBottomLeftRadius: theme.radius.md,
+                            },
+                            '&:last-child': {
+                                borderBottomRightRadius: theme.radius.md,
+                                borderRightWidth: 1,
+                            }
+                        }
+                    }
+                }
             },
-            'tbody > tr > td:first-child': {
-                borderBottomLeftRadius: theme.radius.md,
-            },
-            'tbody > tr > td:last-child': {
-                borderBottomRightRadius: theme.radius.md,
-            }
         },
         cell: {
             ...commonBorderStyle,

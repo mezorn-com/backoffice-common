@@ -50,7 +50,7 @@ const useStyles = createStyles((theme, { isActive, hasLinks }: IStyleParams) => 
         label: {
             display: 'flex',
             alignItems: 'center',
-            color: hasLinks && isActive ? theme.colors[theme.primaryColor] : undefined,
+            color: isActive ? theme.colors[theme.primaryColor] : undefined,
         },
         children: {
             marginLeft: '1rem',

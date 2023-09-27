@@ -30,11 +30,11 @@ export const useStyles = createStyles((theme) => {
                             borderStyle: 'solid',
                             borderColor: theme.colors.gray[1],
                             borderTopWidth: 1,
-                            '&:first-child': {
+                            '&:first-of-type': {
                                 borderTopLeftRadius: theme.radius.md,
                                 borderLeftWidth: 1,
                             },
-                            '&:last-child': {
+                            '&:last-of-type': {
                                 borderTopRightRadius: theme.radius.md,
                                 borderRightWidth: 1,
                             }
@@ -47,20 +47,20 @@ export const useStyles = createStyles((theme) => {
                     td: {
                         borderStyle: 'solid',
                         borderColor: commonBorderStyle.borderColor,
-                        '&:first-child': {
+                        '&:first-of-type': {
                             borderLeftWidth: 1,
                         },
-                        '&:last-child': {
+                        '&:last-of-type': {
                             borderRightWidth: 1,
                         }
                     },
                     '&:last-of-type': {
                         td: {
                             borderBottomWidth: 1,
-                            '&:first-child': {
+                            '&:first-of-type': {
                                 borderBottomLeftRadius: theme.radius.md,
                             },
-                            '&:last-child': {
+                            '&:last-of-type': {
                                 borderBottomRightRadius: theme.radius.md,
                                 borderRightWidth: 1,
                             }

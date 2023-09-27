@@ -48,6 +48,7 @@ import {
 } from '@tanstack/react-table'
 import { IRowActionButton } from '@/backoffice-common/hooks/useListPage';
 import { IFormValues } from '@/backoffice-common/components/form/helper';
+import { reducer, initialState } from './reducer';
 
 const pageSizes = [10, 20, 30, 40, 50];
 
@@ -55,13 +56,14 @@ const Table = ({
     onInteract,
     rowActionButtons,
     rowActionButtonPosition = TABLE_ROW_ACTION_BUTTON_POSITION,
-    state
+    state: externalState
 }: ITableProps) => {
     const { t } = useTranslation();
     const { classes } = useStyles();
+    const [ state, dispatch ] = React.useReducer(reducer, initialState);
 
     const tableColumns = React.useMemo(() => {
-        let cols = clone(state.columns);
+        let cols = clone(externalState.columns);
         if (rowActionButtons?.length) {
             const actionButtonsColumn: ColumnDef<Record<string, any>> = {
                 header: '',
@@ -79,27 +81,27 @@ const Table = ({
             if (rowActionButtonPosition === 'right') {
                 cols = append(
                     actionButtonsColumn,
-                    state.columns
+                    externalState.columns
                 );
             } else {
                 cols = prepend(
                     actionButtonsColumn,
-                    state.columns
+                    externalState.columns
                 );
             }
         }
         return cols;
-    }, [ state.columns, rowActionButtons ]);
+    }, [ externalState.columns, rowActionButtons ]);
 
     const table = useReactTable({
-        data: state.docs,
+        data: externalState.docs,
         columns: tableColumns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         initialState: {
             pagination: {
-                pageSize: state.pageSize,
-                pageIndex: state.page - 1,
+                pageSize: externalState.pageSize,
+                pageIndex: externalState.page - 1,
             }
         },
         manualPagination: true,
@@ -112,7 +114,7 @@ const Table = ({
     })
 
     // console.log('Table State>>>>', table.getState());
-    // console.log('Props State>>>>', state);
+    // console.log('Props State>>>>', externalState);
 
     // compare 2 objects' given props values.
     const check = allPass([
@@ -125,7 +127,7 @@ const Table = ({
             page: updatedTableState.pagination.pageIndex + 1,
             pageSize: updatedTableState.pagination.pageSize,
         }
-        if (!check(state, updatedState)) {
+        if (!check(externalState, updatedState)) {
             handleInteraction({ state: updatedState })
         }
     }
@@ -133,11 +135,11 @@ const Table = ({
     const handleInteraction = (value: Partial<ITableInteraction>) => {
         const params: ITableInteraction = {
             state: {
-                page: state.page,
-                pageSize: state.pageSize,
-                totalPage: state.totalPage,
+                page: externalState.page,
+                pageSize: externalState.pageSize,
+                totalPage: externalState.totalPage,
             },
-            filter: undefined,
+            filter: state.filter,
             ...value,
         }
         onInteract(params)
@@ -146,10 +148,10 @@ const Table = ({
     table.setOptions(prev => ({
         ...prev,
         // state,
-        pageCount: state.totalPage,
+        pageCount: externalState.totalPage,
         pagination: {
-            pageSize: state.pageSize,
-            pageIndex: state.page - 1
+            pageSize: externalState.pageSize,
+            pageIndex: externalState.page - 1
         },
         debugTable: true,
     }));
@@ -191,54 +193,18 @@ const Table = ({
             </div>
         )
     }
-    //
-    // const tableRecords = React.useMemo(() => {
-    //     return data.map(record => {
-    //         let recordClone = clone(record);
-    //         for (const column of tableColumns) {
-    //             // @ts-expect-error
-    //             const valuePath = (column.key ?? '').split('.');
-    //             // @ts-expect-error
-    //             const renderType = column.renderType ?? 'text' as IFieldRenderType;
-    //             let value: any = clone(path(valuePath, recordClone));
-    //             if (renderType) {
-    //                 switch(renderType) {
-    //                     case 'text': {
-    //                         break;
-    //                     }
-    //                     case 'boolean': {
-    //                          TODO: change this.
-    //                          it should not render 'NO' when value is null or undefined.
-    //                          also display some icon or something;
-    //                         value = value ? 'Yes' : 'No';
-    //                         break;
-    //                     }
-    //                     case 'link': {
-    //                         // @ts-expect-error
-    //                         const uri: string = column.uri ?? '';
-    //                         value = (
-    //                             <Anchor target={'_blank'} href={getSubResourceUrl(uri, [ { match: '{_id}', replace: recordClone?._id ?? '' } ])}>{value}</Anchor>
-    //                         );
-    //                         break;
-    //                     }
-    //                     default: {
-    //                         return recordClone;
-    //                     }
-    //                 }
-    //             }
-    //             recordClone = assocPath(valuePath, value, recordClone);
-    //         }
-    //         return recordClone;
-    //     });
-    // }, [data, tableColumns]);
 
     const handleFilterChange = (values: IFormValues) => {
+        dispatch({
+            type: 'HANDLE_FILTER_ITEM_CHANGE',
+            payload: values
+        })
         handleInteraction({
             filter: values,
             state: {
                 page: 1,
-                pageSize: state.pageSize,
-                totalPage: state.totalPage
+                pageSize: externalState.pageSize,
+                totalPage: externalState.totalPage
             }
         })
     }
@@ -247,9 +213,9 @@ const Table = ({
         <div className={classes.container}>
             <div>
                 {
-                    state.filter && (
+                    externalState.filter && (
                         <Form
-                            fields={state.filter ?? []}
+                            fields={externalState.filter ?? []}
                             submitButtonProps={{
                                 style: {
                                     display: 'none'
@@ -355,40 +321,12 @@ const Table = ({
                     >
                         <IconChevronsRight size={16}/>
                     </ActionIcon>
-                    {/*<button*/}
-                    {/*    className={classes.paginationControlsButton}*/}
-                    {/*    onClick={() => table.setPageIndex(0)}*/}
-                    {/*    disabled={!table.getCanPreviousPage()}*/}
-                    {/*>*/}
-                    {/*    <IconChevronsLeft size={16}/>*/}
-                    {/*</button>{' '}*/}
-                    {/*<button*/}
-                    {/*    className={classes.paginationControlsButton}*/}
-                    {/*    onClick={() => table.previousPage()}*/}
-                    {/*    disabled={!table.getCanPreviousPage()}*/}
-                    {/*>*/}
-                    {/*    <IconChevronLeft size={16}/>*/}
-                    {/*</button>{' '}*/}
-                    {/*<button*/}
-                    {/*    className={classes.paginationControlsButton}*/}
-                    {/*    onClick={() => table.nextPage()}*/}
-                    {/*    disabled={!table.getCanNextPage()}*/}
-                    {/*>*/}
-                    {/*    <IconChevronRight size={16}/>*/}
-                    {/*</button>{' '}*/}
-                    {/*<button*/}
-                    {/*    className={classes.paginationControlsButton}*/}
-                    {/*    onClick={() => table.setPageIndex(table.getPageCount() - 1)}*/}
-                    {/*    disabled={!table.getCanNextPage()}*/}
-                    {/*>*/}
-                    {/*    <IconChevronsRight size={16}/>*/}
-                    {/*</button>{' '}*/}
                 </div>
                 <div className={classes.totalPage}>
                     Page
                     <NumberInput
                         type="number"
-                        value={state.page}
+                        value={externalState.page}
                         onChange={e => {
                             const page = e ? Number(e) : 0;
                             table.setPageIndex(page);
@@ -408,7 +346,7 @@ const Table = ({
                             width: 80
                         }
                     }}
-                    value={state.pageSize.toString()}
+                    value={externalState.pageSize.toString()}
                     size='xs'
                 />
             </div>

@@ -76,7 +76,8 @@ const Table = ({
                             }
                         </div>
                     )
-                }
+                },
+                size: 1
             }
             if (rowActionButtonPosition === 'right') {
                 cols = append(
@@ -233,16 +234,22 @@ const Table = ({
                     <thead>
                     {table.getHeaderGroups().map(headerGroup => (
                         <tr key={headerGroup.id}>
-                            {headerGroup.headers.map(header => (
-                                <th key={header.id} colSpan={header.colSpan} className={classes.headerCell}>
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(
-                                            header.column.columnDef.header,
-                                            header.getContext()
-                                        )}
-                                </th>
-                            ))}
+                            {
+                                headerGroup.headers.map(header => {
+                                    return (
+                                        <th key={header.id} colSpan={header.colSpan} className={classes.headerCell} style={{ width: header.getSize() }}>
+                                            {
+                                                header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )
+                                            }
+                                        </th>
+                                    )
+                                })
+                            }
                         </tr>
                     ))}
                     </thead>
@@ -251,11 +258,15 @@ const Table = ({
                         table.getRowModel().rows.length
                             ?   table.getRowModel().rows.map(row => (
                                     <tr key={row.id}>
-                                        {row.getVisibleCells().map(cell => (
-                                            <td key={cell.id} className={classes.cell}>
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                            </td>
-                                        ))}
+                                        {
+                                            row.getVisibleCells().map(cell => {
+                                                return (
+                                                    <td key={cell.id} className={classes.cell}>
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </td>
+                                                )
+                                            })
+                                        }
                                     </tr>
                                 ))
                             :   (

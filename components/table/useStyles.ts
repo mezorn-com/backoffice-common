@@ -87,7 +87,6 @@ export const useStyles = createStyles((theme) => {
             textAlign: 'left',
             color: theme.colors.gray[6],
             width: '100%',
-            minWidth: '200px',
         },
         pagination: {
             textAlign: 'right',

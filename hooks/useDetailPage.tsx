@@ -10,13 +10,15 @@ import {
 import { getMeta } from '@/backoffice-common/utils';
 import axios from 'axios';
 import { IResponse } from '@/backoffice-common/types/api';
-import { Button } from '@mantine/core';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { ActionIcon, Button } from '@mantine/core';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { openConfirmModal } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 import { last } from 'ramda';
+import { getSubResourceUrl } from '@/backoffice-common/utils/route';
+import { actionColors } from '@/backoffice-common/utils/styles';
 
 interface IConfig {
     apiRoute: string;
@@ -30,6 +32,8 @@ export interface IDetailPageState {
     subResources?: SubResources;
     actions?: Record<MetaType | string, ListAction>;
 }
+
+const ICON_SIZE = 18;
 
 const useDetailPage = ({
     apiRoute,
@@ -78,7 +82,7 @@ const useDetailPage = ({
         let actionFn: undefined | (() => void);
         switch(key) {
             case 'update': {
-                icon = <IconEdit size={18}/>;
+                icon = <IconEdit size={ICON_SIZE}/>;
 
                 actionFn = () => {
                     let editPath: string;
@@ -92,7 +96,7 @@ const useDetailPage = ({
                 break;
             }
             case 'delete': {
-                icon = <IconTrash size={18}/>;
+                icon = <IconTrash size={ICON_SIZE}/>;
 
                 actionFn = () => {
                     openConfirmModal({
@@ -132,41 +136,76 @@ const useDetailPage = ({
             }
         }
 
-        return (
-            <Button
-                key={key}
-                radius={'md'}
-                leftIcon={icon}
-                onClick={() => {
-                    if (typeof actionFn === 'function') {
-                        actionFn();
-                    } else {
-                        if (action !== true) {
-                            if (action.confirmation) {
-                                openConfirmModal({
-                                    title: '',
-                                    children: action.confirmation.dialogText,
-                                    labels: {
-                                        confirm: action.confirmation.buttonText ?? 'confirm',
-                                        cancel: t('cancel', { ns: 'common' })
-                                    },
-                                    async onConfirm() {
-                                        typeof actionFn === 'function' && actionFn();
-                                        actionFn = undefined;
-                                    }
-                                })
+        const handler = () => {
+            if (typeof actionFn === 'function') {
+                actionFn();
+            } else {
+                if (action !== true) {
+                    if (action.confirmation) {
+                        openConfirmModal({
+                            title: '',
+                            children: action.confirmation.dialogText,
+                            labels: {
+                                confirm: action.confirmation.buttonText ?? 'confirm',
+                                cancel: t('cancel', { ns: 'common' })
+                            },
+                            async onConfirm() {
+                                typeof actionFn === 'function' && actionFn();
+                                actionFn = undefined;
                             }
-                        }
+                        })
                     }
-                }}
+                }
+            }
+        }
+
+        let element = (
+            <Button
+                onClick={handler}
+                leftIcon={icon}
             >
                 {label}
             </Button>
-        );
+        )
+
+        if (!label) {
+            element = (
+                <ActionIcon
+                    variant='filled'
+                    color={actionColors[key]}
+                    onClick={handler}
+                >
+                    {icon}
+                </ActionIcon>
+            )
+        }
+
+        return element;
     }
 
     const actionButtons = React.useMemo(() => {
         const buttonList: React.ReactNode[] = [];
+
+
+
+        for (const subResourceKey in state.subResources) {
+            const subResource = state.subResources[subResourceKey];
+            if (subResource) {
+                buttonList.push((
+                    <Button
+                        compact
+                        component={Link}
+                        to={getSubResourceUrl(subResourceKey, [
+                            { match: '{_id}', replace: id },
+                        ])}
+                        radius={'sm'}
+                        variant={'light'}
+                    >
+                        {subResource.label}
+                    </Button>
+                ))
+            }
+        }
 
         if (state.actions) {
             for (const actionKey in state.actions) {
@@ -176,9 +215,9 @@ const useDetailPage = ({
                 }
             }
         }
-        return buttonList as React.ReactNode;
-    }, [ state.actions ]);
 
+        return buttonList;
+    }, [ state.actions ]);
 
     return {
         state,

@@ -21,6 +21,7 @@ import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
 import { ITableInteraction, ITableState } from '@/backoffice-common/components/table/types';
 import { INormalField, IVisibility } from '@/backoffice-common/types/form';
+import { actionColors } from '@/backoffice-common/utils/styles';
 
 type IRowActionButtonKey = 'update' | 'delete' | 'get';
 
@@ -123,12 +124,6 @@ const reducer = produce(
         }
     }
 );
-
-const color: Record<ListItemActionKey, MantineColor> = {
-    update: 'yellow',
-    get: 'primary',
-    delete: 'red',
-}
 
 const useListPage = ({
     apiRoute,
@@ -259,7 +254,7 @@ const useListPage = ({
         </Button>
         if (!label) {
             labelElement = (
-                <ActionIcon variant='filled' color={color[key]}>
+                <ActionIcon variant='filled' color={actionColors[key]}>
                     {icon}
                 </ActionIcon>
             )

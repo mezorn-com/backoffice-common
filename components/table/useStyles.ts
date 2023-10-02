@@ -149,7 +149,7 @@ export const useStyles = createStyles((theme) => {
             flex: 1,
             marginTop: theme.spacing.md,
             marginBottom: theme.spacing.md,
-            overflow: 'auto',
+            // overflowX: 'auto',
             'thead th': {
                 position: 'sticky',
                 top: 0,

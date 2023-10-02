@@ -77,7 +77,7 @@ const Table = ({
                         </div>
                     )
                 },
-                size: 1
+                // size: seconds
             }
             if (rowActionButtonPosition === 'right') {
                 cols = append(
@@ -105,6 +105,11 @@ const Table = ({
                 pageIndex: externalState.page - 1,
             }
         },
+        defaultColumn: {
+            // minSize: 0,
+            // size: Number.MAX_SAFE_INTEGER,
+            // maxSize: Number.MAX_SAFE_INTEGER,
+        },
         manualPagination: true,
         onStateChange: (updater) => {
             if (updater instanceof Function) {
@@ -112,6 +117,11 @@ const Table = ({
                 handleTableStateChange(newState);
             }
         },
+        renderFallbackValue: (
+            <div>
+                xdxd
+            </div>
+        )
     })
 
     // console.log('Table State>>>>', table.getState());
@@ -230,73 +240,154 @@ const Table = ({
                 }
             </div>
             <div className={classes.tableWrapper}>
-                <table className={classes.table}>
-                    <thead>
-                    {table.getHeaderGroups().map(headerGroup => (
-                        <tr key={headerGroup.id}>
+                <div style={{ overflowX: 'auto', border: '1px solid blue' }}>
+                    <div
+                        className='divTable'
+                        style={{
+                            width: table.getTotalSize(),
+                        }}
+                    >
+                        <div
+                            className='thead'
+                        >
                             {
-                                headerGroup.headers.map(header => {
+                                table.getHeaderGroups().map(headerGroup => {
                                     return (
-                                        <th key={header.id} colSpan={header.colSpan} className={classes.headerCell} style={{ width: header.getSize() }}>
+                                        <div key={headerGroup.id} className={'tr'}>
                                             {
-                                                header.isPlaceholder
-                                                    ? null
-                                                    : flexRender(
-                                                        header.column.columnDef.header,
-                                                        header.getContext()
+                                                headerGroup.headers.map(header => {
+                                                    return (
+                                                        <div key={header.id} className='th' style={{ width: header.getSize() }}>
+                                                            {
+                                                                header.isPlaceholder
+                                                                    ? null
+                                                                    : flexRender(
+                                                                        header.column.columnDef.header,
+                                                                        header.getContext()
+                                                                    )
+                                                            }
+                                                        </div>
                                                     )
+                                                })
                                             }
-                                        </th>
+                                        </div>
                                     )
                                 })
                             }
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody>
-                    {
-                        table.getRowModel().rows.length
-                            ?   table.getRowModel().rows.map(row => (
-                                    <tr key={row.id}>
-                                        {
-                                            row.getVisibleCells().map(cell => {
-                                                return (
-                                                    <td key={cell.id} className={classes.cell}>
-                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                    </td>
-                                                )
-                                            })
-                                        }
-                                    </tr>
-                                ))
-                            :   (
-                                <tr>
-                                    <td colSpan={1000}>
-                                        <div className={classes.noData}>
-                                            <IconDatabaseX size={50} color={'gray'}/>
+                        </div>
+                        <div className='tbody' style={{ border: '1px solid red' }}>
+                            {
+                                table.getRowModel().rows.map(row => {
+                                    return (
+                                        <div key={row.id} className='tr'>
+                                            {
+                                                row.getVisibleCells().map(cell => {
+                                                    return (
+                                                        <div key={cell.id} className='td' style={{ width: cell.column.getSize() }}>
+                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                        </div>
+                                                    )
+                                                })
+                                            }
                                         </div>
-                                    </td>
-                                </tr>
-                            )
-                    }
-                    </tbody>
-                    <tfoot>
-                    {table.getFooterGroups().map(footerGroup => (
-                        <tr key={footerGroup.id}>
-                            {footerGroup.headers.map(header => (
-                                <th key={header.id} colSpan={header.colSpan}>
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(
-                                            header.column.columnDef.footer,
-                                            header.getContext()
-                                        )}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </tfoot>
-                </table>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div className='tfoot'>
+                            {
+                                table.getFooterGroups().map(footerGroup => {
+                                    return (
+                                        <div key={footerGroup.id} className='tr'>
+                                            {
+                                                footerGroup.headers.map(header => {
+                                                    return (
+                                                        <div key={header.id} className='th' style={{ width: header.getSize() }}>
+                                                            {header.isPlaceholder
+                                                                ? null
+                                                                : flexRender(
+                                                                    header.column.columnDef.footer,
+                                                                    header.getContext()
+                                                                )}
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                {/*<table className={classes.table}>*/}
+                {/*    <thead>*/}
+                {/*    {table.getHeaderGroups().map(headerGroup => (*/}
+                {/*        <tr key={headerGroup.id}>*/}
+                {/*            {*/}
+                {/*                headerGroup.headers.map(header => {*/}
+                {/*                    return (*/}
+                {/*                        <th key={header.id} colSpan={header.colSpan} className={classes.headerCell} style={{ width: header.getSize() }}>*/}
+                {/*                            {*/}
+                {/*                                header.isPlaceholder*/}
+                {/*                                    ? null*/}
+                {/*                                    : flexRender(*/}
+                {/*                                        header.column.columnDef.header,*/}
+                {/*                                        header.getContext()*/}
+                {/*                                    )*/}
+                {/*                            }*/}
+                {/*                        </th>*/}
+                {/*                    )*/}
+                {/*                })*/}
+                {/*            }*/}
+                {/*        </tr>*/}
+                {/*    ))}*/}
+                {/*    </thead>*/}
+                {/*    <tbody>*/}
+                {/*    {*/}
+                {/*        table.getRowModel().rows.length*/}
+                {/*            ?   table.getRowModel().rows.map(row => (*/}
+                {/*                    <tr key={row.id}>*/}
+                {/*                        {*/}
+                {/*                            row.getVisibleCells().map(cell => {*/}
+                {/*                                return (*/}
+                {/*                                    <td key={cell.id} className={classes.cell}>*/}
+                {/*                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}*/}
+                {/*                                    </td>*/}
+                {/*                                )*/}
+                {/*                            })*/}
+                {/*                        }*/}
+                {/*                    </tr>*/}
+                {/*                ))*/}
+                {/*            :   (*/}
+                {/*                <tr>*/}
+                {/*                    <td colSpan={1000}>*/}
+                {/*                        <div className={classes.noData}>*/}
+                {/*                            <IconDatabaseX size={50} color={'gray'}/>*/}
+                {/*                        </div>*/}
+                {/*                    </td>*/}
+                {/*                </tr>*/}
+                {/*            )*/}
+                {/*    }*/}
+                {/*    </tbody>*/}
+                {/*    <tfoot>*/}
+                {/*    {table.getFooterGroups().map(footerGroup => (*/}
+                {/*        <tr key={footerGroup.id}>*/}
+                {/*            {footerGroup.headers.map(header => (*/}
+                {/*                <th key={header.id} colSpan={header.colSpan}>*/}
+                {/*                    {header.isPlaceholder*/}
+                {/*                        ? null*/}
+                {/*                        : flexRender(*/}
+                {/*                            header.column.columnDef.footer,*/}
+                {/*                            header.getContext()*/}
+                {/*                        )}*/}
+                {/*                </th>*/}
+                {/*            ))}*/}
+                {/*        </tr>*/}
+                {/*    ))}*/}
+                {/*    </tfoot>*/}
+                {/*</table>*/}
             </div>
             <div className={classes.pagination}>
                 <div className={classes.paginationControls}>

@@ -247,7 +247,7 @@ export const getFormValueByKey = (key: string, values: IFormValues, separator = 
 
 const getTransformedValue = (field: IFormField, value: unknown): Promise<unknown> => {
 	return new Promise(async resolve => {
-		if ((!value && value !== false) || !('uiType' in field)) {
+		if (isNil(value) || !('uiType' in field)) {
 			resolve(undefined);
 			return;
 		}

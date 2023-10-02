@@ -1,4 +1,4 @@
-import { clone, path, values as objectValues, drop, head } from 'ramda';
+import { clone, path, values as objectValues, drop, head, isNil } from 'ramda';
 import i18n from '@/config/i18n';
 import type { IFormField, INormalField } from '@/backoffice-common/types/form';
 import { FieldType, UiType } from '@/backoffice-common/types/form';
@@ -122,7 +122,7 @@ export const getErrorMessage = (field: IFormField, value: any): null | string =>
 	if (field.uiType === UiType.CHECKBOX) {
 		return null;
 	}
-	if (!value) {
+	if (isNil(value)) {
 		return replaceString(t('validation.error.enterValue', { ns: 'form' }), [
 			{
 				match: '{{-REPLACE_VALUE-}}',

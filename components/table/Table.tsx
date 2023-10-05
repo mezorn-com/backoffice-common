@@ -77,6 +77,7 @@ const Table = ({
                         </div>
                     )
                 },
+
                 // size: seconds
             }
             if (rowActionButtonPosition === 'right') {
@@ -117,12 +118,10 @@ const Table = ({
                 handleTableStateChange(newState);
             }
         },
-        renderFallbackValue: (
-            <div>
-                xdxd
-            </div>
-        )
+        renderFallbackValue: '-'
     })
+
+    console.log('table>>>', table)
 
     // console.log('Table State>>>>', table.getState());
     // console.log('Props State>>>>', externalState);
@@ -240,24 +239,34 @@ const Table = ({
                 }
             </div>
             <div className={classes.tableWrapper}>
-                <div style={{ overflowX: 'auto', border: '1px solid blue' }}>
+                <div style={{ overflowX: 'auto', overflowY: 'hidden', maxHeight: '100%', display: 'flex', flexDirection: 'column' }}>
                     <div
                         className='divTable'
                         style={{
                             width: table.getTotalSize(),
+                            display: 'flex',
+                            flexDirection: 'column',
+                            flex: 1,
+                            overflow:'hidden'
                         }}
                     >
                         <div
                             className='thead'
                         >
                             {
-                                table.getHeaderGroups().map(headerGroup => {
+                                table.getLeftHeaderGroups().map(headerGroup => {
                                     return (
-                                        <div key={headerGroup.id} className={'tr'}>
+                                        <div key={headerGroup.id} className={classes.row}>
                                             {
                                                 headerGroup.headers.map(header => {
                                                     return (
-                                                        <div key={header.id} className='th' style={{ width: header.getSize() }}>
+                                                        <div
+                                                            key={header.id}
+                                                            className={classes.headerCell}
+                                                            style={{
+                                                                width: header.getSize()
+                                                            }}
+                                                        >
                                                             {
                                                                 header.isPlaceholder
                                                                     ? null
@@ -275,15 +284,21 @@ const Table = ({
                                 })
                             }
                         </div>
-                        <div className='tbody' style={{ border: '1px solid red' }}>
+                        <div className='tbody' style={{ flex: 1, overflow: 'auto' }}>
                             {
                                 table.getRowModel().rows.map(row => {
                                     return (
-                                        <div key={row.id} className='tr'>
+                                        <div key={row.id} className={classes.row}>
                                             {
                                                 row.getVisibleCells().map(cell => {
                                                     return (
-                                                        <div key={cell.id} className='td' style={{ width: cell.column.getSize() }}>
+                                                        <div
+                                                            key={cell.id}
+                                                            className='td'
+                                                            style={{
+                                                                width: cell.column.getSize()
+                                                        }}
+                                                        >
                                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                         </div>
                                                     )
@@ -302,7 +317,11 @@ const Table = ({
                                             {
                                                 footerGroup.headers.map(header => {
                                                     return (
-                                                        <div key={header.id} className='th' style={{ width: header.getSize() }}>
+                                                        <div
+                                                            key={header.id}
+                                                            className={classes.headerCell}
+                                                            style={{ width: header.getSize() }}
+                                                        >
                                                             {header.isPlaceholder
                                                                 ? null
                                                                 : flexRender(

@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
 import TableFilter from './filter';
+import TableElement from '@/backoffice-common/components/table/components/TableElement';
 
 import Form from '@/backoffice-common/components/form/Form';
 
@@ -239,106 +240,25 @@ const Table = ({
                 }
             </div>
             <div className={classes.tableWrapper}>
-                <div style={{ overflowX: 'auto', overflowY: 'hidden', maxHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-                    <div
-                        className='divTable'
-                        style={{
-                            width: table.getTotalSize(),
-                            display: 'flex',
-                            flexDirection: 'column',
-                            flex: 1,
-                            overflow:'hidden'
-                        }}
-                    >
-                        <div
-                            className='thead'
-                        >
-                            {
-                                table.getLeftHeaderGroups().map(headerGroup => {
-                                    return (
-                                        <div key={headerGroup.id} className={classes.row}>
-                                            {
-                                                headerGroup.headers.map(header => {
-                                                    return (
-                                                        <div
-                                                            key={header.id}
-                                                            className={classes.headerCell}
-                                                            style={{
-                                                                width: header.getSize()
-                                                            }}
-                                                        >
-                                                            {
-                                                                header.isPlaceholder
-                                                                    ? null
-                                                                    : flexRender(
-                                                                        header.column.columnDef.header,
-                                                                        header.getContext()
-                                                                    )
-                                                            }
-                                                        </div>
-                                                    )
-                                                })
-                                            }
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                        <div className='tbody' style={{ flex: 1, overflow: 'auto' }}>
-                            {
-                                table.getRowModel().rows.map(row => {
-                                    return (
-                                        <div key={row.id} className={classes.row}>
-                                            {
-                                                row.getVisibleCells().map(cell => {
-                                                    return (
-                                                        <div
-                                                            key={cell.id}
-                                                            className='td'
-                                                            style={{
-                                                                width: cell.column.getSize()
-                                                        }}
-                                                        >
-                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                        </div>
-                                                    )
-                                                })
-                                            }
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                        <div className='tfoot'>
-                            {
-                                table.getFooterGroups().map(footerGroup => {
-                                    return (
-                                        <div key={footerGroup.id} className='tr'>
-                                            {
-                                                footerGroup.headers.map(header => {
-                                                    return (
-                                                        <div
-                                                            key={header.id}
-                                                            className={classes.headerCell}
-                                                            style={{ width: header.getSize() }}
-                                                        >
-                                                            {header.isPlaceholder
-                                                                ? null
-                                                                : flexRender(
-                                                                    header.column.columnDef.footer,
-                                                                    header.getContext()
-                                                                )}
-                                                        </div>
-                                                    )
-                                                })
-                                            }
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                    </div>
-                </div>
+                <TableElement
+                    footerGroups={table.getFooterGroups()}
+                    headerGroups={table.getHeaderGroups()}
+                    rowModel={table.getRowModel()}
+                    width={table.getTotalSize()}
+                />
+                <TableElement
+                    footerGroups={table.getFooterGroups()}
+                    headerGroups={table.getHeaderGroups()}
+                    rowModel={table.getRowModel()}
+                    width={table.getTotalSize()}
+                    horizontalScroll={true}
+                />
+                <TableElement
+                    footerGroups={table.getFooterGroups()}
+                    headerGroups={table.getHeaderGroups()}
+                    rowModel={table.getRowModel()}
+                    width={table.getTotalSize()}
+                />
 
                 {/*<table className={classes.table}>*/}
                 {/*    <thead>*/}

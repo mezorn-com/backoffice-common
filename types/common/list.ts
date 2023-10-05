@@ -3,8 +3,10 @@ import type { IListMetaResponse } from '../api/meta';
 import type { ITableState } from '@/backoffice-common/components/table/types';
 import { INormalField } from '@/backoffice-common/types/form';
 
+export type ListDoc = Record<string, unknown>;
+
 export interface IListState extends ITableState {
-    docs: Record<string, unknown>[];
+    docs: ListDoc[];
     pageTitle?: string;
     columns: ColumnDef<Record<string, any>>[];
     subResources?: IListMetaResponse['subResources'];

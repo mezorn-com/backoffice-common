@@ -154,6 +154,7 @@ export const useStyles = createStyles((theme) => {
             gap: theme.spacing.sm
         },
         tableWrapper: {
+            display: 'flex',
             flex: 1,
             marginTop: theme.spacing.md,
             marginBottom: theme.spacing.md,
@@ -168,6 +169,7 @@ export const useStyles = createStyles((theme) => {
                 position: 'sticky',
                 left: 0
             },
+            gap: '1rem'
         },
         noData: {
             display: 'flex',

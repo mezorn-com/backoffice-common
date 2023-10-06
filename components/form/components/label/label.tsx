@@ -1,22 +1,23 @@
 import * as React from 'react';
-import { Text } from '@mantine/core';
+import { Text, TextProps } from '@mantine/core';
 import { useStyles } from './styles'
 
-interface IProps {
+interface IProps extends TextProps {
     label?: string;
     withAsterisk?: boolean;
 }
 
 const FormLabel = ({
     label = '',
-    withAsterisk = false
+    withAsterisk = false,
+    ...props
 }: IProps) => {
     const { classes } = useStyles();
     return (
         <div className={classes.label}>
             {
                 label && (
-                    <Text fz='sm' fw={500}>
+                    <Text fz='sm' fw={500} {...props}>
                         {label}
                     </Text>
                 )

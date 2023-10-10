@@ -6,6 +6,7 @@ export interface ITableState {
     page: number;
     pageSize: number;
     totalPage?: number;
+    totalData?: number;
 }
 
 export interface ITableInteraction {

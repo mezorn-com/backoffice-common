@@ -49,6 +49,7 @@ type SetListResponse = {
         page: number;
         limit: number;
         totalPage: number;
+        totalData?: number;
     };
 };
 
@@ -79,6 +80,7 @@ const initialState: IListState = {
     page: 1,
     pageSize: 20,
     totalPage: 1,
+    totalData: undefined,
     docs: [],
     columns: [],
     subResources: undefined,
@@ -102,6 +104,7 @@ const reducer = produce(
                 draft.page = action.payload.page;
                 draft.pageSize = action.payload.limit;
                 draft.totalPage = action.payload.totalPage;
+                draft.totalData = action.payload.totalData;
                 break;
             }
             case 'SET_META_DATA': {
@@ -163,7 +166,8 @@ const useListPage = ({
                 docs: data.data.docs,
                 page: data.data.page,
                 totalPage: data.data.totalPage,
-                limit: data.data.limit
+                limit: data.data.limit,
+                totalData: data.data.totalData,
             }
         })
     };

@@ -298,68 +298,79 @@ const Table = ({
                     </tfoot>
                 </table>
             </div>
-            <div className={classes.pagination}>
-                <div className={classes.paginationControls}>
-                    <ActionIcon
-                        variant='filled'
-                        color='color.primary'
-                        onClick={() => table.setPageIndex(0)}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        <IconChevronsLeft size={16}/>
-                    </ActionIcon>
-                    <ActionIcon
-                        variant='filled'
-                        color='color.primary'
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        <IconChevronLeft size={16}/>
-                    </ActionIcon>
-                    <ActionIcon
-                        variant='filled'
-                        color='color.primary'
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        <IconChevronRight size={16}/>
-                    </ActionIcon>
-                    <ActionIcon
-                        variant='filled'
-                        color='color.primary'
-                        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        <IconChevronsRight size={16}/>
-                    </ActionIcon>
+            <div className={classes.footer}>
+                <div>
+                    {
+                        externalState.totalData && (
+                            <div>
+                                Нийт: {externalState.totalData}
+                            </div>
+                        )
+                    }
                 </div>
-                <div className={classes.totalPage}>
-                    Page
-                    <NumberInput
-                        type="number"
-                        value={externalState.page}
-                        onChange={e => {
-                            const page = e ? Number(e) : 0;
-                            table.setPageIndex(page);
+                <div className={classes.pagination}>
+                    <div className={classes.paginationControls}>
+                        <ActionIcon
+                            variant='filled'
+                            color='color.primary'
+                            onClick={() => table.setPageIndex(0)}
+                            disabled={!table.getCanPreviousPage()}
+                        >
+                            <IconChevronsLeft size={16}/>
+                        </ActionIcon>
+                        <ActionIcon
+                            variant='filled'
+                            color='color.primary'
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                        >
+                            <IconChevronLeft size={16}/>
+                        </ActionIcon>
+                        <ActionIcon
+                            variant='filled'
+                            color='color.primary'
+                            onClick={() => table.nextPage()}
+                            disabled={!table.getCanNextPage()}
+                        >
+                            <IconChevronRight size={16}/>
+                        </ActionIcon>
+                        <ActionIcon
+                            variant='filled'
+                            color='color.primary'
+                            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                            disabled={!table.getCanNextPage()}
+                        >
+                            <IconChevronsRight size={16}/>
+                        </ActionIcon>
+                    </div>
+                    <div className={classes.totalPage}>
+                        Page
+                        <NumberInput
+                            type="number"
+                            value={externalState.page}
+                            onChange={e => {
+                                const page = e ? Number(e) : 0;
+                                table.setPageIndex(page);
+                            }}
+                            style={{ width: '100px' }}
+                            className={classes.paginationInput}
+                            min={1}
+                            size='xs'
+                        />
+                        / {table.getPageCount()}
+                    </div>
+                    <Select
+                        data={pageSizes.map(pageSize => {return {value: `${pageSize}`, label: `${pageSize}`}})}
+                        onChange={e => {table.setPageSize(Number(e))}}
+                        wrapperProps={{
+                            style: {
+                                width: 80
+                            }
                         }}
-                        style={{ width: '100px' }}
-                        className={classes.paginationInput}
-                        min={1}
+                        value={externalState.pageSize.toString()}
                         size='xs'
                     />
-                    / {table.getPageCount()}
                 </div>
-                <Select
-                    data={pageSizes.map(pageSize => {return {value: `${pageSize}`, label: `${pageSize}`}})}
-                    onChange={e => {table.setPageSize(Number(e))}}
-                    wrapperProps={{
-                        style: {
-                            width: 80
-                        }
-                    }}
-                    value={externalState.pageSize.toString()}
-                    size='xs'
-                />
             </div>
         </div>
     )

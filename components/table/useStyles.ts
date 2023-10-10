@@ -15,6 +15,11 @@ export const useStyles = createStyles((theme) => {
             flexDirection: 'column',
             padding: '0 20px',
         },
+        footer: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+        },
         table: {
             borderCollapse: 'separate',
             borderSpacing: 0,
@@ -89,11 +94,10 @@ export const useStyles = createStyles((theme) => {
             width: '100%',
         },
         pagination: {
-            textAlign: 'right',
             display: 'flex',
             flexDirection: 'row',
             gap: '20px',
-            justifyContent: 'end',
+            justifyContent: 'flex-end',
             alignItems: 'center',
             marginBottom: theme.spacing.sm
         },

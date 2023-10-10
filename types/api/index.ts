@@ -10,6 +10,7 @@ export interface IListResponseData {
     limit: number;
     page: number;
     totalPage: number;
+    totalData?: number;
 }
 
 type IFieldType = 'render';

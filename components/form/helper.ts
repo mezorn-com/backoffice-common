@@ -1,8 +1,8 @@
-import { clone, path, values as objectValues, drop, head, isNil } from 'ramda';
+import { clone, drop, head, isNil, path, values as objectValues } from 'ramda';
 import i18n from '@/config/i18n';
 import type { IFormField, INormalField } from '@/backoffice-common/types/form';
 import { FieldType, UiType } from '@/backoffice-common/types/form';
-import { replaceString, getArrayObjectByProp } from '@/backoffice-common/utils';
+import { getArrayObjectByProp, replaceString } from '@/backoffice-common/utils';
 import dayjs from 'dayjs';
 import { uploadFile } from '@/backoffice-common/utils/file-upload';
 
@@ -263,6 +263,14 @@ const getTransformedValue = (field: IFormField, value: unknown): Promise<unknown
 			}
 			case UiType.CHECKBOX: {
 				resolve(!!value);
+				return;
+			}
+			case UiType.TEXT_INPUT: {
+				if (field.number) {
+					resolve(value || undefined);
+					return;
+				}
+				resolve(value);
 				return;
 			}
 			default: {

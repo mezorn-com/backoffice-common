@@ -270,7 +270,7 @@ const getTransformedValue = (field: IFormField, value: unknown): Promise<unknown
 					resolve(value || undefined);
 					return;
 				}
-				resolve(value);
+				resolve(value || undefined);
 				return;
 			}
 			default: {

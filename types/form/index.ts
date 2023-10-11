@@ -28,6 +28,7 @@ export enum UiType {
 	MAP_ADDRESS_PICKER = 'map-address-picker',
 	DATETIME = 'datetime',
 	TIME = 'time',
+	SEARCH_SELECT = 'search-select',
 }
 
 export enum Locale {
@@ -73,8 +74,20 @@ interface TextInputField extends NormalFieldCore {
 	secret?: boolean;
 }
 
+type SearchSelect = NormalFieldCore & WithOptionsApi & {
+	uiType: UiType.SEARCH_SELECT;
+	multiple?: boolean;
+}
+
 interface CheckboxField extends NormalFieldCore {
 	uiType: UiType.CHECKBOX;
+}
+
+type WithOptionsApi =  {
+	optionsApi: {
+		uri: string;
+		queryParams?: string[];
+	}
 }
 
 type SelectField = {
@@ -84,17 +97,11 @@ type SelectField = {
 	| {
 			options: SelectOption[];
 	  }
-	| {
-			optionsApi: {
-				uri: string;
-				queryParams?: string[];
-			};
-	  }
+	| WithOptionsApi
 	| {
 			refCode: string;
 	  }
-) &
-	NormalFieldCore;
+) & NormalFieldCore;
 
 export interface WithLabel {
 	label: string;
@@ -263,7 +270,7 @@ export enum FieldType {
 //     'object' |
 //     'group';
 
-export type INormalField = TextInputField | CheckboxField | SelectField | DateInput | TimeInput | DatetimeInput | CascadingSelectField | MapAddressPicker | FileUpload | HtmlInput;
+export type INormalField = TextInputField | CheckboxField | SelectField | DateInput | TimeInput | DatetimeInput | CascadingSelectField | MapAddressPicker | FileUpload | HtmlInput | SearchSelect;
 
 export type IFormField = (RenderField | INormalField | ArrayField | ObjectField | FieldGroup) & {
 	// TODO: try to remove these

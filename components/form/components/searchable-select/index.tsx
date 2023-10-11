@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Loader, Popover, Chip, Button, Text } from "@mantine/core";
+import { Loader, Popover, Chip, Button } from "@mantine/core";
 import { useDebouncedValue, useElementSize } from "@mantine/hooks";
 import axios from "axios";
 import qs from "qs";
@@ -7,31 +7,43 @@ import { IconSearch } from "@tabler/icons-react";
 import { useStyles } from './styles';
 import type { IResponse } from '@/backoffice-common/types/api';
 import { FormLabel } from '@/backoffice-common/components/form/components';
+import { clone } from 'ramda';
 
-interface DataItem {
+interface Option {
     label: string;
     value: string;
 }
 
-interface IProps<T> {
+interface CommonProps {
     uri: string;
-    parser?: (item: T, index: number) => DataItem;
-    value?: string;
+    parser?: (item: any, index: number) => Option;
     placeholder?: string;
-    onChange: (value: string) => void;
     label?: string;
     withAsterisk?: boolean;
 }
 
-function SearchableSelect<T>({
+interface MultiProps extends CommonProps {
+    multiple: true;
+    value: string[];
+    onChange: (value: string[] | null) => void;
+}
+
+interface SingleProps extends CommonProps {
+    multiple?: false;
+    value: string;
+    onChange: (value: string | null) => void;
+}
+
+type Props = MultiProps | SingleProps
+
+const SearchableSelect = ({
     uri,
     parser,
-    value,
     placeholder,
-    onChange,
     label,
-    withAsterisk = false
-}: IProps<T>){
+    withAsterisk = false,
+    ...props
+}: Props) => {
 
     const { ref, width } = useElementSize();
     const { classes } = useStyles();
@@ -39,17 +51,17 @@ function SearchableSelect<T>({
 
     const [ searchValue, setSearchValue ] = React.useState('');
     const [ debounced ] = useDebouncedValue(searchValue, 500);
-    const [ data, setData ] = React.useState<DataItem[]>([]);
+    const [ data, setData ] = React.useState<Option[]>([]);
     const [ loading, setLoading ] = React.useState(false);
-    const [ selectedValue, setSelectedValue ] = React.useState<DataItem | null>(null);
+    const [ selectedValue, setSelectedValue ] = React.useState<null | Option[]>(null);
 
     const controllerRef = React.useRef(new AbortController());
 
     React.useEffect(() => {
-        if (!value) {
+        if (!props.value) {
             setSelectedValue(null);
         }
-    }, [value])
+    }, [props.value]);
 
     React.useEffect(() => {
         try {
@@ -60,14 +72,14 @@ function SearchableSelect<T>({
                         search: debounced,
                     }
                     const queryParams = qs.stringify(params);
-                    const { data: responseData } = await axios.get<IResponse<T[]>>(
+                    const { data: responseData } = await axios.get<IResponse<unknown[]>>(
                         `${uri}?${queryParams}`,
                         {
                             silent: true,
                             signal: controllerRef.current.signal,
                         }
                     );
-                    let parsed: DataItem[] = [];
+                    let parsed: Option[] = [];
                     if (parser) {
                         parsed = (responseData.data ?? []).map(parser);
                     } else {
@@ -90,11 +102,38 @@ function SearchableSelect<T>({
 
     }, [debounced]);
 
-    const handleSelect = (item: DataItem) => {
-        setSelectedValue(item);
+    const handleSelect = (item: Option) => {
+        let updatedValue: Option[] | null = clone(selectedValue);
+        if (updatedValue) {
+            updatedValue.push(item);
+        } else {
+            updatedValue = [item]
+        }
+        setSelectedValue(updatedValue);
         setSearchValue('');
-        setData([]);
-        onChange(item.value);
+        handleChange(updatedValue)
+    }
+
+    const handleChange = (updatedValue: Option[] | null) => {
+        if (!updatedValue) {
+            props.onChange(null);
+            return;
+        }
+        if (props.multiple) {
+            props.onChange(updatedValue.map(value => value.value));
+        } else {
+            props.onChange(updatedValue?.[0]?.value ?? null);
+        }
+    }
+
+    const removeSelectedItem = (value: string) => {
+        const clonedValue = clone(selectedValue);
+        const index = (clonedValue ?? []).findIndex(v => v.value === value);
+        if (index > -1) {
+            clonedValue?.splice(index, 1);
+            setSelectedValue(clonedValue);
+            handleChange(clonedValue);
+        }
     }
 
     return (
@@ -112,11 +151,18 @@ function SearchableSelect<T>({
                             }
                         </div>
                         {
-                            value && selectedValue && !searchValue && (
-                                <Chip radius='md' checked={false}>
-                                    {selectedValue.label}
-                                </Chip>
-                            )
+                            (selectedValue ?? []).map(option => {
+                                return (
+                                    <Chip
+                                        key={option.value}
+                                        radius='md'
+                                        checked={false}
+                                        onClick={() => removeSelectedItem(option.value)}
+                                    >
+                                        {option.label}
+                                    </Chip>
+                                )
+                            })
                         }
                         <input
                             className={classes.input}
@@ -132,6 +178,7 @@ function SearchableSelect<T>({
             <Popover.Dropdown className={classes.dropdown}>
                 {
                     data.map((item) => {
+                        const isSelected = !!(selectedValue ?? []).find(v => v.value === item.value);
                         return (
                             <Button
                                 key={item.value}
@@ -141,6 +188,9 @@ function SearchableSelect<T>({
                                 fullWidth
                                 classNames={{
                                     inner: classes.buttonInner
+                                }}
+                                style={{
+                                    background: isSelected ? '#e7e7e7' : undefined
                                 }}
                             >
                                 {item.label}

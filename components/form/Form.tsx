@@ -3,27 +3,35 @@ import { useForm } from '@mantine/form';
 import {
 	ActionIcon,
 	Button,
+	ButtonProps,
 	Card,
 	Checkbox,
 	FileInput,
 	Flex,
+	MultiSelect,
 	NumberInput,
 	PasswordInput,
 	Select,
-	Stack,
 	Textarea,
 	TextInput,
-	Title,
-	ButtonProps,
-	MultiSelect
+	Title
 } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, UiType } from '@/backoffice-common/types/form';
-import { getFormInitialValues, getFormValueByKey, IFormValues, isFieldRequired, isFieldVisible, SEPARATOR, transformValuesAsync, validator } from './helper';
+import {
+	getFormInitialValues,
+	getFormValueByKey,
+	IFormValues,
+	isFieldRequired,
+	isFieldVisible,
+	SEPARATOR,
+	transformValuesAsync,
+	validator
+} from './helper';
 import { randomId } from '@mantine/hooks';
-import { CascadingSelect, FetchSelect, FormRTE, MapAddressPicker } from './components';
+import { CascadingSelect, FetchSelect, FormRTE, MapAddressPicker, SearchableSelect } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
-import { DatePickerInput, TimeInput, DateTimePicker } from '@mantine/dates';
+import { DatePickerInput, DateTimePicker, TimeInput } from '@mantine/dates';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
 import { clone, omit } from 'ramda';
 import dayjs from 'dayjs';
@@ -70,7 +78,7 @@ const Form = ({
 	}, [form.values]);
 
 	// console.log('form initial Values>>>>', getFormInitialValues(fields, values));
-	// console.log('FORM VALUES>>>>', form.values);
+	console.log('FORM VALUES>>>>', form.values);
 
 	const handleError = (validationErrors: any, _values: any, _event: any) => {
 		console.log('Form Error>>>', { validationErrors, _values: _values, _event: _event });
@@ -375,7 +383,7 @@ const Form = ({
 				return (
 					<TimeInput
 						{...props}
-						withSeconds={field.format === 'HH:mm' ? false : true}
+						withSeconds={field.format !== 'HH:mm'}
 					/>
 				);
 			}
@@ -439,6 +447,15 @@ const Form = ({
 						onChange={value => form.setFieldValue(valueKey, value)}
 					/>
 				);
+			}
+			case UiType.SEARCH_SELECT: {
+				return (
+					<SearchableSelect
+						{...props}
+						uri={field.optionsApi.uri}
+						multiple={field.multiple}
+					/>
+				)
 			}
 			default: {
 				return null;

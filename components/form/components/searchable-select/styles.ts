@@ -7,6 +7,7 @@ export const useStyles = createStyles((theme) => {
             borderRadius: theme.radius.sm,
             padding: '.4rem .8rem',
             display: 'flex',
+            flexWrap: 'wrap',
             alignItems: 'center',
             '&:focus-within': {
                 borderColor: theme.colors[theme.primaryColor]

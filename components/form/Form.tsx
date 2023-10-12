@@ -39,6 +39,7 @@ import { useFormStyles } from './styles';
 import { useTranslation } from 'react-i18next';
 import { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
 import { useLocation } from 'react-router-dom';
+import Location from '@/backoffice-common/components/form/components/location';
 
 interface IFormProps {
 	fields: IFormField[];
@@ -454,6 +455,14 @@ const Form = ({
 						{...props}
 						uri={field.optionsApi.uri}
 						multiple={field.multiple}
+					/>
+				)
+			}
+			case UiType.LOCATION: {
+				return (
+					<Location
+						{...props}
+						onSave={props.onChange}
 					/>
 				)
 			}

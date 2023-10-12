@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { MantineProvider, LoadingOverlay, createStyles } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
@@ -9,24 +9,22 @@ import ProtectedRoutes from './routes/Protected';
 import ErrorPage from '@/backoffice-common/components/common/Error';
 import 'dayjs/locale/mn';
 
-const authRoutes = createBrowserRouter(
-	createRoutesFromElements(
-		<Route
-			errorElement={<ErrorPage/>}
-			path={'*'}
-			element={<AuthRouter />}
-		/>
-	)
+const authRoutes = createBrowserRouter([
+		{
+			path: '*',
+			element: <AuthRouter/>,
+			errorElement: <ErrorPage/>
+		}
+	]
 );
 
-const protectedRoutes = createBrowserRouter(
-	createRoutesFromElements(
-		<Route
-			errorElement={<ErrorPage/>}
-			path={'*'}
-			element={<ProtectedRoutes />}
-		/>
-	)
+const protectedRoutes = createBrowserRouter([
+		{
+			path: '*',
+			element: <ProtectedRoutes/>,
+			errorElement: <ErrorPage/>,
+		}
+	]
 );
 
 const useStyles = createStyles((theme) => {

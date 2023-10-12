@@ -13,7 +13,7 @@ Double check everything
     "@mantine/hooks": "^6.0.8",
     "@mantine/modals": "^6.0.8",
     "@mantine/notifications": "^6.0.8",
-    "@tabler/icons-react": "^2.16.0",
+    "@tabler/icons-react": "^2.39.0",
     "@tanstack/react-table": "^8.9.2",
     "axios": "^1.3.5",
     "dayjs": "^1.11.7",

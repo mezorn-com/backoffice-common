@@ -29,6 +29,7 @@ export enum UiType {
 	DATETIME = 'datetime',
 	TIME = 'time',
 	SEARCH_SELECT = 'search-select',
+	LOCATION = 'location'
 }
 
 export enum Locale {
@@ -77,6 +78,10 @@ interface TextInputField extends NormalFieldCore {
 type SearchSelect = NormalFieldCore & WithOptionsApi & {
 	uiType: UiType.SEARCH_SELECT;
 	multiple?: boolean;
+}
+
+interface LocationField extends NormalFieldCore {
+	uiType: UiType.LOCATION;
 }
 
 interface CheckboxField extends NormalFieldCore {
@@ -270,7 +275,19 @@ export enum FieldType {
 //     'object' |
 //     'group';
 
-export type INormalField = TextInputField | CheckboxField | SelectField | DateInput | TimeInput | DatetimeInput | CascadingSelectField | MapAddressPicker | FileUpload | HtmlInput | SearchSelect;
+export type INormalField = TextInputField
+	| CheckboxField
+	| SelectField
+	| DateInput
+	| TimeInput
+	| DatetimeInput
+	| CascadingSelectField
+	| MapAddressPicker
+	| FileUpload
+	| HtmlInput
+	| SearchSelect
+	| LocationField
+	;
 
 export type IFormField = (RenderField | INormalField | ArrayField | ObjectField | FieldGroup) & {
 	// TODO: try to remove these

@@ -71,11 +71,10 @@ const Location = ({
     }
 
     const handleSave = () => {
-        console.log('HERE')
         if (location) {
             onSave(location);
         } else {
-            onSave(INITIAL_LOCATION);
+            onSave(value ?? INITIAL_LOCATION);
         }
         setOpen(false);
     }
@@ -84,7 +83,7 @@ const Location = ({
         <div>
             <FormLabel
                 label={label}
-                withAsterisk
+                withAsterisk={withAsterisk}
             />
             <Button
                 onClick={() => setOpen(true)}

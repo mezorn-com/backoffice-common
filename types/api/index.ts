@@ -11,6 +11,7 @@ export interface IListResponseData {
     page: number;
     totalPage: number;
     totalData?: number;
+    [key: string]: unknown;
 }
 
 type IFieldType = 'render';

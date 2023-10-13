@@ -11,4 +11,5 @@ export interface IListState extends ITableState {
     listActions?: IListMetaResponse['listActions'];
     listItemActions?: IListMetaResponse['listItemActions'];
     filter?: INormalField[];
+    listResponse?: Record<string, unknown>;
 }

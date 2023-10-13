@@ -50,6 +50,7 @@ type SetListResponse = {
         limit: number;
         totalPage: number;
         totalData?: number;
+        listResponse?: Record<string, unknown>;
     };
 };
 
@@ -88,6 +89,7 @@ const initialState: IListState = {
     listActions: undefined,
     listItemActions: undefined,
     filter: undefined,
+    listResponse: undefined
 }
 
 interface IBaseListParams {
@@ -105,6 +107,7 @@ const reducer = produce(
                 draft.pageSize = action.payload.limit;
                 draft.totalPage = action.payload.totalPage;
                 draft.totalData = action.payload.totalData;
+                draft.listResponse = action.payload.listResponse;
                 break;
             }
             case 'SET_META_DATA': {
@@ -168,6 +171,7 @@ const useListPage = ({
                 totalPage: data.data.totalPage,
                 limit: data.data.limit,
                 totalData: data.data.totalData,
+                listResponse: data.data
             }
         })
     };

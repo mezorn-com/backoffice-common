@@ -84,12 +84,8 @@ export const uploadFileNormally = (payload: File | File[], config: IFileUploader
 
             const params: Record<string, unknown> = {
                 useFileName: config?.useFileName ?? false,
-            }
-            if (config.folderPath) {
-                params.folderPath = config.folderPath
-            }
-            if (config.prefix) {
-                params.prefix = config.prefix
+                folderPath: config?.folderPath ?? undefined,
+                prefix: config?.prefix ?? undefined
             }
             const queryParams = qs.stringify(params);
             const response = await axios<IFileUploadResponse>({

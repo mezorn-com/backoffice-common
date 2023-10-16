@@ -240,26 +240,41 @@ const Table = ({
                 }
             </div>
             <div className={classes.tableWrapper}>
-                <TableElement
-                    footerGroups={table.getFooterGroups()}
-                    headerGroups={table.getHeaderGroups()}
-                    rowModel={table.getRowModel()}
-                    width={table.getTotalSize()}
-                />
-                <TableElement
-                    footerGroups={table.getFooterGroups()}
-                    headerGroups={table.getHeaderGroups()}
-                    rowModel={table.getRowModel()}
-                    width={table.getTotalSize()}
-                    horizontalScroll={true}
-                />
-                <TableElement
-                    footerGroups={table.getFooterGroups()}
-                    headerGroups={table.getHeaderGroups()}
-                    rowModel={table.getRowModel()}
-                    width={table.getTotalSize()}
-                />
-
+                <div style={{ border: '3px solid teal', minWidth: '100%', display: 'inline-flex' }}>
+                    <TableElement
+                        footerGroups={table.getFooterGroups()}
+                        headerGroups={table.getHeaderGroups()}
+                        rowModel={table.getRowModel()}
+                        width={table.getTotalSize()}
+                        // style={{
+                        //     //     width: '100%'
+                        //     width: 50,
+                        //     border: '1px solid pink'
+                        // }}
+                    />
+                    <TableElement
+                        footerGroups={table.getFooterGroups()}
+                        headerGroups={table.getHeaderGroups()}
+                        rowModel={table.getRowModel()}
+                        width={table.getTotalSize()}
+                        horizontalScroll={true}
+                        // style={{
+                        //     border: '1px solid yellow',
+                        //     width: 50,
+                        // }}
+                    />
+                    <TableElement
+                        footerGroups={table.getFooterGroups()}
+                        headerGroups={table.getHeaderGroups()}
+                        rowModel={table.getRowModel()}
+                        width={table.getTotalSize()}
+                        // style={{
+                        //     width: 150,
+                        //     border: '1px solid green'
+                        //     // width: '100%'
+                        // }}
+                    />
+                </div>
                 {/*<table className={classes.table}>*/}
                 {/*    <thead>*/}
                 {/*    {table.getHeaderGroups().map(headerGroup => (*/}

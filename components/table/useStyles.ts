@@ -154,11 +154,15 @@ export const useStyles = createStyles((theme) => {
             gap: theme.spacing.sm
         },
         tableWrapper: {
-            display: 'flex',
+            // border: '1px solid blue',
+            // display: 'inline-flex',
+            // display: 'grid',
+            // gridTemplateColumns: 'auto auto auto',
             flex: 1,
             marginTop: theme.spacing.md,
             marginBottom: theme.spacing.md,
             overflow: 'hidden',
+            // overflowX: 'hidden',
             'thead th': {
                 position: 'sticky',
                 top: 0,

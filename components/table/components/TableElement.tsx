@@ -3,14 +3,13 @@ import { flexRender, HeaderGroup, RowData, RowModel } from '@tanstack/react-tabl
 import { useStyles } from '@/backoffice-common/components/table/useStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
 
-
-/// TODO: type of doc
 interface IProps {
     rowModel: RowModel<ListDoc>;
     headerGroups: HeaderGroup<ListDoc>[];
     footerGroups: HeaderGroup<ListDoc>[];
     width: number;
     horizontalScroll?: boolean;
+    style?: any;
 }
 
 const TableElement = ({
@@ -18,7 +17,8 @@ const TableElement = ({
     footerGroups,
     rowModel,
     width,
-    horizontalScroll = false
+    horizontalScroll = false,
+    style
 }: IProps) => {
     const { classes } = useStyles();
 
@@ -30,7 +30,9 @@ const TableElement = ({
                 maxHeight: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                border: '1px solid red'
+                // border: '1px solid red',
+                width,
+                ...style
             }}
         >
             <div

@@ -50,6 +50,7 @@ import {
 import { IRowActionButton } from '@/backoffice-common/hooks/useListPage';
 import { IFormValues } from '@/backoffice-common/components/form/helper';
 import { reducer, initialState } from './reducer';
+import { useBodyScrolls } from '@/backoffice-common/components/table/hooks';
 
 const pageSizes = [10, 20, 30, 40, 50];
 
@@ -62,6 +63,7 @@ const Table = ({
     const { t } = useTranslation();
     const { classes } = useStyles();
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
+    const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
 
     const tableColumns = React.useMemo(() => {
         let cols = clone(externalState.columns);
@@ -220,6 +222,8 @@ const Table = ({
         })
     }
 
+    // console.log('DSADAS>>>', table.getRowM)
+
     return (
         <div className={classes.container}>
             <div>
@@ -239,40 +243,34 @@ const Table = ({
                     )
                 }
             </div>
+
             <div className={classes.tableWrapper}>
-                <div style={{ border: '3px solid teal', minWidth: '100%', display: 'inline-flex' }}>
+                <div style={{ border: '0px solid teal', minWidth: '100%', display: 'inline-flex', maxHeight: '100%' }}>
                     <TableElement
-                        footerGroups={table.getFooterGroups()}
-                        headerGroups={table.getHeaderGroups()}
+                        footerGroups={table.getLeftFooterGroups()}
+                        headerGroups={table.getLeftHeaderGroups()}
                         rowModel={table.getRowModel()}
-                        width={table.getTotalSize()}
-                        // style={{
-                        //     //     width: '100%'
-                        //     width: 50,
-                        //     border: '1px solid pink'
-                        // }}
+                        width={table.getLeftTotalSize()}
+                        bodyRef={leftBodyRef}
+                        cells={row.getLeftVisibleCells()}
+                        style={{
+                            border: '1px solid blue'
+                        }}
                     />
                     <TableElement
-                        footerGroups={table.getFooterGroups()}
-                        headerGroups={table.getHeaderGroups()}
+                        footerGroups={table.getCenterFooterGroups()}
+                        headerGroups={table.getCenterHeaderGroups()}
                         rowModel={table.getRowModel()}
-                        width={table.getTotalSize()}
+                        width={table.getCenterTotalSize()}
                         horizontalScroll={true}
-                        // style={{
-                        //     border: '1px solid yellow',
-                        //     width: 50,
-                        // }}
+                        bodyRef={centerBodyRef}
                     />
                     <TableElement
-                        footerGroups={table.getFooterGroups()}
-                        headerGroups={table.getHeaderGroups()}
+                        footerGroups={table.getRightFooterGroups()}
+                        headerGroups={table.getRightHeaderGroups()}
                         rowModel={table.getRowModel()}
-                        width={table.getTotalSize()}
-                        // style={{
-                        //     width: 150,
-                        //     border: '1px solid green'
-                        //     // width: '100%'
-                        // }}
+                        width={table.getRightTotalSize()}
+                        bodyRef={rightBodyRef}
                     />
                 </div>
                 {/*<table className={classes.table}>*/}

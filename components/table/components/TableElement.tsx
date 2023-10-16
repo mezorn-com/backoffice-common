@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { flexRender, HeaderGroup, RowData, RowModel } from '@tanstack/react-table';
+import { flexRender, HeaderGroup, RowModel, Cell } from '@tanstack/react-table';
 import { useStyles } from '@/backoffice-common/components/table/useStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
 
@@ -7,9 +7,11 @@ interface IProps {
     rowModel: RowModel<ListDoc>;
     headerGroups: HeaderGroup<ListDoc>[];
     footerGroups: HeaderGroup<ListDoc>[];
+    cells: Cell<ListDoc, unknown>[];
     width: number;
     horizontalScroll?: boolean;
-    style?: any;
+    bodyRef: React.MutableRefObject<HTMLDivElement | null>;
+    style?: React.CSSProperties;
 }
 
 const TableElement = ({
@@ -18,6 +20,7 @@ const TableElement = ({
     rowModel,
     width,
     horizontalScroll = false,
+    bodyRef,
     style
 }: IProps) => {
     const { classes } = useStyles();
@@ -30,7 +33,6 @@ const TableElement = ({
                 maxHeight: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                // border: '1px solid red',
                 width,
                 ...style
             }}
@@ -79,7 +81,7 @@ const TableElement = ({
                         })
                     }
                 </div>
-                <div className='tbody' style={{ flex: 1, overflow: 'auto' }}>
+                <div className='tbody' style={{ flex: 1, overflow: 'auto', border: '2px solid red' }} ref={bodyRef}>
                     {
                         rowModel.rows.map(row => {
                             return (

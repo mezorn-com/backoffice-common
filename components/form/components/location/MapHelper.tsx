@@ -1,9 +1,15 @@
 import * as React from 'react';
 import { useMapEvents, Marker } from 'react-leaflet'
 import L, { LatLngExpression, LatLngLiteral, LatLngTuple } from 'leaflet';
-import url from './marker-icon.png';
-import shadow from './marker-shadow.png'
-const icon = L.icon({ iconUrl: url, shadowUrl: shadow });
+import markerIcon2x from './marker-icon-2x.png';
+import markerShadow from './marker-shadow.png'
+
+const icon = L.icon({
+    iconUrl: markerIcon2x,
+    shadowUrl: markerShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41]
+});
 
 interface LocationMapHelperProps {
     location: LatLngLiteral;
@@ -38,5 +44,5 @@ export const MapHelper = ({
         // }
     }, []);
 
-    return <Marker position={location} icon={icon}/>;
+    return <Marker key='sad' position={location} icon={icon}/>
 }

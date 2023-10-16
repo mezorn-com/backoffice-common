@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { useMapEvents, Marker } from 'react-leaflet'
-import { LatLngExpression, LatLngLiteral, LatLngTuple } from 'leaflet';
+import L, { LatLngExpression, LatLngLiteral, LatLngTuple } from 'leaflet';
+import url from './marker-icon.png';
+import shadow from './marker-shadow.png'
+const icon = L.icon({ iconUrl: url, shadowUrl: shadow });
 
 interface LocationMapHelperProps {
     location: LatLngLiteral;
@@ -35,5 +38,5 @@ export const MapHelper = ({
         // }
     }, []);
 
-    return <Marker position={location}/>;
+    return <Marker position={location} icon={icon}/>;
 }

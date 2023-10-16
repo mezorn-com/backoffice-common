@@ -102,7 +102,7 @@ const Location = ({
             >
                 <div className={classes.wrapper}>
                     <div className={classes.header}>
-                        Location
+                        Location ICON TEST
                         <Modal.CloseButton/>
                     </div>
                     <MapContainer center={getMapCenter()} zoom={13} className={classes.map}>

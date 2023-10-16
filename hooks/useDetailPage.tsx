@@ -183,9 +183,8 @@ const useDetailPage = ({
         return element;
     }
 
-    const actionButtons = React.useMemo(() => {
+    const actionButtons: React.ReactNode = React.useMemo(() => {
         const buttonList: React.ReactNode[] = [];
-
 
 
         for (const subResourceKey in state.subResources) {

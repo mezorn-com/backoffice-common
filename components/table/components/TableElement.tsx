@@ -1,59 +1,137 @@
 import * as React from 'react';
-import { flexRender, HeaderGroup, RowModel, Cell } from '@tanstack/react-table';
+import { flexRender, HeaderGroup, Cell, Table, Row } from '@tanstack/react-table';
 import { useStyles } from '@/backoffice-common/components/table/useStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
+import { useResizeObserver } from '@mantine/hooks';
+import { getRowClassName } from '@/backoffice-common/components/table/utilts';
+import TableRow from './Row';
 
-interface IProps {
-    rowModel: RowModel<ListDoc>;
-    headerGroups: HeaderGroup<ListDoc>[];
-    footerGroups: HeaderGroup<ListDoc>[];
-    cells: Cell<ListDoc, unknown>[];
-    width: number;
-    horizontalScroll?: boolean;
+type Type = 'left' | 'center' | 'right';
+
+interface TableElementProps {
+    type: Type,
+    table: Table<ListDoc>,
     bodyRef: React.MutableRefObject<HTMLDivElement | null>;
     style?: React.CSSProperties;
+    onResize: (height: number, rowId: string) => void;
 }
 
 const TableElement = ({
-    headerGroups,
-    footerGroups,
-    rowModel,
-    width,
-    horizontalScroll = false,
+    type,
+    table,
     bodyRef,
+    onResize,
     style
-}: IProps) => {
+}: TableElementProps) => {
     const { classes } = useStyles();
+
+    const [ ref, { height } ] = useResizeObserver();
+
+    React.useEffect(() => {
+        onResize(height, '')
+    }, [height]);
+
+    const getHeaderGroups = (): HeaderGroup<ListDoc>[] => {
+        switch(type) {
+            case 'left': {
+                return table.getLeftHeaderGroups();
+            }
+            case 'center': {
+                return table.getCenterHeaderGroups();
+            }
+            case 'right': {
+                return table.getRightHeaderGroups();
+            }
+            default: {
+                return []
+            }
+        }
+    }
+
+    const getFooterGroups = (): HeaderGroup<ListDoc>[] => {
+        switch(type) {
+            case 'left': {
+                return table.getLeftFooterGroups();
+            }
+            case 'center': {
+                return table.getCenterFooterGroups();
+            }
+            case 'right': {
+                return table.getRightFooterGroups();
+            }
+            default: {
+                return []
+            }
+        }
+    }
+
+    const getVisibleCells = (row: Row<ListDoc>): Cell<ListDoc, unknown>[] => {
+        switch(type) {
+            case 'left': {
+                return row.getLeftVisibleCells();
+            }
+            case 'center': {
+                return row.getCenterVisibleCells();
+            }
+            case 'right': {
+                return row.getRightVisibleCells();
+            }
+            default: {
+                return []
+            }
+        }
+    }
+
+    const getWidth = (): number => {
+        switch(type) {
+            case 'left': {
+                return table.getLeftTotalSize();
+            }
+            case 'center': {
+                return table.getCenterTotalSize();
+            }
+            case 'right': {
+                return table.getRightTotalSize();
+            }
+            default: {
+                return 0;
+            }
+        }
+    }
+
 
     return (
         <div
             style={{
-                overflowX: horizontalScroll ? 'auto' : 'hidden',
+                overflowX: type === 'center' ? 'auto' : 'hidden',
                 overflowY: 'hidden',
                 maxHeight: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                width,
+                // width: getWidth(),
                 ...style
             }}
         >
             <div
                 className='divTable'
                 style={{
-                    width,
+                    width: getWidth(),
                     display: 'flex',
                     flexDirection: 'column',
                     flex: 1,
                     overflow:'hidden'
                 }}
+                ref={ref}
             >
                 <div
                     className='thead'
                 >
                     {
-                        headerGroups.map(headerGroup => {
+                        getHeaderGroups().map(headerGroup => {
+                            const id = headerGroup.id.split('_')[1];
+                            const rowId = getRowClassName(id) + '-col-' + type;
                             return (
-                                <div key={headerGroup.id} className={classes.row}>
+                                <TableRow key={headerGroup.id}>
                                     {
                                         headerGroup.headers.map(header => {
                                             return (
@@ -76,18 +154,19 @@ const TableElement = ({
                                             )
                                         })
                                     }
-                                </div>
+                                </TableRow>
                             )
                         })
                     }
                 </div>
-                <div className='tbody' style={{ flex: 1, overflow: 'auto', border: '2px solid red' }} ref={bodyRef}>
+                <div className={`tbody ${type === 'center' ? classes.z : ''}`} style={{ flex: 1, overflow: 'auto', border: '0px solid red' }} ref={bodyRef}>
                     {
-                        rowModel.rows.map(row => {
+                        table.getRowModel().rows.map(row => {
+                            const rowId = getRowClassName(row.id) + '-' + type;
                             return (
-                                <div key={row.id} className={classes.row}>
+                                <TableRow key={row.id}>
                                     {
-                                        row.getVisibleCells().map(cell => {
+                                        getVisibleCells(row).map(cell => {
                                             return (
                                                 <div
                                                     key={cell.id}
@@ -101,14 +180,14 @@ const TableElement = ({
                                             )
                                         })
                                     }
-                                </div>
+                                </TableRow>
                             )
                         })
                     }
                 </div>
                 <div className='tfoot'>
                     {
-                        footerGroups.map(footerGroup => {
+                        getFooterGroups().map(footerGroup => {
                             return (
                                 <div key={footerGroup.id} className='tr'>
                                     {

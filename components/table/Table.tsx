@@ -1,12 +1,8 @@
 import * as React from 'react';
 import type { ITableInteraction, ITableProps, ITableState } from './types';
 import { append, assocPath, clone, path, prepend, eqProps, allPass } from 'ramda';
-import type { ArrayElement } from '@/backoffice-common/types/common';
 import { useStyles } from './useStyles';
-import { IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight, IconDatabaseX } from '@tabler/icons-react';
-import { Anchor, NumberInput, Select, ActionIcon } from '@mantine/core';
 import { IFieldRenderType } from '@/backoffice-common/types/api';
-import { useTranslation } from 'react-i18next';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
 import TableFilter from './filter';
@@ -51,19 +47,17 @@ import { IRowActionButton } from '@/backoffice-common/hooks/useListPage';
 import { IFormValues } from '@/backoffice-common/components/form/helper';
 import { reducer, initialState } from './reducer';
 import { useBodyScrolls } from '@/backoffice-common/components/table/hooks';
-
-const pageSizes = [10, 20, 30, 40, 50];
-
+import TablePagination from '@/backoffice-common/components/table/components/pagination/TablePagination';
 const Table = ({
     onInteract,
     rowActionButtons,
     rowActionButtonPosition = TABLE_ROW_ACTION_BUTTON_POSITION,
     state: externalState
 }: ITableProps) => {
-    const { t } = useTranslation();
     const { classes } = useStyles();
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
     const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
+    const tablesContainerRef = React.useRef<HTMLDivElement>(null);
 
     const tableColumns = React.useMemo(() => {
         let cols = clone(externalState.columns);
@@ -80,8 +74,7 @@ const Table = ({
                         </div>
                     )
                 },
-
-                // size: seconds
+                enablePinning: true
             }
             if (rowActionButtonPosition === 'right') {
                 cols = append(
@@ -121,13 +114,15 @@ const Table = ({
                 handleTableStateChange(newState);
             }
         },
-        renderFallbackValue: '-'
+        renderFallbackValue: '-',
+        enablePinning: true
     })
 
-    console.log('table>>>', table)
-
-    // console.log('Table State>>>>', table.getState());
-    // console.log('Props State>>>>', externalState);
+    React.useEffect(() => {
+        table.setColumnPinning({
+            right: ['table-actions-column']
+        })
+    }, []);
 
     // compare 2 objects' given props values.
     const check = allPass([
@@ -222,7 +217,41 @@ const Table = ({
         })
     }
 
-    // console.log('DSADAS>>>', table.getRowM)
+    const handleRowHeightChange = () => {
+        if (tablesContainerRef.current) {
+            Array.from(tablesContainerRef.current.children).forEach(element => {
+                // @ts-ignore
+                [...element.querySelector('.tbody').children, ...element.querySelector('.thead').children].forEach((rowElement) => {
+                    const id = rowElement.id;
+                    // remove last -right -left -center
+                    let prefix = '';
+                    if (id.endsWith('-right')) {
+                        prefix = id.substring(0, id.length - '-right'.length);
+                    } else if (id.endsWith('-center')) {
+                        prefix = id.substring(0, id.length - '-center'.length);
+                    } else if (id.endsWith('-left')) {
+                        prefix = id.substring(0, id.length - '-left'.length);
+                    }
+                    if (tablesContainerRef.current && prefix) {
+                        const rows = Array.from(tablesContainerRef.current.querySelectorAll(`[id^=${prefix}]`));
+                        let highest = 0;
+                        for (const el of rows) {
+                            const h = el.getBoundingClientRect().height;
+                            if (h > highest) {
+                                highest = h;
+                            }
+                        }
+                        for (const el of rows) {
+                            if (highest) {
+                                // @ts-ignore
+                                el.style.height = highest + 'px';
+                            }
+                        }
+                    }
+                })
+            })
+        }
+    }
 
     return (
         <div className={classes.container}>
@@ -243,167 +272,50 @@ const Table = ({
                     )
                 }
             </div>
-
             <div className={classes.tableWrapper}>
-                <div style={{ border: '0px solid teal', minWidth: '100%', display: 'inline-flex', maxHeight: '100%' }}>
+                <div style={{ border: '0px solid teal', minWidth: '100%', display: 'flex', maxHeight: '100%' }} ref={tablesContainerRef}>
                     <TableElement
-                        footerGroups={table.getLeftFooterGroups()}
-                        headerGroups={table.getLeftHeaderGroups()}
-                        rowModel={table.getRowModel()}
-                        width={table.getLeftTotalSize()}
+                        type='left'
+                        table={table}
                         bodyRef={leftBodyRef}
-                        cells={row.getLeftVisibleCells()}
-                        style={{
-                            border: '1px solid blue'
-                        }}
+                        onResize={handleRowHeightChange}
+                        // style={{
+                        //     border: '1px solid blue'
+                        // }}
                     />
                     <TableElement
-                        footerGroups={table.getCenterFooterGroups()}
-                        headerGroups={table.getCenterHeaderGroups()}
-                        rowModel={table.getRowModel()}
-                        width={table.getCenterTotalSize()}
-                        horizontalScroll={true}
+                        type='center'
+                        table={table}
                         bodyRef={centerBodyRef}
+                        onResize={handleRowHeightChange}
+                        style={{
+                            flex: 1
+                        //     border: '1px solid green'
+                        }}
                     />
                     <TableElement
-                        footerGroups={table.getRightFooterGroups()}
-                        headerGroups={table.getRightHeaderGroups()}
-                        rowModel={table.getRowModel()}
-                        width={table.getRightTotalSize()}
+                        type='right'
+                        table={table}
                         bodyRef={rightBodyRef}
-                    />
-                </div>
-                {/*<table className={classes.table}>*/}
-                {/*    <thead>*/}
-                {/*    {table.getHeaderGroups().map(headerGroup => (*/}
-                {/*        <tr key={headerGroup.id}>*/}
-                {/*            {*/}
-                {/*                headerGroup.headers.map(header => {*/}
-                {/*                    return (*/}
-                {/*                        <th key={header.id} colSpan={header.colSpan} className={classes.headerCell} style={{ width: header.getSize() }}>*/}
-                {/*                            {*/}
-                {/*                                header.isPlaceholder*/}
-                {/*                                    ? null*/}
-                {/*                                    : flexRender(*/}
-                {/*                                        header.column.columnDef.header,*/}
-                {/*                                        header.getContext()*/}
-                {/*                                    )*/}
-                {/*                            }*/}
-                {/*                        </th>*/}
-                {/*                    )*/}
-                {/*                })*/}
-                {/*            }*/}
-                {/*        </tr>*/}
-                {/*    ))}*/}
-                {/*    </thead>*/}
-                {/*    <tbody>*/}
-                {/*    {*/}
-                {/*        table.getRowModel().rows.length*/}
-                {/*            ?   table.getRowModel().rows.map(row => (*/}
-                {/*                    <tr key={row.id}>*/}
-                {/*                        {*/}
-                {/*                            row.getVisibleCells().map(cell => {*/}
-                {/*                                return (*/}
-                {/*                                    <td key={cell.id} className={classes.cell}>*/}
-                {/*                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}*/}
-                {/*                                    </td>*/}
-                {/*                                )*/}
-                {/*                            })*/}
-                {/*                        }*/}
-                {/*                    </tr>*/}
-                {/*                ))*/}
-                {/*            :   (*/}
-                {/*                <tr>*/}
-                {/*                    <td colSpan={1000}>*/}
-                {/*                        <div className={classes.noData}>*/}
-                {/*                            <IconDatabaseX size={50} color={'gray'}/>*/}
-                {/*                        </div>*/}
-                {/*                    </td>*/}
-                {/*                </tr>*/}
-                {/*            )*/}
-                {/*    }*/}
-                {/*    </tbody>*/}
-                {/*    <tfoot>*/}
-                {/*    {table.getFooterGroups().map(footerGroup => (*/}
-                {/*        <tr key={footerGroup.id}>*/}
-                {/*            {footerGroup.headers.map(header => (*/}
-                {/*                <th key={header.id} colSpan={header.colSpan}>*/}
-                {/*                    {header.isPlaceholder*/}
-                {/*                        ? null*/}
-                {/*                        : flexRender(*/}
-                {/*                            header.column.columnDef.footer,*/}
-                {/*                            header.getContext()*/}
-                {/*                        )}*/}
-                {/*                </th>*/}
-                {/*            ))}*/}
-                {/*        </tr>*/}
-                {/*    ))}*/}
-                {/*    </tfoot>*/}
-                {/*</table>*/}
-            </div>
-            <div className={classes.pagination}>
-                <div className={classes.paginationControls}>
-                    <ActionIcon
-                        variant='filled'
-                        color='color.primary'
-                        onClick={() => table.setPageIndex(0)}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        <IconChevronsLeft size={16}/>
-                    </ActionIcon>
-                    <ActionIcon
-                        variant='filled'
-                        color='color.primary'
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        <IconChevronLeft size={16}/>
-                    </ActionIcon>
-                    <ActionIcon
-                        variant='filled'
-                        color='color.primary'
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        <IconChevronRight size={16}/>
-                    </ActionIcon>
-                    <ActionIcon
-                        variant='filled'
-                        color='color.primary'
-                        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        <IconChevronsRight size={16}/>
-                    </ActionIcon>
-                </div>
-                <div className={classes.totalPage}>
-                    Page
-                    <NumberInput
-                        type="number"
-                        value={externalState.page}
-                        onChange={e => {
-                            const page = e ? Number(e) : 0;
-                            table.setPageIndex(page);
+                        style={{
+                            // width: 200,
+                            // border: '1px solid pink'
                         }}
-                        style={{ width: '100px' }}
-                        className={classes.paginationInput}
-                        min={1}
-                        size='xs'
+                        onResize={handleRowHeightChange}
                     />
-                    / {table.getPageCount()}
                 </div>
-                <Select
-                    data={pageSizes.map(pageSize => {return {value: `${pageSize}`, label: `${pageSize}`}})}
-                    onChange={e => {table.setPageSize(Number(e))}}
-                    wrapperProps={{
-                        style: {
-                            width: 80
-                        }
-                    }}
-                    value={externalState.pageSize.toString()}
-                    size='xs'
-                />
             </div>
+            <TablePagination
+                canPreviousPage={table.getCanPreviousPage()}
+                canNextPage={table.getCanNextPage()}
+                pageSize={externalState.pageSize.toString()}
+                pageCount={table.getPageCount()}
+                page={externalState.page}
+                onPageSizeChange={value =>  table.setPageSize(value)}
+                onPageIndexChange={value => table.setPageIndex(value)}
+                onPreviousPage={table.previousPage}
+                onNextPage={table.nextPage}
+            />
         </div>
     )
 }

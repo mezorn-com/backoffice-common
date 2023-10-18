@@ -29,9 +29,9 @@ import {
 	validator
 } from './helper';
 import { randomId } from '@mantine/hooks';
-import { CascadingSelect, FetchSelect, FormRTE, MapAddressPicker, SearchableSelect, YearPicker } from './components';
+import { CascadingSelect, FetchSelect, FormRTE, MapAddressPicker, SearchableSelect } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
-import { DatePickerInput, DateTimePicker, TimeInput } from '@mantine/dates';
+import { DatePickerInput, DateTimePicker, TimeInput, YearPickerInput } from '@mantine/dates';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
 import { clone, omit } from 'ramda';
 import dayjs from 'dayjs';
@@ -468,7 +468,7 @@ const Form = ({
 			}
 			case UiType.YEAR: {
 				return (
-					<YearPicker
+					<YearPickerInput
 						{...props}
 					/>
 				)

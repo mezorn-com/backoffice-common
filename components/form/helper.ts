@@ -273,6 +273,14 @@ const getTransformedValue = (field: IFormField, value: unknown): Promise<unknown
 				resolve(value || undefined);
 				return;
 			}
+			case UiType.YEAR: {
+				if (value && value instanceof Date) {
+					resolve(dayjs(value).year())
+					return;
+				}
+				resolve(undefined);
+				return
+			}
 			default: {
 				resolve(value);
 				return;

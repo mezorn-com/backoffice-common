@@ -29,7 +29,8 @@ export enum UiType {
 	DATETIME = 'datetime',
 	TIME = 'time',
 	SEARCH_SELECT = 'search-select',
-	LOCATION = 'location'
+	LOCATION = 'location',
+	'YEAR' = 'year'
 }
 
 export enum Locale {
@@ -88,6 +89,10 @@ interface CheckboxField extends NormalFieldCore {
 	uiType: UiType.CHECKBOX;
 }
 
+interface YearField extends NormalFieldCore {
+	uiType: UiType.YEAR;
+}
+
 type WithOptionsApi =  {
 	optionsApi: {
 		uri: string;
@@ -123,52 +128,6 @@ export interface WithDescription {
 export interface SelectOption extends WithLabel, WithOptionalDescription {
 	value: string | number;
 }
-
-// export interface IFormField {
-//     type: FieldType;
-//     key: string;
-//     label?: string;
-//     required?: boolean;
-//     uiType?: UiType;
-//     maxLength?: number;
-//     minLength?: number;
-//     length?: number;
-//     numeric?: boolean;
-//     number?: boolean;
-//     fields?: IFormField[];
-//     refCode?: string;
-//     multiLine?: boolean;
-//     secret?: boolean;
-//     visibility?: IVisibility;
-//     value?: any;
-//     multiple?: boolean;
-//     optionsApi?: {
-//         uri: string;
-//         queryParams?: string[];
-//     };
-//     options?: IFormOption[];
-//     format?: string;
-//     element?: IFormField;
-//     renderType?: IFieldRenderType;
-//     uri?: string;
-//     retrieveApi?: {
-//         uri: string;
-//     };
-//     suggestApi?: {
-//         uri: string;
-//         searchKey: string;
-//     };
-//
-//     mimeType?: string;
-//     useFileName?: boolean;
-//     folderPath?: string;
-//     prefix?: string;
-//
-//     // Custom Properties
-//     parentFields?: IFormField[]; // not necessary now
-//     isArrayElement?: boolean;
-//     groupPath?: string;
-// }
 
 interface CascadingSelectField extends NormalFieldCore {
 	uiType: UiType.CASCADING_SELECT;
@@ -219,25 +178,6 @@ export interface MapAddressPicker extends NormalFieldCore {
 		uri: string;
 	};
 }
-// type CascadingSelect = Omit<NormalFieldCore, 'label' | 'localizedLabels'> & {
-//     uiType: UiType.CASCADING_SELECT
-//     refCode: string
-// } & (WithOptionalLabel | {
-//     labels?: string[]
-//     localizedLabels?: Array<Partial<Record<Locale, string>>>
-// })
-
-interface IUploadForm {
-	mimeType?: string;
-	useFileName?: boolean;
-	folderPath?: string;
-	prefix?: string;
-}
-
-export interface IFormOption {
-	label: string;
-	value: string;
-}
 
 export interface WithVisibility {
 	visibility?: IVisibility;
@@ -287,6 +227,7 @@ export type INormalField = TextInputField
 	| HtmlInput
 	| SearchSelect
 	| LocationField
+	| YearField
 	;
 
 export type IFormField = (RenderField | INormalField | ArrayField | ObjectField | FieldGroup) & {

@@ -17,7 +17,7 @@ const getFileArraySize = (array: File[]) => {
 // 4_194_304 max size. 4mb
 const MAX_UPLOAD_SIZE = 4_194_304;
 
-export const uploadFile = (payload: File | File[], config: IFileUploaderConfig) => {
+export const uploadFile = (payload: File | File[], config?: IFileUploaderConfig) => {
     const files = payload;
 
     if (!Array.isArray(files)) {
@@ -51,7 +51,7 @@ export const uploadFile = (payload: File | File[], config: IFileUploaderConfig) 
         }
     }
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
         const urls = [];
         for (const request of requests) {
             if (Array.isArray(request)) {
@@ -67,7 +67,7 @@ export const uploadFile = (payload: File | File[], config: IFileUploaderConfig) 
     })
 }
 
-export const uploadFileNormally = (payload: File | File[], config: IFileUploaderConfig): Promise<string | string[]> => {
+export const uploadFileNormally = (payload: File | File[], config?: IFileUploaderConfig): Promise<string | string[]> => {
     return new Promise(async (resolve, reject) => {
         try {
             const formData = new FormData();
@@ -86,6 +86,12 @@ export const uploadFileNormally = (payload: File | File[], config: IFileUploader
                 useFileName: config?.useFileName ?? false,
                 folderPath: config?.folderPath ?? undefined,
                 prefix: config?.prefix ?? undefined
+            }
+            if (config?.folderPath) {
+                params.folderPath = config.folderPath
+            }
+            if (config?.prefix) {
+                params.prefix = config.prefix
             }
             const queryParams = qs.stringify(params);
             const response = await axios<IFileUploadResponse>({
@@ -112,14 +118,14 @@ export const uploadFileNormally = (payload: File | File[], config: IFileUploader
     })
 }
 
-export const uploadWithSignedURL = (file: File, config: IFileUploaderConfig) => {
+export const uploadWithSignedURL = (file: File, config?: IFileUploaderConfig) => {
     return new Promise(async (resolve, reject) => {
         try {
             const bodyParams = {
                 fileName: file.name,
-                prefix: config?.prefix ?? config.folderPath ?? undefined,
-                useFileName: config.useFileName || false,
-                folderPath: config.folderPath ?? undefined
+                prefix: config?.prefix ?? config?.folderPath ?? undefined,
+                useFileName: config?.useFileName || false,
+                folderPath: config?.folderPath ?? undefined
             };
 
             const state = useStore.getState();

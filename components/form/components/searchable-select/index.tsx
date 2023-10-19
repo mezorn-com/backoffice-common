@@ -24,17 +24,21 @@ interface CommonProps {
 
 interface MultiProps extends CommonProps {
     multiple: true;
-    value: string[];
+    value: (string | Option)[];
     onChange: (value: string[] | null) => void;
 }
 
 interface SingleProps extends CommonProps {
     multiple?: false;
-    value: string;
+    value: string | Option;
     onChange: (value: string | null) => void;
 }
 
-type Props = MultiProps | SingleProps
+type Props = MultiProps | SingleProps;
+
+const isValueOption = (value: string | Option): value is Option => {
+    return typeof value !== 'string';
+}
 
 const SearchableSelect = ({
     uri,
@@ -60,6 +64,15 @@ const SearchableSelect = ({
     React.useEffect(() => {
         if (!props.value) {
             setSelectedValue(null);
+        } else if (!selectedValue) {
+            if (props.multiple) {
+                const value = props.value.filter(isValueOption);
+                setSelectedValue(value);
+            } else {
+                if (isValueOption(props.value)) {
+                    setSelectedValue([props.value]);
+                }
+            }
         }
     }, [props.value]);
 
@@ -79,7 +92,7 @@ const SearchableSelect = ({
                             signal: controllerRef.current.signal,
                         }
                     );
-                    let parsed: Option[] = [];
+                    let parsed: Option[];
                     if (parser) {
                         parsed = (responseData.data ?? []).map(parser);
                     } else {

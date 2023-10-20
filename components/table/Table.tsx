@@ -249,17 +249,17 @@ const Table = ({
             <div className={classes.tableWrapper}>
                 <div className={classes.table} ref={tablesContainerRef}>
                     <TableSection
-                        type={TableSectionType.LEFT}
+                        section={TableSectionType.LEFT}
                         table={table}
                         bodyRef={leftBodyRef}
                     />
                     <TableSection
-                        type={TableSectionType.CENTER}
+                        section={TableSectionType.CENTER}
                         table={table}
                         bodyRef={centerBodyRef}
                     />
                     <TableSection
-                        type={TableSectionType.RIGHT}
+                        section={TableSectionType.RIGHT}
                         table={table}
                         bodyRef={rightBodyRef}
                     />

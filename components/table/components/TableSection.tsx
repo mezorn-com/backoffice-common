@@ -7,13 +7,13 @@ import TableRow from './Row';
 import { TableSectionType } from '../types';
 
 interface TableElementProps {
-    type: TableSectionType,
+    section: TableSectionType,
     table: Table<ListDoc>,
     bodyRef: React.MutableRefObject<HTMLDivElement | null>;
 }
 
 const TableSection = ({
-    type,
+    section,
     table,
     bodyRef,
 }: TableElementProps) => {

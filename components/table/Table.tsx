@@ -1,13 +1,11 @@
 import * as React from 'react';
 import type { ITableInteraction, ITableProps, ITableState } from './types';
-import { append, assocPath, clone, path, prepend, eqProps, allPass } from 'ramda';
+import { TableSectionType } from './types';
+import { allPass, append, clone, eqProps, prepend } from 'ramda';
 import { useStyles } from './useStyles';
-import { IFieldRenderType } from '@/backoffice-common/types/api';
-import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
-import TableFilter from './filter';
-import TableElement from '@/backoffice-common/components/table/components/TableElement';
-
+import TableSection from './components/TableSection';
+import { getHeightObserver } from './utilts';
 import Form from '@/backoffice-common/components/form/Form';
 
 // react-table props below
@@ -33,21 +31,26 @@ import Form from '@/backoffice-common/components/form/Form';
 // },
 // rowSelection: {},
 // sorting: []
-
 import {
+    CellContext,
     ColumnDef,
-    flexRender,
     getCoreRowModel,
     getPaginationRowModel,
     TableState,
-    useReactTable,
-    CellContext
+    useReactTable
 } from '@tanstack/react-table'
 import { IRowActionButton } from '@/backoffice-common/hooks/useListPage';
 import { IFormValues } from '@/backoffice-common/components/form/helper';
-import { reducer, initialState } from './reducer';
+import { initialState, reducer } from './reducer';
 import { useBodyScrolls } from '@/backoffice-common/components/table/hooks';
 import TablePagination from '@/backoffice-common/components/table/components/pagination/TablePagination';
+
+// compare 2 objects' given props values.
+const check = allPass([
+    eqProps('page'),
+    eqProps('pageSize'),
+])
+
 const Table = ({
     onInteract,
     rowActionButtons,
@@ -59,10 +62,29 @@ const Table = ({
     const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
 
+    React.useEffect(() => {
+        if (tablesContainerRef.current) {
+            const observer = getHeightObserver();
+            for (const tableElement of tablesContainerRef.current.children) {
+                //TODO: Remove class selector
+                const headerElement = tableElement.querySelector('.thead');
+                if (headerElement) {
+                    observer.observe(headerElement);
+                }
+            }
+        }
+    }, [])
+
+    React.useEffect(() => {
+        table.setColumnPinning({
+            right: ['table-actions-column']
+        })
+    }, []);
+
     const tableColumns = React.useMemo(() => {
         let cols = clone(externalState.columns);
         if (rowActionButtons?.length) {
-            const actionButtonsColumn: ColumnDef<Record<string, any>> = {
+            const actionButtonsColumn: ColumnDef<Record<string, unknown>> = {
                 header: '',
                 id: 'table-actions-column',
                 cell(props) {
@@ -117,18 +139,6 @@ const Table = ({
         renderFallbackValue: '-',
         enablePinning: true
     })
-
-    React.useEffect(() => {
-        table.setColumnPinning({
-            right: ['table-actions-column']
-        })
-    }, []);
-
-    // compare 2 objects' given props values.
-    const check = allPass([
-        eqProps('page'),
-        eqProps('pageSize'),
-    ])
 
     const handleTableStateChange = (updatedTableState: TableState) => {
         const updatedState: ITableState = {
@@ -217,42 +227,6 @@ const Table = ({
         })
     }
 
-    const handleRowHeightChange = () => {
-        if (tablesContainerRef.current) {
-            Array.from(tablesContainerRef.current.children).forEach(element => {
-                // @ts-ignore
-                [...element.querySelector('.tbody').children, ...element.querySelector('.thead').children].forEach((rowElement) => {
-                    const id = rowElement.id;
-                    // remove last -right -left -center
-                    let prefix = '';
-                    if (id.endsWith('-right')) {
-                        prefix = id.substring(0, id.length - '-right'.length);
-                    } else if (id.endsWith('-center')) {
-                        prefix = id.substring(0, id.length - '-center'.length);
-                    } else if (id.endsWith('-left')) {
-                        prefix = id.substring(0, id.length - '-left'.length);
-                    }
-                    if (tablesContainerRef.current && prefix) {
-                        const rows = Array.from(tablesContainerRef.current.querySelectorAll(`[id^=${prefix}]`));
-                        let highest = 0;
-                        for (const el of rows) {
-                            const h = el.getBoundingClientRect().height;
-                            if (h > highest) {
-                                highest = h;
-                            }
-                        }
-                        for (const el of rows) {
-                            if (highest) {
-                                // @ts-ignore
-                                el.style.height = highest + 'px';
-                            }
-                        }
-                    }
-                })
-            })
-        }
-    }
-
     return (
         <div className={classes.container}>
             <div>
@@ -273,35 +247,21 @@ const Table = ({
                 }
             </div>
             <div className={classes.tableWrapper}>
-                <div style={{ border: '0px solid teal', minWidth: '100%', display: 'flex', maxHeight: '100%' }} ref={tablesContainerRef}>
-                    <TableElement
-                        type='left'
+                <div className={classes.table} ref={tablesContainerRef}>
+                    <TableSection
+                        type={TableSectionType.LEFT}
                         table={table}
                         bodyRef={leftBodyRef}
-                        onResize={handleRowHeightChange}
-                        // style={{
-                        //     border: '1px solid blue'
-                        // }}
                     />
-                    <TableElement
-                        type='center'
+                    <TableSection
+                        type={TableSectionType.CENTER}
                         table={table}
                         bodyRef={centerBodyRef}
-                        onResize={handleRowHeightChange}
-                        style={{
-                            flex: 1
-                        //     border: '1px solid green'
-                        }}
                     />
-                    <TableElement
-                        type='right'
+                    <TableSection
+                        type={TableSectionType.RIGHT}
                         table={table}
                         bodyRef={rightBodyRef}
-                        style={{
-                            // width: 200,
-                            // border: '1px solid pink'
-                        }}
-                        onResize={handleRowHeightChange}
                     />
                 </div>
             </div>

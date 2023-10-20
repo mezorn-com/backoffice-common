@@ -1,35 +1,41 @@
 import * as React from 'react';
 import { flexRender, HeaderGroup, Cell, Table, Row } from '@tanstack/react-table';
-import { useStyles } from '@/backoffice-common/components/table/useStyles';
+import { useSectionStyles } from './useSectionStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
-import { useResizeObserver } from '@mantine/hooks';
-import { getRowClassName } from '@/backoffice-common/components/table/utilts';
+import { getMutationObserver } from '../utilts';
 import TableRow from './Row';
-
-type Type = 'left' | 'center' | 'right';
+import { TableSectionType } from '../types';
 
 interface TableElementProps {
-    type: Type,
+    type: TableSectionType,
     table: Table<ListDoc>,
     bodyRef: React.MutableRefObject<HTMLDivElement | null>;
-    style?: React.CSSProperties;
-    onResize: (height: number, rowId: string) => void;
 }
 
-const TableElement = ({
+const TableSection = ({
     type,
     table,
     bodyRef,
-    onResize,
-    style
 }: TableElementProps) => {
-    const { classes } = useStyles();
-
-    const [ ref, { height } ] = useResizeObserver();
+    const { classes } = useSectionStyles({ sectionType: type });
+    const tablesContainerRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
-        onResize(height, '')
-    }, [height]);
+        if (type === 'center' &&  tablesContainerRef.current) {
+            const tableBody = tablesContainerRef.current.querySelector('.tbody');
+            if (tableBody) {
+                const mutationObserver = getMutationObserver();
+                mutationObserver.observe(tableBody,{
+                    attributes: false,
+                    childList: true,
+                    subtree: false
+                });
+                return () => {
+                    mutationObserver.disconnect();
+                }
+            }
+        }
+    }, [])
 
     const getHeaderGroups = (): HeaderGroup<ListDoc>[] => {
         switch(type) {
@@ -99,39 +105,19 @@ const TableElement = ({
         }
     }
 
-
     return (
-        <div
-            style={{
-                overflowX: type === 'center' ? 'auto' : 'hidden',
-                overflowY: 'hidden',
-                maxHeight: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                // width: getWidth(),
-                ...style
-            }}
-        >
+        <div className={classes.container}>
             <div
-                className='divTable'
-                style={{
-                    width: getWidth(),
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flex: 1,
-                    overflow:'hidden'
-                }}
-                ref={ref}
+                className={classes.wrapper}
+                style={{ width: getWidth() }}
+                ref={type === 'center' ? tablesContainerRef : undefined}
             >
-                <div
-                    className='thead'
-                >
+                {/*Using `thead` class for css selector */}
+                <div className='thead'>
                     {
                         getHeaderGroups().map(headerGroup => {
-                            const id = headerGroup.id.split('_')[1];
-                            const rowId = getRowClassName(id) + '-col-' + type;
                             return (
-                                <TableRow key={headerGroup.id}>
+                                <TableRow key={headerGroup.id} rowId={headerGroup.id}>
                                     {
                                         headerGroup.headers.map(header => {
                                             return (
@@ -159,12 +145,11 @@ const TableElement = ({
                         })
                     }
                 </div>
-                <div className={`tbody ${type === 'center' ? classes.z : ''}`} style={{ flex: 1, overflow: 'auto', border: '0px solid red' }} ref={bodyRef}>
+                <div className={`tbody ${classes.body}`} ref={bodyRef}>
                     {
                         table.getRowModel().rows.map(row => {
-                            const rowId = getRowClassName(row.id) + '-' + type;
                             return (
-                                <TableRow key={row.id}>
+                                <TableRow key={row.id} rowId={row.id}>
                                     {
                                         getVisibleCells(row).map(cell => {
                                             return (
@@ -218,4 +203,4 @@ const TableElement = ({
     )
 };
 
-export default TableElement;
+export default TableSection;

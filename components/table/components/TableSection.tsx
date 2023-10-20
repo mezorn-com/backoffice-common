@@ -17,11 +17,11 @@ const TableSection = ({
     table,
     bodyRef,
 }: TableElementProps) => {
-    const { classes } = useSectionStyles({ sectionType: type });
+    const { classes } = useSectionStyles({ sectionType: section });
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
-        if (type === 'center' &&  tablesContainerRef.current) {
+        if (section === 'center' &&  tablesContainerRef.current) {
             const tableBody = tablesContainerRef.current.querySelector('.tbody');
             if (tableBody) {
                 const mutationObserver = getMutationObserver();
@@ -38,14 +38,14 @@ const TableSection = ({
     }, [])
 
     const getHeaderGroups = (): HeaderGroup<ListDoc>[] => {
-        switch(type) {
-            case 'left': {
+        switch(section) {
+            case TableSectionType.LEFT: {
                 return table.getLeftHeaderGroups();
             }
-            case 'center': {
+            case TableSectionType.CENTER: {
                 return table.getCenterHeaderGroups();
             }
-            case 'right': {
+            case TableSectionType.RIGHT: {
                 return table.getRightHeaderGroups();
             }
             default: {
@@ -55,14 +55,14 @@ const TableSection = ({
     }
 
     const getFooterGroups = (): HeaderGroup<ListDoc>[] => {
-        switch(type) {
-            case 'left': {
+        switch(section) {
+            case TableSectionType.LEFT: {
                 return table.getLeftFooterGroups();
             }
-            case 'center': {
+            case TableSectionType.CENTER: {
                 return table.getCenterFooterGroups();
             }
-            case 'right': {
+            case TableSectionType.RIGHT: {
                 return table.getRightFooterGroups();
             }
             default: {
@@ -72,14 +72,14 @@ const TableSection = ({
     }
 
     const getVisibleCells = (row: Row<ListDoc>): Cell<ListDoc, unknown>[] => {
-        switch(type) {
-            case 'left': {
+        switch(section) {
+            case TableSectionType.LEFT: {
                 return row.getLeftVisibleCells();
             }
-            case 'center': {
+            case TableSectionType.CENTER: {
                 return row.getCenterVisibleCells();
             }
-            case 'right': {
+            case TableSectionType.RIGHT: {
                 return row.getRightVisibleCells();
             }
             default: {
@@ -89,7 +89,7 @@ const TableSection = ({
     }
 
     const getWidth = (): number => {
-        switch(type) {
+        switch(section) {
             case 'left': {
                 return table.getLeftTotalSize();
             }
@@ -110,7 +110,7 @@ const TableSection = ({
             <div
                 className={classes.wrapper}
                 style={{ width: getWidth() }}
-                ref={type === 'center' ? tablesContainerRef : undefined}
+                ref={section === TableSectionType.CENTER ? tablesContainerRef : undefined}
             >
                 {/*Using `thead` class for css selector */}
                 <div className='thead'>
@@ -155,7 +155,6 @@ const TableSection = ({
                                             return (
                                                 <div
                                                     key={cell.id}
-                                                    className='td'
                                                     style={{
                                                         width: cell.column.getSize()
                                                     }}
@@ -174,7 +173,7 @@ const TableSection = ({
                     {
                         getFooterGroups().map(footerGroup => {
                             return (
-                                <div key={footerGroup.id} className='tr'>
+                                <div key={footerGroup.id}>
                                     {
                                         footerGroup.headers.map(header => {
                                             return (

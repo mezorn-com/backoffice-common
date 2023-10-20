@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { path } from 'ramda';
-import { Anchor, createStyles, Flex, SimpleGrid } from '@mantine/core';
+import { Anchor, createStyles, SimpleGrid } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, RenderType } from '@/backoffice-common/types/form';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { IDetailPageState } from '@/backoffice-common/hooks/useDetailPage';
+import ImagePreview from '@/backoffice-common/components/common/image-preview';
 
 interface IDetailProps {
 	id: string;
@@ -69,6 +70,15 @@ const Detail = ({ id, head, apiUrl, state: { values, details, actions } }: IDeta
 						</tbody>
 					</table>
 				);
+			}
+			case RenderType.IMAGE: {
+				return (
+					<ImagePreview
+						src={value as string}
+						width={'200'}
+						height={'100'}
+					/>
+				)
 			}
 		}
 		console.warn('Detail Unknown render type: ', field.renderType);

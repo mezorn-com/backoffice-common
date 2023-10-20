@@ -272,7 +272,7 @@ const getTransformedValue = (field: IFormField, value: unknown): Promise<unknown
 			}
 			case UiType.TEXT_INPUT: {
 				if (field.number) {
-					resolve(value || undefined);
+					resolve((value === 0 || value) ? value : undefined);
 					return;
 				}
 				resolve(value || undefined);

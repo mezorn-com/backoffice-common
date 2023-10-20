@@ -5,8 +5,9 @@ import { allPass, append, clone, eqProps, prepend } from 'ramda';
 import { useStyles } from './useStyles';
 import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
 import TableSection from './components/TableSection';
-import { getHeightObserver } from './utilts';
+import { getDOMRectObserver } from './utilts';
 import Form from '@/backoffice-common/components/form/Form';
+import TableContextProvider from './TableContextProvider';
 
 // react-table props below
 // columnFilters: [],
@@ -64,7 +65,7 @@ const Table = ({
 
     React.useEffect(() => {
         if (tablesContainerRef.current) {
-            const observer = getHeightObserver();
+            const observer = getDOMRectObserver('height');
             for (const tableElement of tablesContainerRef.current.children) {
                 //TODO: Remove class selector
                 const headerElement = tableElement.querySelector('.thead');
@@ -73,12 +74,14 @@ const Table = ({
                 }
             }
         }
+        // 1. Observe if column is added or removed
+        // 2. Add resize observer to all column cells
     }, [])
 
     React.useEffect(() => {
-        table.setColumnPinning({
-            right: ['table-actions-column']
-        })
+        // table.setColumnPinning({
+        //     right: ['table-actions-column']
+        // })
     }, []);
 
     const tableColumns = React.useMemo(() => {
@@ -96,7 +99,8 @@ const Table = ({
                         </div>
                     )
                 },
-                enablePinning: true
+                enablePinning: true,
+                size: 350
             }
             if (rowActionButtonPosition === 'right') {
                 cols = append(
@@ -228,55 +232,57 @@ const Table = ({
     }
 
     return (
-        <div className={classes.container}>
-            <div>
-                {
-                    externalState.filter && (
-                        <Form
-                            fields={externalState.filter ?? []}
-                            submitButtonProps={{
-                                style: {
-                                    display: 'none'
-                                }
-                            }}
-                            direction={'row'}
-                            onSubmit={() => undefined}
-                            onChange={handleFilterChange}
-                        />
-                    )
-                }
-            </div>
-            <div className={classes.tableWrapper}>
-                <div className={classes.table} ref={tablesContainerRef}>
-                    <TableSection
-                        section={TableSectionType.LEFT}
-                        table={table}
-                        bodyRef={leftBodyRef}
-                    />
-                    <TableSection
-                        section={TableSectionType.CENTER}
-                        table={table}
-                        bodyRef={centerBodyRef}
-                    />
-                    <TableSection
-                        section={TableSectionType.RIGHT}
-                        table={table}
-                        bodyRef={rightBodyRef}
-                    />
+        <TableContextProvider>
+            <div className={classes.container}>
+                <div>
+                    {
+                        externalState.filter && (
+                            <Form
+                                fields={externalState.filter ?? []}
+                                submitButtonProps={{
+                                    style: {
+                                        display: 'none'
+                                    }
+                                }}
+                                direction={'row'}
+                                onSubmit={() => undefined}
+                                onChange={handleFilterChange}
+                            />
+                        )
+                    }
                 </div>
+                <div className={classes.tableWrapper}>
+                    <div className={classes.table} ref={tablesContainerRef}>
+                        <TableSection
+                            section={TableSectionType.LEFT}
+                            table={table}
+                            bodyRef={leftBodyRef}
+                        />
+                        <TableSection
+                            section={TableSectionType.CENTER}
+                            table={table}
+                            bodyRef={centerBodyRef}
+                        />
+                        <TableSection
+                            section={TableSectionType.RIGHT}
+                            table={table}
+                            bodyRef={rightBodyRef}
+                        />
+                    </div>
+                </div>
+                <TablePagination
+                    canPreviousPage={table.getCanPreviousPage()}
+                    canNextPage={table.getCanNextPage()}
+                    pageSize={externalState.pageSize.toString()}
+                    pageCount={table.getPageCount()}
+                    page={externalState.page}
+                    onPageSizeChange={value =>  table.setPageSize(value)}
+                    onPageIndexChange={value => table.setPageIndex(value)}
+                    onPreviousPage={table.previousPage}
+                    onNextPage={table.nextPage}
+                />
             </div>
-            <TablePagination
-                canPreviousPage={table.getCanPreviousPage()}
-                canNextPage={table.getCanNextPage()}
-                pageSize={externalState.pageSize.toString()}
-                pageCount={table.getPageCount()}
-                page={externalState.page}
-                onPageSizeChange={value =>  table.setPageSize(value)}
-                onPageIndexChange={value => table.setPageIndex(value)}
-                onPreviousPage={table.previousPage}
-                onNextPage={table.nextPage}
-            />
-        </div>
+        </TableContextProvider>
     )
 }
 

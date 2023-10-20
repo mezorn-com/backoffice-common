@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { flexRender, HeaderGroup, Cell, Table, Row } from '@tanstack/react-table';
+import { Cell, flexRender, HeaderGroup, Row, Table } from '@tanstack/react-table';
 import { useSectionStyles } from './useSectionStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
-import { getMutationObserver } from '../utilts';
-import TableRow from './Row';
+import { COLUMN_UID_ATTR, getMutationObserver } from '../utilts';
+import TableRow, { RowSection } from './Row';
 import { TableSectionType } from '../types';
 
 interface TableElementProps {
@@ -116,12 +116,17 @@ const TableSection = ({
                 <div className='thead'>
                     {
                         getHeaderGroups().map(headerGroup => {
+                            // ADD Mutation OBSERVER HERE>>>>
                             return (
-                                <TableRow key={headerGroup.id} rowId={headerGroup.id}>
+                                <TableRow key={headerGroup.id} rowId={headerGroup.id} rowSection={RowSection.HEADER}>
                                     {
                                         headerGroup.headers.map(header => {
+                                            const colAttr = {
+                                                [COLUMN_UID_ATTR]: header.id
+                                            }
                                             return (
                                                 <div
+                                                    {...colAttr}
                                                     key={header.id}
                                                     className={classes.headerCell}
                                                     style={{
@@ -145,18 +150,27 @@ const TableSection = ({
                         })
                     }
                 </div>
+                {/*Using `tbody` class for css selector */}
                 <div className={`tbody ${classes.body}`} ref={bodyRef}>
                     {
                         table.getRowModel().rows.map(row => {
                             return (
-                                <TableRow key={row.id} rowId={row.id}>
+                                <TableRow key={row.id} rowId={row.id} rowSection={RowSection.BODY}>
                                     {
                                         getVisibleCells(row).map(cell => {
+                                            const cellAttr = {
+                                                [COLUMN_UID_ATTR]: cell.column.id
+                                            }
                                             return (
                                                 <div
+                                                    {...cellAttr}
                                                     key={cell.id}
+                                                    className={classes.cell}
                                                     style={{
-                                                        width: cell.column.getSize()
+                                                        width: cell.column.getSize(),
+                                                        // TODO: remove temporary inline style
+                                                        // wordBreak: 'keep-all',
+                                                        // whiteSpace: 'nowrap'
                                                     }}
                                                 >
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -179,8 +193,8 @@ const TableSection = ({
                                             return (
                                                 <div
                                                     key={header.id}
-                                                    className={classes.headerCell}
-                                                    style={{ width: header.getSize() }}
+                                                    // className={classes.headerCell}
+                                                    // style={{ width: header.getSize() }}
                                                 >
                                                     {header.isPlaceholder
                                                         ? null

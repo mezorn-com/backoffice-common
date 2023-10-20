@@ -8,7 +8,8 @@ interface StylesProps {
 export const useSectionStyles = createStyles((theme, { sectionType }: StylesProps) => {
     return {
         container: {
-            overflowX: sectionType === TableSectionType.CENTER ? 'auto': 'hidden',
+            // overflowX: sectionType === TableSectionType.CENTER ? 'auto': 'hidden',
+            overflowX: 'auto',
             overflowY: 'hidden',
             maxHeight: '100%',
             display: 'flex',
@@ -21,7 +22,9 @@ export const useSectionStyles = createStyles((theme, { sectionType }: StylesProp
             overflow:'hidden'
         },
         headerCell: {
-            textAlign: 'center'
+            textAlign: 'center',
+            background: '#d7d7d7',
+            padding: '1rem'
         },
         body: {
             flex: 1,
@@ -29,6 +32,11 @@ export const useSectionStyles = createStyles((theme, { sectionType }: StylesProp
             '::-webkit-scrollbar': {
                 width: sectionType === TableSectionType.CENTER ? 0 : undefined,
             }
+        },
+        cell: {
+            borderBottom: '1px solid',
+            borderBottomColor: theme.colors.gray[2],
+            padding: '.3rem'
         }
     }
 })

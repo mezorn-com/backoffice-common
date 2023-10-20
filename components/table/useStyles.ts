@@ -1,6 +1,7 @@
 import { createStyles, rem } from '@mantine/core';
 
 export const useStyles = createStyles((theme) => {
+    const borderColor = theme.colors.gray[2];
     return {
         container: {
             height: '100%',
@@ -25,7 +26,12 @@ export const useStyles = createStyles((theme) => {
         table: {
             minWidth: '100%',
             display: 'flex',
-            maxHeight: '100%'
+            maxHeight: '100%',
+            // TEMPORARY STYLES HERE,
+            border: '1px solid',
+            borderColor,
+            borderRadius: 6,
+            overflow: 'hidden',
         }
     }
 })

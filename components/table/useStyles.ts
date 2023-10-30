@@ -27,11 +27,6 @@ export const useStyles = createStyles((theme) => {
             minWidth: '100%',
             display: 'flex',
             maxHeight: '100%',
-            // TEMPORARY STYLES HERE,
-            border: '1px solid',
-            borderColor,
-            borderRadius: 6,
-            overflow: 'hidden',
         }
     }
 })

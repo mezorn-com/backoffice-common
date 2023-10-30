@@ -7,7 +7,6 @@ import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
 import TableSection from './components/TableSection';
 import { getDOMRectObserver } from './utilts';
 import Form from '@/backoffice-common/components/form/Form';
-import TableContextProvider from './TableContextProvider';
 
 // react-table props below
 // columnFilters: [],
@@ -45,7 +44,6 @@ import { IFormValues } from '@/backoffice-common/components/form/helper';
 import { initialState, reducer } from './reducer';
 import { useBodyScrolls } from '@/backoffice-common/components/table/hooks';
 import TablePagination from '@/backoffice-common/components/table/components/pagination/TablePagination';
-import { useMyStore } from '@/backoffice-common/components/table/context';
 
 // compare 2 objects' given props values.
 const check = allPass([
@@ -53,7 +51,7 @@ const check = allPass([
     eqProps('pageSize'),
 ])
 
-const TableComponent = ({
+const Table = ({
     onInteract,
     rowActionButtons,
     rowActionButtonPosition = TABLE_ROW_ACTION_BUTTON_POSITION,
@@ -63,16 +61,6 @@ const TableComponent = ({
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
     const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
-    const z = useMyStore();
-
-    // console.log('z>>>zZ>Z>Z>Z>Z>Z>ZZ>>>>>', z.count);
-
-    React.useEffect(() => {
-        // console.log('INCREMENT')
-        z.inc()
-    }, [])
-
-    // console.log('CTXXXX>>>', context);
 
     React.useEffect(() => {
         if (tablesContainerRef.current) {
@@ -85,23 +73,12 @@ const TableComponent = ({
                 }
             }
         }
-        // 1. Observe if column is added or removed
-        // 2. Add resize observer to all column cells
     }, [])
 
     React.useEffect(() => {
         table.setColumnPinning({
             right: ['table-actions-column']
         })
-    }, []);
-
-
-    React.useLayoutEffect(() => {
-        if (tablesContainerRef.current) {
-            for (const section of tablesContainerRef.current.children) {
-                // console.log('>>>', section);
-            }
-        }
     }, []);
 
     const tableColumns = React.useMemo(() => {
@@ -120,7 +97,6 @@ const TableComponent = ({
                     )
                 },
                 enablePinning: true,
-                // size: 350
             }
             if (rowActionButtonPosition === 'right') {
                 cols = append(
@@ -134,23 +110,7 @@ const TableComponent = ({
                 );
             }
         }
-
-        const v = cols.map((column) => {
-            const x = clone(column)
-            let id = x.id;
-            if ('accessorKey' in x) {
-                id = x.accessorKey;
-            }
-            id = id?.replace('.', '_')
-            // const z = context.columnInformation.find(item => item.key === id);
-            // console.log('ZZZ>>>>', z);
-            // if (z) {
-            //     x.size = z.width;
-            // }
-            return x;
-        })
-        // console.log('dSADASDASDASDASDSADA>>>>', v);
-        return v;
+        return cols;
     }, [ externalState.columns, rowActionButtons ]);
 
     const table = useReactTable({
@@ -270,58 +230,56 @@ const TableComponent = ({
     }
 
     return (
-        <TableContextProvider>
-            <div className={classes.container}>
-                <div>
-                    {
-                        externalState.filter && (
-                            <Form
-                                fields={externalState.filter ?? []}
-                                submitButtonProps={{
-                                    style: {
-                                        display: 'none'
-                                    }
-                                }}
-                                direction={'row'}
-                                onSubmit={() => undefined}
-                                onChange={handleFilterChange}
-                            />
-                        )
-                    }
-                </div>
-                <div className={classes.tableWrapper}>
-                    <div className={classes.table} ref={tablesContainerRef}>
-                        <TableSection
-                            section={TableSectionType.LEFT}
-                            table={table}
-                            bodyRef={leftBodyRef}
+        <div className={classes.container}>
+            <div>
+                {
+                    externalState.filter && (
+                        <Form
+                            fields={externalState.filter ?? []}
+                            submitButtonProps={{
+                                style: {
+                                    display: 'none'
+                                }
+                            }}
+                            direction={'row'}
+                            onSubmit={() => undefined}
+                            onChange={handleFilterChange}
                         />
-                        <TableSection
-                            section={TableSectionType.CENTER}
-                            table={table}
-                            bodyRef={centerBodyRef}
-                        />
-                        <TableSection
-                            section={TableSectionType.RIGHT}
-                            table={table}
-                            bodyRef={rightBodyRef}
-                        />
-                    </div>
-                </div>
-                <TablePagination
-                    canPreviousPage={table.getCanPreviousPage()}
-                    canNextPage={table.getCanNextPage()}
-                    pageSize={externalState.pageSize.toString()}
-                    pageCount={table.getPageCount()}
-                    page={externalState.page}
-                    onPageSizeChange={value =>  table.setPageSize(value)}
-                    onPageIndexChange={value => table.setPageIndex(value)}
-                    onPreviousPage={table.previousPage}
-                    onNextPage={table.nextPage}
-                />
+                    )
+                }
             </div>
-        </TableContextProvider>
+            <div className={classes.tableWrapper}>
+                <div className={classes.table} ref={tablesContainerRef}>
+                    <TableSection
+                        section={TableSectionType.LEFT}
+                        table={table}
+                        bodyRef={leftBodyRef}
+                    />
+                    <TableSection
+                        section={TableSectionType.CENTER}
+                        table={table}
+                        bodyRef={centerBodyRef}
+                    />
+                    <TableSection
+                        section={TableSectionType.RIGHT}
+                        table={table}
+                        bodyRef={rightBodyRef}
+                    />
+                </div>
+            </div>
+            <TablePagination
+                canPreviousPage={table.getCanPreviousPage()}
+                canNextPage={table.getCanNextPage()}
+                pageSize={externalState.pageSize.toString()}
+                pageCount={table.getPageCount()}
+                page={externalState.page}
+                onPageSizeChange={value =>  table.setPageSize(value)}
+                onPageIndexChange={value => table.setPageIndex(value)}
+                onPreviousPage={table.previousPage}
+                onNextPage={table.nextPage}
+            />
+        </div>
     )
 }
 
-export default TableComponent;
+export default Table;

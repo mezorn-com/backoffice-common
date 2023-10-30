@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Cell, flexRender, HeaderGroup, Row, Table } from '@tanstack/react-table';
 import { useSectionStyles } from './useSectionStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
-import { COLUMN_UID_ATTR, getMutationObserver } from '../utilts';
-import TableRow, { RowSection } from './Row';
+import { COLUMN_UID_ATTR, getTableBodyMutationObserver } from '../utilts';
+import TableRow from './Row';
 import { TableSectionType } from '../types';
 
 interface TableElementProps {
@@ -24,7 +24,7 @@ const TableSection = ({
         if (section === 'center' &&  tablesContainerRef.current) {
             const tableBody = tablesContainerRef.current.querySelector('.tbody');
             if (tableBody) {
-                const mutationObserver = getMutationObserver();
+                const mutationObserver = getTableBodyMutationObserver();
                 mutationObserver.observe(tableBody,{
                     attributes: false,
                     childList: true,
@@ -117,21 +117,16 @@ const TableSection = ({
                 className={classes.wrapper}
                 style={{
                     width: 'fit-content',
-                    // width: getWidth()
                     overflowX: 'hidden',
-                    // overflowX: section === TableSectionType.CENTER ? 'auto' : undefined
                 }}
                 ref={section === TableSectionType.CENTER ? tablesContainerRef : undefined}
-                // specify width here
             >
                 {/*Using `thead` class for css selector */}
                 <div className={`thead ${classes.head}`}>
                     {
                         getHeaderGroups().map(headerGroup => {
-                            // ADD Mutation OBSERVER HERE>>>>
                             return (
-                                // @ts-ignore
-                                <TableRow key={headerGroup.id} rowId={headerGroup.id} rowSection={RowSection.HEADER}>
+                                <TableRow key={headerGroup.id} rowId={headerGroup.id}>
                                     {
                                         headerGroup.headers.map(header => {
                                             const colAttr = {
@@ -145,7 +140,6 @@ const TableSection = ({
                                                     style={{
                                                         wordBreak: 'keep-all',
                                                         whiteSpace: 'nowrap'
-                                                        // width: header.getSize()
                                                     }}
                                                 >
                                                     {
@@ -170,20 +164,18 @@ const TableSection = ({
                     {
                         table.getRowModel().rows.map(row => {
                             return (
-                                <TableRow key={row.id} rowId={row.id} rowSection={RowSection.BODY}>
+                                <TableRow key={row.id} rowId={row.id}>
                                     {
                                         getVisibleCells(row).map(cell => {
                                             const cellAttr = {
                                                 [COLUMN_UID_ATTR]: cell.column.id
                                             }
-                                            // console.log('size>>>>', cell.column.id, cell.column.getSize());
                                             return (
                                                 <div
                                                     {...cellAttr}
                                                     key={cell.id}
                                                     className={classes.cell}
                                                     style={{
-                                                        // width: cell.column.getSize(),
                                                         // TODO: remove temporary inline style
                                                         wordBreak: 'keep-all',
                                                         whiteSpace: 'nowrap'
@@ -207,11 +199,7 @@ const TableSection = ({
                                     {
                                         footerGroup.headers.map(header => {
                                             return (
-                                                <div
-                                                    key={header.id}
-                                                    // className={classes.headerCell}
-                                                    // style={{ width: header.getSize() }}
-                                                >
+                                                <div key={header.id}>
                                                     {header.isPlaceholder
                                                         ? null
                                                         : flexRender(

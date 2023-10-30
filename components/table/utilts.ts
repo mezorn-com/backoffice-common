@@ -19,7 +19,7 @@ export const getDOMRectObserver = (key: keyof Omit<DOMRectReadOnly, 'toJSON' | '
     });
 }
 
-export const getMutationObserver = () => {
+export const getTableBodyMutationObserver = () => {
     return new MutationObserver((mutationList, observer) => {
         // remove resize observer when observed element removed from DOM.
         for (const mutation of mutationList) {
@@ -55,4 +55,31 @@ export const getMutationObserver = () => {
             }
         }
     })
+}
+
+export const getColumns = (sectionElement: HTMLDivElement, columnId: string) => {
+    let headerCells: HTMLDivElement[] = [];
+    const thead = sectionElement.querySelector('.thead');
+    for (const headerRow of (thead?.children ?? [])) {
+        for (const headerCell of headerRow.children) {
+            if (headerCell.getAttribute(COLUMN_UID_ATTR) === columnId && headerCell instanceof HTMLDivElement) {
+                headerCells.push(headerCell);
+            }
+        }
+    }
+
+    const tbody = sectionElement.querySelector('.tbody');
+    let cells: HTMLDivElement[] = [];
+
+    for (const row of (tbody?.children ?? [])) {
+        for (const cell of row.children) {
+            if (cell.getAttribute(COLUMN_UID_ATTR) === columnId && cell instanceof HTMLDivElement) {
+                cells.push(cell);
+            }
+        }
+    }
+    return {
+        headerCells,
+        cells
+    }
 }

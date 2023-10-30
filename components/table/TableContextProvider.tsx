@@ -1,23 +1,9 @@
 import * as React from 'react';
-import { TableContext, ITableContext } from '././context';
+import { createMyStore, MyContext } from '@/backoffice-common/components/table/context';
 
-interface TableContextProviderProps {
-    children?: React.ReactNode;
-}
+const MyProvider = ({ children }: { children: React.ReactNode }) => {
+    const store = createMyStore();
+    return <MyContext.Provider value={store}>{children}</MyContext.Provider>;
+};
 
-const TableContextProvider = ({
-    children
-}: TableContextProviderProps) => {
-
-    const ref = React.useRef<ITableContext>({
-        columnObservers: {},
-    })
-
-    return (
-        <TableContext.Provider value={ref}>
-            {children}
-        </TableContext.Provider>
-    )
-}
-
-export default TableContextProvider;
+export default MyProvider;

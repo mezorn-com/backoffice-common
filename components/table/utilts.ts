@@ -26,55 +26,11 @@ export const getMutationObserver = () => {
             if (mutation.type === "childList") {
                 if (mutation.addedNodes) {
                     Array.from(mutation.addedNodes).forEach((rowElement) => {
-                        // if (rowElement instanceof HTMLDivElement) {
-                        //     for (const cell of rowElement.children) {
-                        //         const id = cell.getAttribute(COLUMN_UID_ATTR);
-                        //         if (id) {
-                        //             const sectionElement = cell?.parentElement?.parentElement?.parentElement;
-                        //             const columnItems: HTMLDivElement[] = [];
-                        //             if (sectionElement) {
-                        //                 // TODO: Remove class selector.
-                        //                 const sectionBodyElement = sectionElement.querySelector('.tbody');
-                        //                 if (sectionBodyElement) {
-                        //                     for (const row of sectionBodyElement.children) {
-                        //                         for (const cell of row.children) {
-                        //                             if (cell.getAttribute(COLUMN_UID_ATTR) === id && cell instanceof HTMLDivElement) {
-                        //                                 columnItems.push(cell)
-                        //                             }
-                        //                         }
-                        //                     }
-                        //                 }
-                        //
-                        //                 const sectionHeaderElement = sectionElement.querySelector('.thead');
-                        //                 if (sectionHeaderElement) {
-                        //                     for (const row of sectionHeaderElement.children) {
-                        //                         for (const headerCell of row.children) {
-                        //                             if (headerCell.getAttribute(COLUMN_UID_ATTR) === id && headerCell instanceof HTMLDivElement) {
-                        //                                 columnItems.push(headerCell)
-                        //                             }
-                        //                         }
-                        //                     }
-                        //                 }
-                        //
-                        //                 // additional code here
-                        //             }
-                        //             const observer = getDOMRectObserver('width');
-                        //             for (const columnItem of columnItems) {
-                        //                 observer.observe(columnItem);
-                        //             }
-                        //         }
-                        //     }
-                        // }
-
-
-
-
-
-
                         if (rowElement instanceof HTMLDivElement && rowElement.getAttribute(ROW_PREFIX)) {
                             const rowId = rowElement.getAttribute(ROW_PREFIX);
                             // TODO make selector shorter
-                            const table = rowElement?.parentElement?.parentElement?.parentElement?.parentElement;
+                            const sectionElement = rowElement?.parentElement?.parentElement?.parentElement;
+                            const table = sectionElement?.parentElement;
                             if (table instanceof HTMLElement) {
                                 let sectionRows: HTMLDivElement[] = [];
                                 Array.from(table?.children ?? '').forEach(section => {

@@ -6,6 +6,7 @@ interface StylesProps {
 }
 
 export const useSectionStyles = createStyles((theme, { sectionType }: StylesProps) => {
+    const headerBackground = '#d7d7d7'
     return {
         container: {
             // overflowX: sectionType === TableSectionType.CENTER ? 'auto': 'hidden',
@@ -13,7 +14,8 @@ export const useSectionStyles = createStyles((theme, { sectionType }: StylesProp
             overflowY: 'hidden',
             maxHeight: '100%',
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            boxShadow: sectionType === TableSectionType.RIGHT ? '10px 0 20px 5px #c7c7c7' : undefined
         },
         wrapper: {
             display: 'flex',
@@ -21,14 +23,17 @@ export const useSectionStyles = createStyles((theme, { sectionType }: StylesProp
             flex: 1,
             overflow:'hidden'
         },
+        head: {
+            background: headerBackground,
+        },
         headerCell: {
             textAlign: 'center',
-            background: '#d7d7d7',
-            padding: '1rem'
+            padding: '.3rem'
         },
         body: {
             flex: 1,
-            overflow:'auto',
+            overflowY: 'auto',
+            overflowX: 'hidden',
             '::-webkit-scrollbar': {
                 width: sectionType === TableSectionType.CENTER ? 0 : undefined,
             }

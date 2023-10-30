@@ -106,18 +106,31 @@ const TableSection = ({
     }
 
     return (
-        <div className={classes.container}>
+        <div
+            className={classes.container}
+            style={{
+                // TODO: remove inline style
+                flex: section === TableSectionType.CENTER ? 1 : undefined
+            }}
+        >
             <div
                 className={classes.wrapper}
-                style={{ width: getWidth() }}
+                style={{
+                    width: 'fit-content',
+                    // width: getWidth()
+                    overflowX: 'hidden',
+                    // overflowX: section === TableSectionType.CENTER ? 'auto' : undefined
+                }}
                 ref={section === TableSectionType.CENTER ? tablesContainerRef : undefined}
+                // specify width here
             >
                 {/*Using `thead` class for css selector */}
-                <div className='thead'>
+                <div className={`thead ${classes.head}`}>
                     {
                         getHeaderGroups().map(headerGroup => {
                             // ADD Mutation OBSERVER HERE>>>>
                             return (
+                                // @ts-ignore
                                 <TableRow key={headerGroup.id} rowId={headerGroup.id} rowSection={RowSection.HEADER}>
                                     {
                                         headerGroup.headers.map(header => {
@@ -130,7 +143,9 @@ const TableSection = ({
                                                     key={header.id}
                                                     className={classes.headerCell}
                                                     style={{
-                                                        width: header.getSize()
+                                                        wordBreak: 'keep-all',
+                                                        whiteSpace: 'nowrap'
+                                                        // width: header.getSize()
                                                     }}
                                                 >
                                                     {
@@ -161,16 +176,17 @@ const TableSection = ({
                                             const cellAttr = {
                                                 [COLUMN_UID_ATTR]: cell.column.id
                                             }
+                                            // console.log('size>>>>', cell.column.id, cell.column.getSize());
                                             return (
                                                 <div
                                                     {...cellAttr}
                                                     key={cell.id}
                                                     className={classes.cell}
                                                     style={{
-                                                        width: cell.column.getSize(),
+                                                        // width: cell.column.getSize(),
                                                         // TODO: remove temporary inline style
-                                                        // wordBreak: 'keep-all',
-                                                        // whiteSpace: 'nowrap'
+                                                        wordBreak: 'keep-all',
+                                                        whiteSpace: 'nowrap'
                                                     }}
                                                 >
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

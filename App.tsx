@@ -52,7 +52,7 @@ function App() {
 		}
 	}, []);
 
-	import.meta.env.DEV && console.log('store>>>', store);
+	// import.meta.env.DEV && console.log('store>>>', store);
 
 	return (
 		<MantineProvider

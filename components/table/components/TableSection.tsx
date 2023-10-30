@@ -88,37 +88,10 @@ const TableSection = ({
         }
     }
 
-    const getWidth = (): number => {
-        switch(section) {
-            case 'left': {
-                return table.getLeftTotalSize();
-            }
-            case 'center': {
-                return table.getCenterTotalSize();
-            }
-            case 'right': {
-                return table.getRightTotalSize();
-            }
-            default: {
-                return 0;
-            }
-        }
-    }
-
     return (
-        <div
-            className={classes.container}
-            style={{
-                // TODO: remove inline style
-                flex: section === TableSectionType.CENTER ? 1 : undefined
-            }}
-        >
+        <div className={classes.container}>
             <div
                 className={classes.wrapper}
-                style={{
-                    width: 'fit-content',
-                    overflowX: 'hidden',
-                }}
                 ref={section === TableSectionType.CENTER ? tablesContainerRef : undefined}
             >
                 {/*Using `thead` class for css selector */}
@@ -137,10 +110,6 @@ const TableSection = ({
                                                     {...colAttr}
                                                     key={header.id}
                                                     className={classes.headerCell}
-                                                    style={{
-                                                        wordBreak: 'keep-all',
-                                                        whiteSpace: 'nowrap'
-                                                    }}
                                                 >
                                                     {
                                                         header.isPlaceholder
@@ -175,11 +144,6 @@ const TableSection = ({
                                                     {...cellAttr}
                                                     key={cell.id}
                                                     className={classes.cell}
-                                                    style={{
-                                                        // TODO: remove temporary inline style
-                                                        wordBreak: 'keep-all',
-                                                        whiteSpace: 'nowrap'
-                                                    }}
                                                 >
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </div>

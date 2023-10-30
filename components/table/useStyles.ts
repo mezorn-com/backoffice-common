@@ -14,7 +14,9 @@ export const useStyles = createStyles((theme) => {
             marginTop: theme.spacing.md,
             marginBottom: theme.spacing.md,
             overflow: 'hidden',
-            gap: '1rem'
+            gap: '1rem',
+            width: 'max-content',
+            maxWidth: '100%'
         },
         actionButtons: {
             display: 'flex',
@@ -27,6 +29,10 @@ export const useStyles = createStyles((theme) => {
             minWidth: '100%',
             display: 'flex',
             maxHeight: '100%',
+            overflow: 'hidden',
+            border: '1px solid',
+            borderColor,
+            borderRadius: theme.radius.sm
         }
     }
 })

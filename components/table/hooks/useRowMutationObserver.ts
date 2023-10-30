@@ -1,8 +1,8 @@
-import * as React from 'react';
+import { useEffect, RefObject } from 'react';
 import { COLUMN_UID_ATTR, getColumns, getDOMRectObserver } from '@/backoffice-common/components/table/utilts';
 
-export const useRowMutationObserver = (rowRef: React.RefObject<HTMLDivElement>) => {
-    React.useEffect(() => {
+export const useRowMutationObserver = (rowRef: RefObject<HTMLDivElement>) => {
+    useEffect(() => {
         if (rowRef.current) {
             const section = rowRef.current.parentElement?.parentElement?.parentElement;
             if (section && section instanceof HTMLDivElement) {

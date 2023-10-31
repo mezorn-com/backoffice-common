@@ -1,5 +1,5 @@
 import { useEffect, RefObject } from 'react';
-import { COLUMN_UID_ATTR, getColumns, getDOMRectObserver } from '@/backoffice-common/components/table/utilts';
+import { COLUMN_UID_ATTR, getColumns, getDOMRectObserver } from '@/backoffice-common/components/table/utils';
 
 export const useRowMutationObserver = (rowRef: RefObject<HTMLDivElement>) => {
     useEffect(() => {

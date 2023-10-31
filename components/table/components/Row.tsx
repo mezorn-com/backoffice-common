@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ROW_PREFIX } from '../utilts';
+import { ROW_PREFIX } from '../utils';
 import { createStyles } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import { useRowMutationObserver } from '@/backoffice-common/components/table/hooks';
@@ -12,7 +12,8 @@ interface TableRowProps {
 const useStyles = createStyles(() => {
     return {
         container: {
-            display: 'flex'
+            display: 'flex',
+            alignItems: 'flex-end'
         }
     }
 })

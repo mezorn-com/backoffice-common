@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Cell, flexRender, HeaderGroup, Row, Table } from '@tanstack/react-table';
 import { useSectionStyles } from './useSectionStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
-import { COLUMN_UID_ATTR, getTableBodyMutationObserver } from '../utilts';
+import { COLUMN_UID_ATTR, getTableBodyMutationObserver } from '../utils';
 import TableRow from './Row';
 import { TableSectionType } from '../types';
 

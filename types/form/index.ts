@@ -1,7 +1,3 @@
-// import { IFieldRenderType } from '../api';
-
-// interface NormalField
-
 export type GridWidth = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export interface WithGrid {
 	span: GridWidth;
@@ -112,52 +108,6 @@ export interface SelectOption extends WithLabel, WithOptionalDescription {
 	value: string | number;
 }
 
-// export interface IFormField {
-//     type: FieldType;
-//     key: string;
-//     label?: string;
-//     required?: boolean;
-//     uiType?: UiType;
-//     maxLength?: number;
-//     minLength?: number;
-//     length?: number;
-//     numeric?: boolean;
-//     number?: boolean;
-//     fields?: IFormField[];
-//     refCode?: string;
-//     multiLine?: boolean;
-//     secret?: boolean;
-//     visibility?: IVisibility;
-//     value?: any;
-//     multiple?: boolean;
-//     optionsApi?: {
-//         uri: string;
-//         queryParams?: string[];
-//     };
-//     options?: IFormOption[];
-//     format?: string;
-//     element?: IFormField;
-//     renderType?: IFieldRenderType;
-//     uri?: string;
-//     retrieveApi?: {
-//         uri: string;
-//     };
-//     suggestApi?: {
-//         uri: string;
-//         searchKey: string;
-//     };
-//
-//     mimeType?: string;
-//     useFileName?: boolean;
-//     folderPath?: string;
-//     prefix?: string;
-//
-//     // Custom Properties
-//     parentFields?: IFormField[]; // not necessary now
-//     isArrayElement?: boolean;
-//     groupPath?: string;
-// }
-
 interface CascadingSelectField extends NormalFieldCore {
 	uiType: UiType.CASCADING_SELECT;
 	refCode: string;
@@ -207,25 +157,6 @@ export interface MapAddressPicker extends NormalFieldCore {
 		uri: string;
 	};
 }
-// type CascadingSelect = Omit<NormalFieldCore, 'label' | 'localizedLabels'> & {
-//     uiType: UiType.CASCADING_SELECT
-//     refCode: string
-// } & (WithOptionalLabel | {
-//     labels?: string[]
-//     localizedLabels?: Array<Partial<Record<Locale, string>>>
-// })
-
-interface IUploadForm {
-	mimeType?: string;
-	useFileName?: boolean;
-	folderPath?: string;
-	prefix?: string;
-}
-
-export interface IFormOption {
-	label: string;
-	value: string;
-}
 
 export interface WithVisibility {
 	visibility?: IVisibility;
@@ -246,7 +177,10 @@ type VisibilityType = { value: unknown } | { hasValue: boolean } | { valueNotEqu
 
 export type IVisibility = VisibilityType & { key: string };
 
-export type FormType = 'normal' | 'tabbed';
+export enum FormType {
+	NORMAL = 'normal',
+	TABBED = 'tabbed'
+}
 
 export enum FieldType {
 	NORMAL = 'normal',
@@ -255,13 +189,6 @@ export enum FieldType {
 	OBJECT = 'object',
 	GROUP = 'group',
 }
-
-// export type FieldType =
-//     'normal' |
-//     'render' |
-//     'array' |
-//     'object' |
-//     'group';
 
 export type INormalField = TextInputField | CheckboxField | SelectField | DateInput | TimeInput | DatetimeInput | CascadingSelectField | MapAddressPicker | FileUpload | HtmlInput;
 
@@ -325,18 +252,6 @@ export interface ObjectField extends FieldCore {
 }
 
 export interface FieldGroup extends WithVisibility, WithOptionalLabel {
-	// key: string;
 	type: FieldType.GROUP;
 	fields: IFormField[];
 }
-
-// export type UiType =
-//     'text-input'
-//     | 'checkbox'
-//     | 'select'
-//     | 'date'
-//     | 'cascading-select'
-//     | 'map-address-picker'
-//     | 'file-upload'
-//     | 'html-input'
-//     ;

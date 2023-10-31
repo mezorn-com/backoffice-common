@@ -5,7 +5,7 @@ import { allPass, append, clone, eqProps, prepend } from 'ramda';
 import { useStyles } from './useStyles';
 import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
 import TableSection from './components/TableSection';
-import { getDOMRectObserver } from './utilts';
+import { getDOMRectObserver } from './utils';
 import Form from '@/backoffice-common/components/form/Form';
 
 // react-table props below
@@ -34,6 +34,7 @@ import Form from '@/backoffice-common/components/form/Form';
 import {
     CellContext,
     ColumnDef,
+    ColumnMeta,
     getCoreRowModel,
     getPaginationRowModel,
     TableState,
@@ -44,6 +45,8 @@ import { IFormValues } from '@/backoffice-common/components/form/helper';
 import { initialState, reducer } from './reducer';
 import { useBodyScrolls } from '@/backoffice-common/components/table/hooks';
 import TablePagination from '@/backoffice-common/components/table/components/pagination/TablePagination';
+import { isRenderField } from '@/backoffice-common/utils';
+import { useRenderField } from '@/backoffice-common/hooks';
 
 // compare 2 objects' given props values.
 const check = allPass([
@@ -61,6 +64,7 @@ const Table = ({
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
     const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
+    const renderField = useRenderField();
 
     React.useEffect(() => {
         if (tablesContainerRef.current) {
@@ -126,6 +130,16 @@ const Table = ({
         },
         defaultColumn: {
             enableResizing: true,
+            cell(props) {
+                const { meta } = props.column.columnDef;
+                if (!meta) {
+                    return props.renderValue();
+                }
+                if (isRenderField(meta.field)) {
+                    return renderField(meta.field, props.getValue(), props.row.original)
+                }
+                return props.renderValue();
+            }
             // minSize: 0,
             // size: Number.MAX_SAFE_INTEGER,
             // maxSize: Number.MAX_SAFE_INTEGER,

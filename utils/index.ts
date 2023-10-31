@@ -5,6 +5,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type { IColumn, IResponse } from '@/backoffice-common/types/api';
 import type { MetaType } from '@/backoffice-common/types/api/meta';
 import { IStringReplacer } from '@/backoffice-common/types/utils';
+import { FieldType, IFormField, RenderField, RenderType } from '@/backoffice-common/types/form';
 
 export const getMeta = <T>(url: string, action: MetaType, queryParams?: Record<string, string>): Promise<T> => {
     return new Promise(async (resolve) => {
@@ -14,14 +15,20 @@ export const getMeta = <T>(url: string, action: MetaType, queryParams?: Record<s
     })
 }
 
-export const formatColumns = (columns: IColumn[]): ColumnDef<Record<string, unknown>>[] => {
+export const isRenderField = (field: IFormField): field is RenderField => {
+    return 'type' in field && field.type === FieldType.RENDER;
+}
+
+export const formatColumns = (fields: IFormField[]): ColumnDef<Record<string, unknown>>[] => {
     const formattedColumns: ColumnDef<Record<string, unknown>>[] = [];
-    for (const column of columns) {
-        if (column.type === 'render') {
+    for (const field of fields) {
+        if (isRenderField(field)) {
             const tableColumn: ColumnDef<Record<string, unknown>> = {
-                accessorKey: column.key,
-                header: column.label,
-                ...clone(column)
+                accessorKey: field.key,
+                header: field.label,
+                meta: {
+                    field
+                }
             };
             formattedColumns.push(tableColumn);
         }

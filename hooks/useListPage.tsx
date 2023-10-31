@@ -141,7 +141,7 @@ const useListPage = ({
             dispatch({
                 type: 'SET_META_DATA',
                 payload: {
-                    columns: formatColumns(response.form.fields),
+                    columns: formatColumns(response?.form?.fields ?? []),
                     pageTitle: response.form.title,
                     listActions: response.listActions,
                     listItemActions: response.listItemActions,

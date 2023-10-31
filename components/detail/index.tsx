@@ -5,6 +5,7 @@ import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, RenderType } from '@/backoffice-common/types/form';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { IDetailPageState } from '@/backoffice-common/hooks/useDetailPage';
+import { useRenderField } from '@/backoffice-common/hooks';
 
 interface IDetailProps {
 	id: string;
@@ -15,6 +16,7 @@ interface IDetailProps {
 
 const Detail = ({ id, head, apiUrl, state: { values, details, actions } }: IDetailProps) => {
 	const { classes } = useStyles();
+	const renderField = useRenderField();
 
 	const getDetailValue = (field: IFormField, detailValues: Record<string, any>): React.ReactNode => {
 		if (field.type !== FieldType.RENDER) {
@@ -22,57 +24,7 @@ const Detail = ({ id, head, apiUrl, state: { values, details, actions } }: IDeta
 		}
 		const value = path(field.key.split('.'), detailValues);
 
-		switch (field.renderType) {
-			case RenderType.TEXT: {
-				if (typeof value === 'string' || typeof value === 'number') {
-					return value;
-				}
-				break;
-			}
-			case RenderType.BOOLEAN: {
-				return value ? 'Yes' : 'No';
-			}
-			case RenderType.LINK: {
-				if (typeof value === 'string') {
-					const uri: string = field.uri ?? '';
-					return (
-						<Anchor
-							target={'_blank'}
-							href={getSubResourceUrl(uri, [{ match: '{_id}', replace: values._id ?? '' }])}
-						>
-							{value}
-						</Anchor>
-					);
-				}
-				break;
-			}
-			case RenderType.TABLE: {
-				return (
-					<table className={classes.table}>
-						<thead>
-							<tr>
-								{field.columns.map(column => {
-									return <th key={column.key}>{column.label}</th>;
-								})}
-							</tr>
-						</thead>
-						<tbody>
-							{(Array.isArray(value) ? value : []).map((row, index) => {
-								return (
-									<tr key={index}>
-										{field.columns.map(column => {
-											return <td key={`${column.key}-${index}`}>{row?.[column.key] ?? '-'}</td>;
-										})}
-									</tr>
-								);
-							})}
-						</tbody>
-					</table>
-				);
-			}
-		}
-		console.warn('Detail Unknown render type: ', field.renderType);
-		return '-';
+		return renderField(field, value, detailValues);
 	};
 
 	const renderDetails = (renderFields: IFormField[], renderValues: Record<string, any>) => {
@@ -151,12 +103,6 @@ const useStyles = createStyles(theme => {
 			marginTop: theme.spacing.md,
 			marginBottom: theme.spacing.md,
 			padding: theme.spacing.md,
-		},
-		table: {
-			width: '100%',
-			'tbody > tr > td': {
-				fontWeight: 400,
-			},
 		},
 	};
 });

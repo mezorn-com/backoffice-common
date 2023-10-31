@@ -58,7 +58,8 @@ const Table = ({
     onInteract,
     rowActionButtons,
     rowActionButtonPosition = TABLE_ROW_ACTION_BUTTON_POSITION,
-    state: externalState
+    state: externalState,
+    pageSizes = [10, 20, 50]
 }: ITableProps) => {
     const { classes } = useStyles();
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
@@ -291,6 +292,7 @@ const Table = ({
                 onPageIndexChange={value => table.setPageIndex(value)}
                 onPreviousPage={table.previousPage}
                 onNextPage={table.nextPage}
+                pageSizes={pageSizes}
             />
         </div>
     )

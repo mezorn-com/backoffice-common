@@ -1,4 +1,3 @@
-import type { ColumnDef } from '@tanstack/react-table';
 import type { IRowActionButton } from '@/backoffice-common/hooks/useListPage';
 import { IListState } from '@/backoffice-common/types/common/list';
 
@@ -19,4 +18,10 @@ export interface ITableProps {
     rowActionButtons?: IRowActionButton[];
     rowActionButtonPosition?: 'left' | 'right';
     state: IListState;
+}
+
+export enum TableSectionType {
+    LEFT = 'left',
+    CENTER = 'center',
+    RIGHT = 'right'
 }

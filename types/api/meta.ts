@@ -69,25 +69,21 @@ export type ListAction = true | WithCondition & Confirmable & Invokable & WithIc
 
 
 export interface IListMetaResponse {
-    form: {
-        type: IMetaType;
-        fields: IColumn[];
-        title?: string;
-    };
+    form: Form;
     subResources: SubResources;
     listActions: Partial<Record<ListActionKey, ListAction>>;
     listItemActions: Partial<Record<ListItemActionKey, ListItemAction>>;
     filter?: INormalField[];
 }
 
-export interface IFormResponseData {
+export interface Form {
     type: FormType;
     title?: string;
     fields: IFormField[];
 }
 
 export interface IFormMetaResponse {
-    form: IFormResponseData;
+    form: Form;
     subResources?: SubResources;
     // actions: (MetaType | string)[];
     actions?: Record<MetaType | string, ListAction>;

@@ -1,16 +1,11 @@
 import * as React from 'react';
 import type { ITableInteraction, ITableProps, ITableState } from './types';
-import { append, assocPath, clone, path, prepend, eqProps, allPass } from 'ramda';
-import type { ArrayElement } from '@/backoffice-common/types/common';
+import { TableSectionType } from './types';
+import { allPass, append, clone, eqProps, prepend } from 'ramda';
 import { useStyles } from './useStyles';
-import { IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight, IconDatabaseX } from '@tabler/icons-react';
-import { Anchor, NumberInput, Select, ActionIcon } from '@mantine/core';
-import { IFieldRenderType } from '@/backoffice-common/types/api';
-import { useTranslation } from 'react-i18next';
-import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
-import TableFilter from './filter';
-
+import TableSection from './components/TableSection';
+import { getDOMRectObserver } from './utils';
 import Form from '@/backoffice-common/components/form/Form';
 
 // react-table props below
@@ -36,21 +31,28 @@ import Form from '@/backoffice-common/components/form/Form';
 // },
 // rowSelection: {},
 // sorting: []
-
 import {
+    CellContext,
     ColumnDef,
-    flexRender,
+    ColumnMeta,
     getCoreRowModel,
     getPaginationRowModel,
     TableState,
-    useReactTable,
-    CellContext
+    useReactTable
 } from '@tanstack/react-table'
 import { IRowActionButton } from '@/backoffice-common/hooks/useListPage';
 import { IFormValues } from '@/backoffice-common/components/form/helper';
-import { reducer, initialState } from './reducer';
+import { initialState, reducer } from './reducer';
+import { useBodyScrolls } from '@/backoffice-common/components/table/hooks';
+import TablePagination from '@/backoffice-common/components/table/components/pagination/TablePagination';
+import { isRenderField } from '@/backoffice-common/utils';
+import { useRenderField } from '@/backoffice-common/hooks';
 
-const pageSizes = [10, 20, 30, 40, 50];
+// compare 2 objects' given props values.
+const check = allPass([
+    eqProps('page'),
+    eqProps('pageSize'),
+])
 
 const Table = ({
     onInteract,
@@ -58,14 +60,35 @@ const Table = ({
     rowActionButtonPosition = TABLE_ROW_ACTION_BUTTON_POSITION,
     state: externalState
 }: ITableProps) => {
-    const { t } = useTranslation();
     const { classes } = useStyles();
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
+    const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
+    const tablesContainerRef = React.useRef<HTMLDivElement>(null);
+    const renderField = useRenderField();
+
+    React.useEffect(() => {
+        if (tablesContainerRef.current) {
+            const observer = getDOMRectObserver('height');
+            for (const tableElement of tablesContainerRef.current.children) {
+                //TODO: Remove class selector
+                const headerElement = tableElement.querySelector('.thead');
+                if (headerElement) {
+                    observer.observe(headerElement);
+                }
+            }
+        }
+    }, [])
+
+    React.useEffect(() => {
+        table.setColumnPinning({
+            right: ['table-actions-column']
+        })
+    }, []);
 
     const tableColumns = React.useMemo(() => {
         let cols = clone(externalState.columns);
         if (rowActionButtons?.length) {
-            const actionButtonsColumn: ColumnDef<Record<string, any>> = {
+            const actionButtonsColumn: ColumnDef<Record<string, unknown>> = {
                 header: '',
                 id: 'table-actions-column',
                 cell(props) {
@@ -77,7 +100,7 @@ const Table = ({
                         </div>
                     )
                 },
-                size: 1
+                enablePinning: true,
             }
             if (rowActionButtonPosition === 'right') {
                 cols = append(
@@ -105,6 +128,22 @@ const Table = ({
                 pageIndex: externalState.page - 1,
             }
         },
+        defaultColumn: {
+            enableResizing: true,
+            cell(props) {
+                const { meta } = props.column.columnDef;
+                if (!meta) {
+                    return props.renderValue();
+                }
+                if (isRenderField(meta.field)) {
+                    return renderField(meta.field, props.getValue(), props.row.original)
+                }
+                return props.renderValue();
+            }
+            // minSize: 0,
+            // size: Number.MAX_SAFE_INTEGER,
+            // maxSize: Number.MAX_SAFE_INTEGER,
+        },
         manualPagination: true,
         onStateChange: (updater) => {
             if (updater instanceof Function) {
@@ -112,16 +151,10 @@ const Table = ({
                 handleTableStateChange(newState);
             }
         },
+        renderFallbackValue: '-',
+        enablePinning: true,
+        enableColumnResizing: true,
     })
-
-    // console.log('Table State>>>>', table.getState());
-    // console.log('Props State>>>>', externalState);
-
-    // compare 2 objects' given props values.
-    const check = allPass([
-        eqProps('page'),
-        eqProps('pageSize'),
-    ])
 
     const handleTableStateChange = (updatedTableState: TableState) => {
         const updatedState: ITableState = {
@@ -154,7 +187,7 @@ const Table = ({
             pageSize: externalState.pageSize,
             pageIndex: externalState.page - 1
         },
-        debugTable: true,
+        // debugTable: true,
     }));
 
     const renderActionButton = (actionButton: IRowActionButton, index: number, props: CellContext<any, any>) => {
@@ -230,148 +263,35 @@ const Table = ({
                 }
             </div>
             <div className={classes.tableWrapper}>
-                <table className={classes.table}>
-                    <thead>
-                    {table.getHeaderGroups().map(headerGroup => (
-                        <tr key={headerGroup.id}>
-                            {
-                                headerGroup.headers.map(header => {
-                                    return (
-                                        <th key={header.id} colSpan={header.colSpan} className={classes.headerCell} style={{ width: header.getSize() }}>
-                                            {
-                                                header.isPlaceholder
-                                                    ? null
-                                                    : flexRender(
-                                                        header.column.columnDef.header,
-                                                        header.getContext()
-                                                    )
-                                            }
-                                        </th>
-                                    )
-                                })
-                            }
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody>
-                    {
-                        table.getRowModel().rows.length
-                            ?   table.getRowModel().rows.map(row => (
-                                    <tr key={row.id}>
-                                        {
-                                            row.getVisibleCells().map(cell => {
-                                                return (
-                                                    <td key={cell.id} className={classes.cell}>
-                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                    </td>
-                                                )
-                                            })
-                                        }
-                                    </tr>
-                                ))
-                            :   (
-                                <tr>
-                                    <td colSpan={1000}>
-                                        <div className={classes.noData}>
-                                            <IconDatabaseX size={50} color={'gray'}/>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )
-                    }
-                    </tbody>
-                    <tfoot>
-                    {table.getFooterGroups().map(footerGroup => (
-                        <tr key={footerGroup.id}>
-                            {footerGroup.headers.map(header => (
-                                <th key={header.id} colSpan={header.colSpan}>
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(
-                                            header.column.columnDef.footer,
-                                            header.getContext()
-                                        )}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </tfoot>
-                </table>
-            </div>
-            <div className={classes.footer}>
-                <div>
-                    {
-                        externalState.totalData && (
-                            <div>
-                                Нийт: {externalState.totalData}
-                            </div>
-                        )
-                    }
-                </div>
-                <div className={classes.pagination}>
-                    <div className={classes.paginationControls}>
-                        <ActionIcon
-                            variant='filled'
-                            color='color.primary'
-                            onClick={() => table.setPageIndex(0)}
-                            disabled={!table.getCanPreviousPage()}
-                        >
-                            <IconChevronsLeft size={16}/>
-                        </ActionIcon>
-                        <ActionIcon
-                            variant='filled'
-                            color='color.primary'
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
-                        >
-                            <IconChevronLeft size={16}/>
-                        </ActionIcon>
-                        <ActionIcon
-                            variant='filled'
-                            color='color.primary'
-                            onClick={() => table.nextPage()}
-                            disabled={!table.getCanNextPage()}
-                        >
-                            <IconChevronRight size={16}/>
-                        </ActionIcon>
-                        <ActionIcon
-                            variant='filled'
-                            color='color.primary'
-                            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                            disabled={!table.getCanNextPage()}
-                        >
-                            <IconChevronsRight size={16}/>
-                        </ActionIcon>
-                    </div>
-                    <div className={classes.totalPage}>
-                        Page
-                        <NumberInput
-                            type="number"
-                            value={externalState.page}
-                            onChange={e => {
-                                const page = e ? Number(e) : 0;
-                                table.setPageIndex(page);
-                            }}
-                            style={{ width: '100px' }}
-                            className={classes.paginationInput}
-                            min={1}
-                            size='xs'
-                        />
-                        / {table.getPageCount()}
-                    </div>
-                    <Select
-                        data={pageSizes.map(pageSize => {return {value: `${pageSize}`, label: `${pageSize}`}})}
-                        onChange={e => {table.setPageSize(Number(e))}}
-                        wrapperProps={{
-                            style: {
-                                width: 80
-                            }
-                        }}
-                        value={externalState.pageSize.toString()}
-                        size='xs'
+                <div className={classes.table} ref={tablesContainerRef}>
+                    <TableSection
+                        section={TableSectionType.LEFT}
+                        table={table}
+                        bodyRef={leftBodyRef}
+                    />
+                    <TableSection
+                        section={TableSectionType.CENTER}
+                        table={table}
+                        bodyRef={centerBodyRef}
+                    />
+                    <TableSection
+                        section={TableSectionType.RIGHT}
+                        table={table}
+                        bodyRef={rightBodyRef}
                     />
                 </div>
             </div>
+            <TablePagination
+                canPreviousPage={table.getCanPreviousPage()}
+                canNextPage={table.getCanNextPage()}
+                pageSize={externalState.pageSize.toString()}
+                pageCount={table.getPageCount()}
+                page={externalState.page}
+                onPageSizeChange={value =>  table.setPageSize(value)}
+                onPageIndexChange={value => table.setPageIndex(value)}
+                onPreviousPage={table.previousPage}
+                onNextPage={table.nextPage}
+            />
         </div>
     )
 }

@@ -3,35 +3,27 @@ import { useForm } from '@mantine/form';
 import {
 	ActionIcon,
 	Button,
-	ButtonProps,
 	Card,
 	Checkbox,
 	FileInput,
 	Flex,
-	MultiSelect,
 	NumberInput,
 	PasswordInput,
 	Select,
+	Stack,
 	Textarea,
 	TextInput,
-	Title
+	Title,
+	ButtonProps,
+	MultiSelect
 } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, UiType } from '@/backoffice-common/types/form';
-import {
-	getFormInitialValues,
-	getFormValueByKey,
-	IFormValues,
-	isFieldRequired,
-	isFieldVisible,
-	SEPARATOR,
-	transformValuesAsync,
-	validator
-} from './helper';
+import { getFormInitialValues, getFormValueByKey, IFormValues, isFieldRequired, isFieldVisible, SEPARATOR, transformValuesAsync, validator } from './helper';
 import { randomId } from '@mantine/hooks';
-import { CascadingSelect, FetchSelect, FormRTE, MapAddressPicker, SearchableSelect } from './components';
+import { CascadingSelect, FetchSelect, FormRTE, MapAddressPicker } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
-import { DatePickerInput, DateTimePicker, TimeInput, YearPickerInput } from '@mantine/dates';
+import { DatePickerInput, TimeInput, DateTimePicker } from '@mantine/dates';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
 import { clone, omit } from 'ramda';
 import dayjs from 'dayjs';
@@ -39,7 +31,6 @@ import { useFormStyles } from './styles';
 import { useTranslation } from 'react-i18next';
 import { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
 import { useLocation } from 'react-router-dom';
-import Location from '@/backoffice-common/components/form/components/location';
 
 interface IFormProps {
 	fields: IFormField[];
@@ -79,7 +70,7 @@ const Form = ({
 	}, [form.values]);
 
 	// console.log('form initial Values>>>>', getFormInitialValues(fields, values));
-	console.log('FORM VALUES>>>>', form.values);
+	// console.log('FORM VALUES>>>>', form.values);
 
 	const handleError = (validationErrors: any, _values: any, _event: any) => {
 		console.log('Form Error>>>', { validationErrors, _values: _values, _event: _event });
@@ -384,7 +375,7 @@ const Form = ({
 				return (
 					<TimeInput
 						{...props}
-						withSeconds={field.format !== 'HH:mm'}
+						withSeconds={field.format === 'HH:mm' ? false : true}
 					/>
 				);
 			}
@@ -448,30 +439,6 @@ const Form = ({
 						onChange={value => form.setFieldValue(valueKey, value)}
 					/>
 				);
-			}
-			case UiType.SEARCH_SELECT: {
-				return (
-					<SearchableSelect
-						{...props}
-						uri={field.optionsApi.uri}
-						multiple={field.multiple}
-					/>
-				)
-			}
-			case UiType.LOCATION: {
-				return (
-					<Location
-						{...props}
-						onSave={props.onChange}
-					/>
-				)
-			}
-			case UiType.YEAR: {
-				return (
-					<YearPickerInput
-						{...props}
-					/>
-				)
 			}
 			default: {
 				return null;

@@ -1,4 +1,4 @@
-export type IFieldRenderType = 'text' | 'link' | 'boolean';
+import { FieldType, RenderType } from '@/backoffice-common/types/form';
 
 export interface IResponse<DataType> {
     data: DataType;
@@ -13,8 +13,6 @@ export interface IListResponseData {
     totalData?: number;
     [key: string]: unknown;
 }
-
-type IFieldType = 'render';
 
 export interface IListResponse extends IResponse<any> {
     data: IListResponseData;
@@ -34,8 +32,8 @@ export type ResourceAction =
 export interface IColumn {
     key: string;
     label: string;
-    type: IFieldType;
-    renderType: IFieldRenderType;
+    type: FieldType;
+    renderType: RenderType;
 }
 
 export interface IReference {

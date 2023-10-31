@@ -117,11 +117,16 @@ const SearchableSelect = ({
 
     const handleSelect = (item: Option) => {
         let updatedValue: Option[] | null = clone(selectedValue);
-        if (updatedValue) {
-            updatedValue.push(item);
+        if (props.multiple) {
+            if (updatedValue) {
+                updatedValue.push(item);
+            } else {
+                updatedValue = [item]
+            }
         } else {
-            updatedValue = [item]
+            updatedValue = [item];
         }
+
         setSelectedValue(updatedValue);
         setSearchValue('');
         handleChange(updatedValue)
@@ -136,6 +141,7 @@ const SearchableSelect = ({
             props.onChange(updatedValue.map(value => value.value));
         } else {
             props.onChange(updatedValue?.[0]?.value ?? null);
+            setData([]);
         }
     }
 
@@ -149,8 +155,12 @@ const SearchableSelect = ({
         }
     }
 
+    const handlePopoverClose = () => {
+        setData([])
+    }
+
     return (
-        <Popover opened={!!data.length} onClose={() => setData([])} width={width} zIndex={1000}>
+        <Popover opened={!!data.length} onClose={handlePopoverClose} width={width} zIndex={1000}>
             <Popover.Target>
                 <div>
                     <FormLabel

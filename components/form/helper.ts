@@ -94,6 +94,9 @@ export const getInitialValue = (field: INormalField, initialValue?: any) => {
 		case UiType.SEARCH_SELECT: {
 			return initialValue ?? undefined;
 		}
+		case UiType.FILE_UPLOAD: {
+			return initialValue ?? undefined;
+		}
 		default: {
 			console.warn('Unknown UiType value: ', field.uiType);
 			return undefined;

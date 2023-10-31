@@ -10,7 +10,6 @@ import {
 	NumberInput,
 	PasswordInput,
 	Select,
-	Stack,
 	Textarea,
 	TextInput,
 	Title,
@@ -21,7 +20,7 @@ import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, UiType } from '@/backoffice-common/types/form';
 import { getFormInitialValues, getFormValueByKey, IFormValues, isFieldRequired, isFieldVisible, SEPARATOR, transformValuesAsync, validator } from './helper';
 import { randomId } from '@mantine/hooks';
-import { CascadingSelect, FetchSelect, FormRTE, MapAddressPicker } from './components';
+import { CascadingSelect, FetchSelect, FileUpload, FormRTE, MapAddressPicker } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
 import { DatePickerInput, TimeInput, DateTimePicker } from '@mantine/dates';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
@@ -375,7 +374,7 @@ const Form = ({
 				return (
 					<TimeInput
 						{...props}
-						withSeconds={field.format === 'HH:mm' ? false : true}
+						withSeconds={field.format !== 'HH:mm'}
 					/>
 				);
 			}
@@ -424,7 +423,7 @@ const Form = ({
 			}
 			case UiType.FILE_UPLOAD: {
 				return (
-					<FileInput
+					<FileUpload
 						{...props}
 						accept={field.mimeType}
 					/>

@@ -18,6 +18,7 @@ export interface ITableProps {
     rowActionButtons?: IRowActionButton[];
     rowActionButtonPosition?: 'left' | 'right';
     state: IListState;
+    pageSizes?: number[];
 }
 
 export enum TableSectionType {

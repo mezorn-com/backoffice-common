@@ -13,9 +13,8 @@ interface TablePaginationProps {
     onPageIndexChange: (index: number) => void;
     onNextPage: () => void;
     onPreviousPage: () => void;
+    pageSizes: number[];
 }
-
-const pageSizes = [10, 20, 30, 40, 50];
 
 const TablePagination = ({
     canPreviousPage,
@@ -26,7 +25,8 @@ const TablePagination = ({
     onPageSizeChange,
     onPageIndexChange,
     onNextPage,
-    onPreviousPage
+    onPreviousPage,
+    pageSizes
 }: TablePaginationProps) => {
 
     const { classes } = useStyles();

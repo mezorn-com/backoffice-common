@@ -68,9 +68,11 @@ const SearchableSelect = ({
             if (props.multiple) {
                 const value = props.value.filter(isValueOption);
                 setSelectedValue(value);
+                props.onChange(value.map(item => item.value));
             } else {
                 if (isValueOption(props.value)) {
                     setSelectedValue([props.value]);
+                    props.onChange(props.value.value);
                 }
             }
         }

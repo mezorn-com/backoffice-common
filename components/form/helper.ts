@@ -2,7 +2,7 @@ import { clone, drop, head, isNil, path, values as objectValues } from 'ramda';
 import i18n from '@/config/i18n';
 import type { IFormField, INormalField } from '@/backoffice-common/types/form';
 import { FieldType, UiType } from '@/backoffice-common/types/form';
-import { getArrayObjectByProp, replaceString } from '@/backoffice-common/utils';
+import { getArrayObjectByProp } from '@/backoffice-common/utils';
 import dayjs from 'dayjs';
 import { uploadFile } from '@/backoffice-common/utils/file-upload';
 
@@ -130,38 +130,18 @@ export const getErrorMessage = (field: IFormField, value: any): null | string =>
 	if (field.uiType === UiType.CHECKBOX) {
 		return null;
 	}
-	if (isNil(value)) {
-		return replaceString(t('validation.error.enterValue', { ns: 'form' }), [
-			{
-				match: '{{-REPLACE_VALUE-}}',
-				replace: field.label ?? t('value', { ns: 'form' }),
-			},
-		]);
+	if (isNil(value) || value === '') {
+		return t('validation.error.enterValue', { ns: 'form', value: field.label });
 	}
 	if (field.uiType === UiType.TEXT_INPUT) {
 		if (field.length && ((!field.numeric && field.length !== value?.length) || (field.numeric && field.length !== value.toString().length))) {
-			return replaceString(t('validation.error.exactNLengthAllowed', { ns: 'form' }), [
-				{
-					match: '{{-REPLACE_VALUE-}}',
-					replace: field.length.toString(),
-				},
-			]);
+			return t('validation.error.exactNLengthAllowed', { ns: 'form', value: field.length.toString() })
 		}
 		if (typeof field.maxLength === 'number' && field.maxLength < value?.length) {
-			return replaceString(t('validation.error.maxNLengthAllowed', { ns: 'form' }), [
-				{
-					match: '{{-REPLACE_VALUE-}}',
-					replace: (field.maxLength ?? 0).toString(),
-				},
-			]);
+			return t('validation.error.maxNLengthAllowed', { ns: 'form', value: (field.maxLength ?? 0).toString() })
 		}
 		if (typeof field.minLength === 'number' && field.minLength > value?.length) {
-			return replaceString(t('validation.error.minNLengthAllowed', { ns: 'form' }), [
-				{
-					match: '{{-REPLACE_VALUE-}}',
-					replace: (field.minLength ?? 0).toString(),
-				},
-			]);
+			return t('validation.error.minNLengthAllowed', { ns: 'form', value: (field.minLength ?? 0).toString() })
 		}
 		if (field.numeric && !/^\d+$/.test(value)) {
 			return t('validation.error.numberOnly', { ns: 'form' });

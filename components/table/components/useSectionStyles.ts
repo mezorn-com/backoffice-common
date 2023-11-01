@@ -5,7 +5,7 @@ interface StylesProps {
     sectionType: TableSectionType;
 }
 const headerBackground = '#d7d7d7';
-const cellPadding = '.5rem';
+const cellPadding = '.3rem .5rem';
 
 export const useSectionStyles = createStyles((theme, { sectionType }: StylesProps) => {
     return {

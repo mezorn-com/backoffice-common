@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Cell, flexRender, HeaderGroup, Row, Table } from '@tanstack/react-table';
 import { useSectionStyles } from './useSectionStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
-import { COLUMN_UID_ATTR, getTableBodyMutationObserver } from '../utils';
+import { COLUMN_UID_ATTR, getCenterTableWidthObserver, getTableBodyMutationObserver } from '../utils';
 import TableRow from './Row';
 import { TableSectionType } from '../types';
 
@@ -22,6 +22,13 @@ const TableSection = ({
 
     React.useEffect(() => {
         if (section === 'center' &&  tablesContainerRef.current) {
+
+            // Temp code to make table full width when table is small.
+            const tableWidthObserver = getCenterTableWidthObserver();
+            const container = tablesContainerRef.current.parentElement;
+            container && tableWidthObserver.observe(container);
+
+
             const tableBody = tablesContainerRef.current.querySelector('.tbody');
             if (tableBody) {
                 const mutationObserver = getTableBodyMutationObserver();

@@ -83,3 +83,42 @@ export const getColumns = (sectionElement: HTMLDivElement, columnId: string) => 
         cells
     }
 }
+
+export const getCenterTableWidthObserver = () => {
+    return new ResizeObserver((entries) => {
+        for (const entry of entries) {
+            // check if actions column is rendered
+            if (entry.target.parentElement?.children?.[2]?.querySelector('.tbody')?.children.length) {
+                const sectionWidth = entry.contentRect.width
+                const sectionTableWidth = entry.target.children[0].getBoundingClientRect().width;
+                if (sectionWidth > sectionTableWidth) {
+                    // why is it invoking twice
+                    const tbody = entry.target.querySelector(('.tbody'));
+                    const thead = entry.target.querySelector(('.thead'));
+                    if (thead) {
+                        for (const row of thead.children) {
+                            const colCount = row.children.length;
+                            const colWidth = sectionWidth / colCount;
+                            for (const cell of row.children) {
+                                if (cell instanceof HTMLDivElement) {
+                                    cell.style.width = colWidth + 'px';
+                                }
+                            }
+                        }
+                    }
+                    if (tbody) {
+                        for (const row of tbody.children) {
+                            const colCount = row.children.length;
+                            const colWidth = sectionWidth / colCount;
+                            for (const cell of row.children) {
+                                if (cell instanceof HTMLDivElement) {
+                                    cell.style.width = colWidth + 'px';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    })
+}

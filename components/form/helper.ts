@@ -241,12 +241,16 @@ const getTransformedValue = (field: IFormField, value: unknown): Promise<unknown
 		}
 		switch (field.uiType) {
 			case UiType.FILE_UPLOAD: {
-				const url = await uploadFile(value as File, {
-					useFileName: field.useFileName,
-					prefix: field.prefix ?? '',
-					folderPath: field.folderPath ?? '',
-				});
-				resolve(url);
+				if (value instanceof File) {
+					const url = await uploadFile(value, {
+						useFileName: field.useFileName,
+						prefix: field.prefix ?? '',
+						folderPath: field.folderPath ?? '',
+					});
+					resolve(url);
+					return;
+				}
+				resolve(undefined);
 				return;
 			}
 			case UiType.CHECKBOX: {

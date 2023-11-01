@@ -20,9 +20,9 @@ import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, UiType } from '@/backoffice-common/types/form';
 import { getFormInitialValues, getFormValueByKey, IFormValues, isFieldRequired, isFieldVisible, SEPARATOR, transformValuesAsync, validator } from './helper';
 import { randomId } from '@mantine/hooks';
-import { CascadingSelect, FetchSelect, FileUpload, FormRTE, MapAddressPicker } from './components';
+import { CascadingSelect, FetchSelect, FileUpload, FormRTE, MapAddressPicker, Location, SearchableSelect } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
-import { DatePickerInput, TimeInput, DateTimePicker } from '@mantine/dates';
+import { DatePickerInput, TimeInput, DateTimePicker, YearPickerInput } from '@mantine/dates';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
 import { clone, omit } from 'ramda';
 import dayjs from 'dayjs';
@@ -438,6 +438,30 @@ const Form = ({
 						onChange={value => form.setFieldValue(valueKey, value)}
 					/>
 				);
+			}
+			case UiType.SEARCH_SELECT: {
+				return (
+					<SearchableSelect
+						{...props}
+						uri={field.optionsApi.uri}
+						multiple={field.multiple}
+					/>
+				)
+			}
+			case UiType.LOCATION: {
+				return (
+					<Location
+						{...props}
+						onSave={props.onChange}
+					/>
+				)
+			}
+			case UiType.YEAR: {
+				return (
+					<YearPickerInput
+						{...props}
+					/>
+				)
 			}
 			default: {
 				return null;

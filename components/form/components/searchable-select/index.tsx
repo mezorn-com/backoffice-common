@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Loader, Popover, Chip, Button } from "@mantine/core";
+import { Loader, Popover, Chip, Button, ActionIcon } from "@mantine/core";
 import { useDebouncedValue, useElementSize } from "@mantine/hooks";
 import axios from "axios";
 import qs from "qs";
-import { IconSearch } from "@tabler/icons-react";
+import { IconSearch, IconX } from "@tabler/icons-react";
 import { useStyles } from './styles';
 import type { IResponse } from '@/backoffice-common/types/api';
 import { FormLabel } from '@/backoffice-common/components/form/components';
@@ -183,8 +183,12 @@ const SearchableSelect = ({
                                         radius='md'
                                         checked={false}
                                         onClick={() => removeSelectedItem(option.value)}
+                                        size='xs'
                                     >
                                         {option.label}
+                                        <ActionIcon size='xs' onClick={() => removeSelectedItem(option.value)}>
+                                            <IconX size={14}/>
+                                        </ActionIcon>
                                     </Chip>
                                 )
                             })

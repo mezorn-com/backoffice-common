@@ -1,4 +1,4 @@
-import { createStyles } from '@mantine/core';
+import { createStyles, rem } from '@mantine/core';
 
 export const useStyles = createStyles((theme) => {
     return {
@@ -11,7 +11,8 @@ export const useStyles = createStyles((theme) => {
             alignItems: 'center',
             '&:focus-within': {
                 borderColor: theme.colors[theme.primaryColor]
-            }
+            },
+            gap: rem(3)
         },
         dropdown: {
             maxHeight: 500,
@@ -34,7 +35,6 @@ export const useStyles = createStyles((theme) => {
             paddingLeft: theme.spacing.md,
         },
         icon: {
-            marginRight: theme.spacing.xs,
             display: 'grid',
             placeItems: 'center'
         },

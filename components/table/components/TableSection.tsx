@@ -2,9 +2,16 @@ import * as React from 'react';
 import { Cell, flexRender, HeaderGroup, Row, Table } from '@tanstack/react-table';
 import { useSectionStyles } from './useSectionStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
-import { COLUMN_UID_ATTR, getCenterTableWidthObserver, getTableBodyMutationObserver } from '../utils';
+import {
+    assignZ,
+    COLUMN_UID_ATTR,
+    getCenterTableWidthObserver,
+    getTableRowMutationObserver,
+    ROW_PREFIX
+} from '../utils';
 import TableRow from './Row';
 import { TableSectionType } from '../types';
+import ObservedCell from '@/backoffice-common/components/table/components/ObservedCell';
 
 interface TableElementProps {
     section: TableSectionType,
@@ -24,23 +31,44 @@ const TableSection = ({
         if (section === 'center' &&  tablesContainerRef.current) {
 
             // Temp code to make table full width when table is small.
-            const tableWidthObserver = getCenterTableWidthObserver();
-            const container = tablesContainerRef.current.parentElement;
-            container && tableWidthObserver.observe(container);
+            // const tableWidthObserver = getCenterTableWidthObserver();
+            // const container = tablesContainerRef.current.parentElement;
+            // container && tableWidthObserver.observe(container);
 
 
-            const tableBody = tablesContainerRef.current.querySelector('.tbody');
-            if (tableBody) {
-                const mutationObserver = getTableBodyMutationObserver();
-                mutationObserver.observe(tableBody,{
-                    attributes: false,
-                    childList: true,
-                    subtree: false
-                });
-                return () => {
-                    mutationObserver.disconnect();
-                }
-            }
+            // const tableHead = tablesContainerRef.current.querySelector('.thead');
+            //
+            // if (tableHead) {
+            //     if (tableHead.children.length) {
+            //         for (const row of tableHead.children) {
+            //             assignZ(row, '.thead')
+            //         }
+            //     }
+            //     const mutationObserver = getTableRowMutationObserver('.thead');
+            //     mutationObserver.observe(tableHead,{
+            //         attributes: false,
+            //         childList: true,
+            //         subtree: false
+            //     });
+            //     // return () => {
+            //     //     mutationObserver.disconnect();
+            //     // }
+            // }
+
+
+
+            // const tableBody = tablesContainerRef.current.querySelector('.tbody');
+            // if (tableBody) {
+            //     const mutationObserver = getTableRowMutationObserver('.tbody');
+            //     mutationObserver.observe(tableBody,{
+            //         attributes: false,
+            //         childList: true,
+            //         subtree: false
+            //     });
+            //     return () => {
+            //         mutationObserver.disconnect();
+            //     }
+            // }
         }
     }, [])
 
@@ -105,18 +133,22 @@ const TableSection = ({
                 <div className={`thead ${classes.head}`}>
                     {
                         getHeaderGroups().map(headerGroup => {
+                            const rowId = headerGroup.id.split('_')[1];
                             return (
-                                <TableRow key={headerGroup.id} rowId={headerGroup.id}>
+                                <TableRow key={headerGroup.id} rowId={rowId}>
                                     {
                                         headerGroup.headers.map(header => {
                                             const colAttr = {
-                                                [COLUMN_UID_ATTR]: header.id
+                                                [COLUMN_UID_ATTR]: header.id,
+                                                [ROW_PREFIX]: rowId,
+                                                ['header-col']: 'true'
                                             }
+                                            {/*{...colAttr}*/}
                                             return (
-                                                <div
-                                                    {...colAttr}
+                                                <ObservedCell
+                                                    attrs={colAttr}
                                                     key={header.id}
-                                                    className={classes.headerCell}
+                                                    // className={classes.headerCell}
                                                 >
                                                     {
                                                         header.isPlaceholder
@@ -126,7 +158,7 @@ const TableSection = ({
                                                                 header.getContext()
                                                             )
                                                     }
-                                                </div>
+                                                </ObservedCell>
                                             )
                                         })
                                     }
@@ -144,16 +176,18 @@ const TableSection = ({
                                     {
                                         getVisibleCells(row).map(cell => {
                                             const cellAttr = {
-                                                [COLUMN_UID_ATTR]: cell.column.id
+                                                [COLUMN_UID_ATTR]: cell.column.id,
+                                                [ROW_PREFIX]: row.id
                                             }
+                                            {/*{...cellAttr}*/}
                                             return (
-                                                <div
-                                                    {...cellAttr}
+                                                <ObservedCell
+                                                    attrs={cellAttr}
                                                     key={cell.id}
-                                                    className={classes.cell}
+                                                    // className={classes.cell}
                                                 >
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </div>
+                                                </ObservedCell>
                                             )
                                         })
                                     }

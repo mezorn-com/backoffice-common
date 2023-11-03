@@ -5,7 +5,7 @@ import { allPass, append, clone, eqProps, prepend } from 'ramda';
 import { useStyles } from './useStyles';
 import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
 import TableSection from './components/TableSection';
-import { getDOMRectObserver } from './utils';
+import { COLUMN_UID_ATTR, getCellObserver, getDOMRectObserver, ROW_PREFIX } from './utils';
 import Form from '@/backoffice-common/components/form/Form';
 
 // react-table props below
@@ -34,7 +34,6 @@ import Form from '@/backoffice-common/components/form/Form';
 import {
     CellContext,
     ColumnDef,
-    ColumnMeta,
     getCoreRowModel,
     getPaginationRowModel,
     TableState,
@@ -47,6 +46,8 @@ import { useBodyScrolls } from '@/backoffice-common/components/table/hooks';
 import TablePagination from '@/backoffice-common/components/table/components/pagination/TablePagination';
 import { isRenderField } from '@/backoffice-common/utils';
 import { useRenderField } from '@/backoffice-common/hooks';
+
+import { TableContext } from '@/backoffice-common/components/table/context';
 
 // compare 2 objects' given props values.
 const check = allPass([
@@ -65,19 +66,13 @@ const Table = ({
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
     const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
+
+    const columnObserverRef = React.useRef<ResizeObserver>(null);
     const renderField = useRenderField();
 
     React.useEffect(() => {
-        if (tablesContainerRef.current) {
-            const observer = getDOMRectObserver('height');
-            for (const tableElement of tablesContainerRef.current.children) {
-                //TODO: Remove class selector
-                const headerElement = tableElement.querySelector('.thead');
-                if (headerElement) {
-                    observer.observe(headerElement);
-                }
-            }
-        }
+        // @ts-ignore
+        columnObserverRef.current = getCellObserver();
     }, [])
 
     React.useEffect(() => {
@@ -245,56 +240,58 @@ const Table = ({
     }
 
     return (
-        <div className={classes.container}>
-            <div>
-                {
-                    externalState.filter && (
-                        <Form
-                            fields={externalState.filter ?? []}
-                            submitButtonProps={{
-                                style: {
-                                    display: 'none'
-                                }
-                            }}
-                            direction={'row'}
-                            onSubmit={() => undefined}
-                            onChange={handleFilterChange}
-                        />
-                    )
-                }
-            </div>
-            <div className={classes.tableWrapper}>
-                <div className={classes.table} ref={tablesContainerRef}>
-                    <TableSection
-                        section={TableSectionType.LEFT}
-                        table={table}
-                        bodyRef={leftBodyRef}
-                    />
-                    <TableSection
-                        section={TableSectionType.CENTER}
-                        table={table}
-                        bodyRef={centerBodyRef}
-                    />
-                    <TableSection
-                        section={TableSectionType.RIGHT}
-                        table={table}
-                        bodyRef={rightBodyRef}
-                    />
+        <TableContext.Provider value={{ columnObserver: columnObserverRef.current }}>
+            <div className={classes.container}>
+                <div>
+                    {
+                        externalState.filter && (
+                            <Form
+                                fields={externalState.filter ?? []}
+                                submitButtonProps={{
+                                    style: {
+                                        display: 'none'
+                                    }
+                                }}
+                                direction={'row'}
+                                onSubmit={() => undefined}
+                                onChange={handleFilterChange}
+                            />
+                        )
+                    }
                 </div>
+                <div className={classes.tableWrapper}>
+                    <div className={classes.table} ref={tablesContainerRef}>
+                        <TableSection
+                            section={TableSectionType.LEFT}
+                            table={table}
+                            bodyRef={leftBodyRef}
+                        />
+                        <TableSection
+                            section={TableSectionType.CENTER}
+                            table={table}
+                            bodyRef={centerBodyRef}
+                        />
+                        <TableSection
+                            section={TableSectionType.RIGHT}
+                            table={table}
+                            bodyRef={rightBodyRef}
+                        />
+                    </div>
+                </div>
+                <TablePagination
+                    canPreviousPage={table.getCanPreviousPage()}
+                    canNextPage={table.getCanNextPage()}
+                    pageSize={externalState.pageSize.toString()}
+                    pageCount={table.getPageCount()}
+                    page={externalState.page}
+                    onPageSizeChange={value =>  table.setPageSize(value)}
+                    onPageIndexChange={value => table.setPageIndex(value)}
+                    onPreviousPage={table.previousPage}
+                    onNextPage={table.nextPage}
+                    pageSizes={pageSizes}
+                />
             </div>
-            <TablePagination
-                canPreviousPage={table.getCanPreviousPage()}
-                canNextPage={table.getCanNextPage()}
-                pageSize={externalState.pageSize.toString()}
-                pageCount={table.getPageCount()}
-                page={externalState.page}
-                onPageSizeChange={value =>  table.setPageSize(value)}
-                onPageIndexChange={value => table.setPageIndex(value)}
-                onPreviousPage={table.previousPage}
-                onNextPage={table.nextPage}
-                pageSizes={pageSizes}
-            />
-        </div>
+        </TableContext.Provider>
     )
 }
 

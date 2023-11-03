@@ -28,12 +28,6 @@ export const useSectionStyles = createStyles((theme, { sectionType }: StylesProp
         head: {
             background: headerBackground,
         },
-        headerCell: {
-            textAlign: 'center',
-            padding: cellPadding,
-            wordBreak: 'keep-all',
-            whiteSpace: 'nowrap'
-        },
         body: {
             flex: 1,
             overflowY: 'auto',
@@ -42,12 +36,24 @@ export const useSectionStyles = createStyles((theme, { sectionType }: StylesProp
                 width: sectionType === TableSectionType.CENTER ? 0 : undefined,
             }
         },
+        headerCell: {
+            padding: cellPadding,
+            '> div': {
+                width: 'min-content',
+                wordBreak: 'keep-all',
+                whiteSpace: 'nowrap',
+                textAlign: 'center',
+            }
+        },
         cell: {
             borderBottom: '1px solid',
             borderBottomColor: theme.colors.gray[2],
             padding: cellPadding,
-            wordBreak: 'keep-all',
-            whiteSpace: 'nowrap'
-        }
+            '> div': {
+                wordBreak: 'keep-all',
+                whiteSpace: 'nowrap',
+                width: 'min-content'
+            }
+        },
     }
 })

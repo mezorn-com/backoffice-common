@@ -1,3 +1,5 @@
+type Selector = '.thead' | '.tbody';
+
 export const ROW_PREFIX = 'table-row-id';
 export const COLUMN_UID_ATTR = 'table-column-id';
 
@@ -19,37 +21,53 @@ export const getDOMRectObserver = (key: keyof Omit<DOMRectReadOnly, 'toJSON' | '
     });
 }
 
-export const getTableBodyMutationObserver = () => {
+export const assignZ = (rowElement: Node, selector: Selector) => {
+    if (rowElement instanceof HTMLDivElement && rowElement.getAttribute(ROW_PREFIX)) {
+        const rowId = rowElement.getAttribute(ROW_PREFIX);
+        // TODO make selector shorter
+        const sectionElement = rowElement?.parentElement?.parentElement?.parentElement;
+        const table = sectionElement?.parentElement;
+        if (table instanceof HTMLElement && rowId) {
+            let sectionRows: HTMLDivElement[] = [];
+            Array.from(table?.children ?? '').forEach(section => {
+                // TODO: replace className selector
+                const sectionBody = section.querySelector(selector)?.children;
+                if (sectionBody) {
+                    Array.from(sectionBody).forEach(row => {
+                        if (selector === '.tbody') {
+                            if (row.getAttribute(ROW_PREFIX) === rowId) {
+                                row instanceof HTMLDivElement && sectionRows.push(row);
+                            }
+                        } else if (selector === '.thead') {
+                            const z = row.getAttribute(ROW_PREFIX)
+                            if (z) {
+                                const id = rowId.split('_')[1];
+                                const x = z.split('_')[1];
+                                if (id === x) {
+                                    row instanceof HTMLDivElement && sectionRows.push(row);
+                                    console.log('row>>>', row.getBoundingClientRect().height, row)
+                                }
+                            }
+                        }
+                    })
+                }
+            })
+            // const heightObserver = getDOMRectObserver('height');
+            // for (const row of sectionRows) {
+            //     heightObserver.observe(row);
+            // }
+        }
+    }
+}
+
+export const getTableRowMutationObserver = (selector: Selector) => {
     return new MutationObserver((mutationList, observer) => {
         // remove resize observer when observed element removed from DOM.
         for (const mutation of mutationList) {
             if (mutation.type === "childList") {
                 if (mutation.addedNodes) {
                     Array.from(mutation.addedNodes).forEach((rowElement) => {
-                        if (rowElement instanceof HTMLDivElement && rowElement.getAttribute(ROW_PREFIX)) {
-                            const rowId = rowElement.getAttribute(ROW_PREFIX);
-                            // TODO make selector shorter
-                            const sectionElement = rowElement?.parentElement?.parentElement?.parentElement;
-                            const table = sectionElement?.parentElement;
-                            if (table instanceof HTMLElement) {
-                                let sectionRows: HTMLDivElement[] = [];
-                                Array.from(table?.children ?? '').forEach(section => {
-                                    // TODO: replace className selector
-                                    const sectionBody = section.querySelector('.tbody')?.children;
-                                    if (sectionBody) {
-                                        Array.from(sectionBody).forEach(row => {
-                                            if (row.getAttribute(ROW_PREFIX) === rowId) {
-                                                row instanceof HTMLDivElement && sectionRows.push(row);
-                                            }
-                                        })
-                                    }
-                                })
-                                const heightObserver = getDOMRectObserver('height');
-                                for (const row of sectionRows) {
-                                    heightObserver.observe(row);
-                                }
-                            }
-                        }
+                        assignZ(rowElement, selector)
                     })
                 }
             }
@@ -118,6 +136,93 @@ export const getCenterTableWidthObserver = () => {
                         }
                     }
                 }
+            }
+        }
+    })
+}
+
+export const getCellObserver = () => {
+    return new ResizeObserver((entries) => {
+        // TODO: make improvements
+        for (const entry of entries) {
+            const { target, contentRect } = entry;
+            const columnId = target.getAttribute(COLUMN_UID_ATTR);
+            let rowId = target.getAttribute(ROW_PREFIX);
+            const isHeaderColumn = target.getAttribute('header-col') === 'true';
+
+            const tbodyOrThead = target.parentElement?.parentElement;
+            const wrapper = tbodyOrThead?.parentElement?.parentElement?.parentElement;
+            if (wrapper) {
+                const rows = [];
+                for (const section of wrapper.children) {
+                    const colCells = [];
+                    const head = section.querySelector('.thead');
+                    const body = section.querySelector('.tbody');
+
+                    if (head) {
+                        for (const row of head.children) {
+                            if (row.getAttribute(ROW_PREFIX) === rowId) {
+                                isHeaderColumn && rows.push(row);
+                            }
+
+                            for (const cell of row.children) {
+                                if (cell.getAttribute(COLUMN_UID_ATTR) === columnId) {
+                                    colCells.push(cell);
+                                }
+                            }
+
+                        }
+                    }
+
+                    if (body) {
+                        for (const row of body.children) {
+                            if (row.getAttribute(ROW_PREFIX) === rowId) {
+                                !isHeaderColumn && rows.push(row);
+                            }
+
+                            for (const cell of row.children) {
+                                if (cell.getAttribute(COLUMN_UID_ATTR) === columnId) {
+                                    colCells.push(cell);
+                                }
+                            }
+                        }
+                    }
+
+
+
+                    let maxWidth = 0;
+
+                    for (const c of colCells) {
+                        if (c.getBoundingClientRect().width > maxWidth) {
+                            maxWidth = c.getBoundingClientRect().width;
+                        }
+                    }
+
+
+
+                    for (const c of colCells) {
+                        // @ts-ignore
+                        c.style.width = maxWidth + 'px';
+                    }
+
+                }
+
+                let maxHeight = 0;
+                for (const row of rows) {
+                    for (const cell of row.children) {
+                        if (cell.getBoundingClientRect().height > maxHeight) {
+                            maxHeight = cell.getBoundingClientRect().height;
+                        }
+                    }
+                }
+
+                for (const row of rows) {
+                    for (const cell of row.children) {
+                        // @ts-ignore
+                        cell.style.height = maxHeight + 'px';
+                    }
+                }
+
             }
         }
     })

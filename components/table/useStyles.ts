@@ -15,7 +15,8 @@ export const useStyles = createStyles((theme) => {
             marginBottom: theme.spacing.md,
             overflow: 'hidden',
             gap: '1rem',
-            width: '100%'
+            width: 'max-content',
+            maxWidth: '100%'
         },
         actionButtons: {
             display: 'flex',

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ROW_PREFIX } from '../utils';
 import { createStyles } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
-import { useRowMutationObserver } from '@/backoffice-common/components/table/hooks';
 
 interface TableRowProps {
     children: React.ReactNode;
@@ -13,7 +12,8 @@ const useStyles = createStyles(() => {
     return {
         container: {
             display: 'flex',
-            alignItems: 'flex-end'
+            alignItems: 'flex-end',
+            height: 'fit-content'
         }
     }
 })
@@ -26,7 +26,6 @@ const TableRow = ({
     const { classes } = useStyles();
     const rowRef = React.useRef<HTMLDivElement>(null);
     const forceUpdate = useForceUpdate();
-    useRowMutationObserver(rowRef);
 
     React.useEffect(() => {
         if (rowRef.current) {

@@ -148,6 +148,7 @@ const useListPage = ({
                 type: 'SET_META_DATA',
                 payload: {
                     columns: formatColumns(response?.form?.fields ?? []),
+                    // columns: [],
                     pageTitle: response.form.title,
                     listActions: response.listActions,
                     listItemActions: response.listItemActions,
@@ -167,6 +168,7 @@ const useListPage = ({
             type: 'SET_LIST_RESPONSE',
             payload: {
                 docs: data.data.docs,
+                // docs: [],
                 page: data.data.page,
                 totalPage: data.data.totalPage,
                 limit: data.data.limit,

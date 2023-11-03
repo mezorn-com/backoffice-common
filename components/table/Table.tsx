@@ -150,8 +150,17 @@ const Table = ({
         renderFallbackValue: '-',
         enablePinning: true,
         enableColumnResizing: true,
-        enableRowSelection: true
+        enableRowSelection: true,
+        // onRowSelectionChange(q) {
+        //     // console.log('D>>>', table.getSelectedRowModel());
+        //     // q()
+        //     // console.log('stateateate>>', q);
+        // }
     })
+
+    React.useEffect(() => {
+
+    }, [table.getRowModel()])
 
     const handleTableStateChange = (updatedTableState: TableState) => {
         const updatedState: ITableState = {

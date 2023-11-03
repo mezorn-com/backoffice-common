@@ -3,6 +3,7 @@ import axios from 'axios';
 import { IListResponse, IResponse } from '@/backoffice-common/types/api';
 import { formatColumns, getMeta } from '@/backoffice-common/utils';
 import {
+    BulkAction,
     IListMetaResponse,
     ListAction,
     ListActionKey,
@@ -63,6 +64,7 @@ type SetMetaData = {
         listActions?: IListMetaResponse['listActions'];
         listItemActions?: IListMetaResponse['listItemActions'];
         filter?: INormalField[];
+        bulkItemActions?: BulkAction;
     };
 }
 
@@ -89,7 +91,8 @@ const initialState: IListState = {
     listActions: undefined,
     listItemActions: undefined,
     filter: undefined,
-    listResponse: undefined
+    listResponse: undefined,
+    bulkItemActions: undefined
 }
 
 interface IBaseListParams {
@@ -117,6 +120,7 @@ const reducer = produce(
                 draft.listItemActions = action.payload.listItemActions;
                 draft.subResources = action.payload.subResources;
                 draft.filter = action.payload.filter;
+                draft.bulkItemActions = action.payload.bulkItemActions;
                 break;
             }
             case 'HANDLE_TABLE_INTERACT': {
@@ -148,12 +152,12 @@ const useListPage = ({
                 type: 'SET_META_DATA',
                 payload: {
                     columns: formatColumns(response?.form?.fields ?? []),
-                    // columns: [],
                     pageTitle: response.form.title,
                     listActions: response.listActions,
                     listItemActions: response.listItemActions,
                     subResources: response.subResources ?? [],
-                    filter: response.filter
+                    filter: response.filter,
+                    bulkItemActions: response.bulkItemActions
                 },
             })
         }
@@ -168,7 +172,6 @@ const useListPage = ({
             type: 'SET_LIST_RESPONSE',
             payload: {
                 docs: data.data.docs,
-                // docs: [],
                 page: data.data.page,
                 totalPage: data.data.totalPage,
                 limit: data.data.limit,

@@ -150,6 +150,7 @@ const Table = ({
         renderFallbackValue: '-',
         enablePinning: true,
         enableColumnResizing: true,
+        enableRowSelection: true
     })
 
     const handleTableStateChange = (updatedTableState: TableState) => {

@@ -38,26 +38,18 @@ interface WithLabel {
     label?: string
 }
 
+export enum Method {
+    GET = 'GET',
+    POST = 'POST',
+    PUT = 'PUT',
+    DELETE = 'DELETE'
+}
+
 interface Invokable {
     api?: {
         uri: string
-        method: 'GET' | 'POST' | 'PUT' | 'DELETE'
-    }
-}
-
-export interface IActionMeta {
-    confirmation?: {
-        dialogText?: string;
-        buttonText?: string;
-    };
-    icon?: {
-        type: string;
-        value: string;
-        color: string;
-    };
-    api?: {
-        uri: string;
-        method: string;
+        method: Method;
+        form: Form;
     }
 }
 
@@ -67,6 +59,7 @@ export type ListItemAction = true | WithCondition & Confirmable & Invokable & Wi
 export type ListActionKey = 'create' | string;
 export type ListAction = true | WithCondition & Confirmable & Invokable & WithIcon & WithLabel;
 
+export type BulkAction = Invokable & WithLabel;
 
 export interface IListMetaResponse {
     form: Form;
@@ -74,6 +67,7 @@ export interface IListMetaResponse {
     listActions: Partial<Record<ListActionKey, ListAction>>;
     listItemActions: Partial<Record<ListItemActionKey, ListItemAction>>;
     filter?: INormalField[];
+    bulkItemActions: Record<string, BulkAction>
 }
 
 export interface Form {
@@ -85,7 +79,6 @@ export interface Form {
 export interface IFormMetaResponse {
     form: Form;
     subResources?: SubResources;
-    // actions: (MetaType | string)[];
     actions?: Record<MetaType | string, ListAction>;
 }
 

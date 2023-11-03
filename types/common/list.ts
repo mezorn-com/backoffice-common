@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table';
-import type { IListMetaResponse } from '../api/meta';
+import type { BulkAction, IListMetaResponse } from '../api/meta';
 import type { ITableState } from '@/backoffice-common/components/table/types';
 import { INormalField } from '@/backoffice-common/types/form';
 
@@ -14,4 +14,5 @@ export interface IListState extends ITableState {
     listItemActions?: IListMetaResponse['listItemActions'];
     filter?: INormalField[];
     listResponse?: Record<string, unknown>;
+    bulkItemActions?: BulkAction;
 }

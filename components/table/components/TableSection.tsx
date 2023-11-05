@@ -12,6 +12,7 @@ interface TableElementProps {
     section: TableSectionType,
     table: Table<ListDoc>,
     bodyRef: React.MutableRefObject<HTMLDivElement | null>;
+    rowSelect?: boolean;
 }
 
 const getColumnAttributes = (columnId: string, rowId: string, isHeaderCol?: 'true') => {
@@ -32,6 +33,7 @@ const TableSection = ({
     section,
     table,
     bodyRef,
+    rowSelect
 }: TableElementProps) => {
     const { classes } = useSectionStyles({ sectionType: section });
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
@@ -88,6 +90,8 @@ const TableSection = ({
         }
     }, [])
 
+    console.log('selectrow>>', rowSelect);
+
     const getHeaderGroups = (): HeaderGroup<ListDoc>[] => {
         switch(section) {
             case TableSectionType.LEFT: {
@@ -140,7 +144,7 @@ const TableSection = ({
     }
 
     const renderCheckBox = (row: Row<ListDoc> | HeaderGroup<ListDoc>): React.ReactNode => {
-        if (section !== TableSectionType.CENTER) {
+        if (section !== TableSectionType.CENTER || !rowSelect) {
             return null;
         }
 

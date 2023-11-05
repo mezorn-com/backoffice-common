@@ -1,5 +1,6 @@
-import type { IRowActionButton } from '@/backoffice-common/hooks/useListPage';
+import type { Action, IRowActionButton } from '@/backoffice-common/hooks/useListPage';
 import { IListState } from '@/backoffice-common/types/common/list';
+import { Dispatch } from 'react';
 
 export interface ITableState {
     page: number;
@@ -11,6 +12,7 @@ export interface ITableState {
 export interface ITableInteraction {
     state: ITableState;
     filter?: Record<string, any>;
+    selectedRows?: string[];
 }
 
 export interface ITableProps {
@@ -19,6 +21,7 @@ export interface ITableProps {
     rowActionButtonPosition?: 'left' | 'right';
     state: IListState;
     pageSizes?: number[];
+    dispatch?: Dispatch<Action>;
 }
 
 export enum TableSectionType {

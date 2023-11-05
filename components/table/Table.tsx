@@ -1,7 +1,6 @@
 import * as React from 'react';
 import type { ITableInteraction, ITableProps, ITableState } from './types';
 import { TableSectionType } from './types';
-import { allPass, append, clone, eqProps, prepend } from 'ramda';
 import { useStyles } from './useStyles';
 import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
 import TableSection from './components/TableSection';
@@ -48,6 +47,13 @@ import { isRenderField } from '@/backoffice-common/utils';
 import { useRenderField } from '@/backoffice-common/hooks';
 
 import { TableContext } from '@/backoffice-common/components/table/context';
+import { allPass, append, clone, eqProps, prepend, equals } from 'ramda';
+import { BulkAction } from '@/backoffice-common/types/api/meta.ts';
+import { Button, Menu } from '@mantine/core';
+import BulkActionModal from '@/backoffice-common/components/table/components/BulkActionModal.tsx';
+import axios from 'axios';
+import { IResponse } from '@/backoffice-common/types/api';
+
 
 // compare 2 objects' given props values.
 const check = allPass([
@@ -55,12 +61,15 @@ const check = allPass([
     eqProps('pageSize'),
 ])
 
+const eqValues = (a1: unknown[], a2: unknown[]) => equals(new Set(a1), new Set(a2))
+
 const Table = ({
     onInteract,
     rowActionButtons,
     rowActionButtonPosition = TABLE_ROW_ACTION_BUTTON_POSITION,
     state: externalState,
-    pageSizes = [10, 20, 50]
+    pageSizes = [10, 20, 50],
+    dispatch: dispatchExternalState
 }: ITableProps) => {
     const { classes } = useStyles();
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
@@ -73,7 +82,7 @@ const Table = ({
     React.useEffect(() => {
         // @ts-ignore
         columnObserverRef.current = getCellObserver();
-    }, [])
+    }, []);
 
     React.useEffect(() => {
         table.setColumnPinning({
@@ -151,16 +160,17 @@ const Table = ({
         enablePinning: true,
         enableColumnResizing: true,
         enableRowSelection: true,
-        // onRowSelectionChange(q) {
-        //     // console.log('D>>>', table.getSelectedRowModel());
-        //     // q()
-        //     // console.log('stateateate>>', q);
-        // }
     })
 
     React.useEffect(() => {
-
-    }, [table.getRowModel()])
+        const ids = table.getSelectedRowModel().rows.map(row => row.original._id) as string[];
+        if (!eqValues(ids, externalState.selectedRows)) {
+            dispatchExternalState?.({
+                type: 'HANDLE_ROW_SELECT_CHANGE',
+                payload: ids,
+            })
+        }
+    }, [table.getSelectedRowModel().rows])
 
     const handleTableStateChange = (updatedTableState: TableState) => {
         const updatedState: ITableState = {
@@ -249,9 +259,78 @@ const Table = ({
         })
     }
 
+    const renderBulkActions = () => {
+        if (!externalState.bulkItemActions  || !externalState.selectedRows?.length) {
+            return null;
+        }
+        return (
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <BulkActionModal
+                    onClose={() => {
+                        dispatch({
+                            type: 'UPDATE_BULK_ACTION',
+                            payload: undefined,
+                        })
+                    }}
+                    bulkAction={state.selectedBulkAction}
+                    onSubmit={async (values) => {
+                        const response = await axios<IResponse<unknown>>({
+                            url: state?.selectedBulkAction?.api?.uri,
+                            method: state?.selectedBulkAction?.api?.method,
+                            data: {
+                                ...values,
+                                ids: externalState.selectedRows
+                            }
+                        })
+                        if (response.data.success) {
+                            dispatch({
+                                type: 'UPDATE_BULK_ACTION',
+                                payload: undefined,
+                            })
+                            dispatchExternalState?.({
+                                type: 'HANDLE_ROW_SELECT_CHANGE',
+                                payload: []
+                            })
+                        }
+                    }}
+                />
+                <Menu shadow="md" width={200}>
+                    <Menu.Target>
+                        <Button>Bulk Action</Button>
+                    </Menu.Target>
+
+                    <Menu.Dropdown>
+                        {
+                            Object.keys(externalState.bulkItemActions).map(key => {
+                                // @ts-ignore TODO: remove ignore
+                                const bulkAction = externalState.bulkItemActions[key] as BulkAction;
+                                return (
+                                    <Menu.Item
+                                        key={key}
+                                        onClick={() => {
+                                            dispatch({
+                                                type: 'UPDATE_BULK_ACTION',
+                                                payload: bulkAction,
+                                            })
+                                        }}
+                                    >
+                                        {bulkAction.label}
+                                    </Menu.Item>
+                                )
+                            })
+                        }
+                    </Menu.Dropdown>
+                </Menu>
+            </div>
+        )
+    }
+
     return (
         <TableContext.Provider value={{ columnObserver: columnObserverRef.current }}>
             <div className={classes.container}>
+                {
+                    renderBulkActions()
+                }
                 <div>
                     {
                         externalState.filter && (
@@ -280,6 +359,7 @@ const Table = ({
                             section={TableSectionType.CENTER}
                             table={table}
                             bodyRef={centerBodyRef}
+                            rowSelect={!!dispatchExternalState}
                         />
                         <TableSection
                             section={TableSectionType.RIGHT}

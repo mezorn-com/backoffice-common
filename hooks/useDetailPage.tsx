@@ -14,11 +14,11 @@ import { ActionIcon, Button } from '@mantine/core';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { showMessage } from '@/backoffice-common/lib/notification';
-import { openConfirmModal } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 import { last } from 'ramda';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { actionColors } from '@/backoffice-common/utils/styles';
+import { useConfirmModal } from '@/backoffice-common/hooks/useConfirmModal.ts';
 
 interface IConfig {
     apiRoute: string;
@@ -51,6 +51,7 @@ const useDetailPage = ({
     const { t } = useTranslation();
     const { pathname } = useLocation();
     const navigate = useNavigate();
+    const confirmModal = useConfirmModal()
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -99,25 +100,34 @@ const useDetailPage = ({
                 icon = <IconTrash size={ICON_SIZE}/>;
 
                 actionFn = () => {
-                    openConfirmModal({
-                        title: t('delete.modalTitle', { ns: 'common' }),
-                        children: t('delete.description', { ns: 'common' }),
-                        labels: {
-                            confirm: t('delete.title', { ns: 'common' }),
-                            cancel: t('cancel', { ns: 'common' })
-                        },
-                        confirmProps: {
-                            color: 'red',
-                        },
+                    confirmModal({
                         async onConfirm() {
                             const id = last(pathname.split('/'));
                             const { data } = await axios.delete<IResponse<any>>(`${apiRoute}/${id}`);
                             if (data.success) {
                                 showMessage(t('success', { ns: 'common' }), 'green');
-                                // void fetchData();
                             }
                         }
                     })
+                    // openConfirmModal({
+                    //     title: t('delete.modalTitle', { ns: 'common' }),
+                    //     children: t('delete.description', { ns: 'common' }),
+                    //     labels: {
+                    //         confirm: t('delete.title', { ns: 'common' }),
+                    //         cancel: t('cancel', { ns: 'common' })
+                    //     },
+                    //     confirmProps: {
+                    //         color: 'red',
+                    //     },
+                    //     async onConfirm() {
+                    //         const id = last(pathname.split('/'));
+                    //         const { data } = await axios.delete<IResponse<any>>(`${apiRoute}/${id}`);
+                    //         if (data.success) {
+                    //             showMessage(t('success', { ns: 'common' }), 'green');
+                    //             // void fetchData();
+                    //         }
+                    //     }
+                    // })
                 }
                 break;
             }
@@ -142,7 +152,7 @@ const useDetailPage = ({
             } else {
                 if (action !== true) {
                     if (action.confirmation) {
-                        openConfirmModal({
+                        confirmModal({
                             title: '',
                             children: action.confirmation.dialogText,
                             labels: {
@@ -154,6 +164,18 @@ const useDetailPage = ({
                                 actionFn = undefined;
                             }
                         })
+                        // openConfirmModal({
+                        //     title: '',
+                        //     children: action.confirmation.dialogText,
+                        //     labels: {
+                        //         confirm: action.confirmation.buttonText ?? 'confirm',
+                        //         cancel: t('cancel', { ns: 'common' })
+                        //     },
+                        //     async onConfirm() {
+                        //         typeof actionFn === 'function' && actionFn();
+                        //         actionFn = undefined;
+                        //     }
+                        // })
                     }
                 }
             }

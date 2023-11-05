@@ -73,10 +73,16 @@ type HandleTableInteract = {
     payload: ITableInteraction;
 }
 
+type HandleRowSelectChange = {
+    type: 'HANDLE_ROW_SELECT_CHANGE',
+    payload: string[];
+}
+
 export type Action =
     SetListResponse
     | SetMetaData
     | HandleTableInteract
+    | HandleRowSelectChange
     ;
 
 const initialState: IListState = {
@@ -92,7 +98,8 @@ const initialState: IListState = {
     listItemActions: undefined,
     filter: undefined,
     listResponse: undefined,
-    bulkItemActions: undefined
+    bulkItemActions: undefined,
+    selectedRows: []
 }
 
 interface IBaseListParams {
@@ -127,6 +134,11 @@ const reducer = produce(
                 const { payload } = action;
                 draft.page = payload.state.page;
                 draft.pageSize = payload.state.pageSize;
+                draft.selectedRows = payload.selectedRows ?? [];
+                break;
+            }
+            case 'HANDLE_ROW_SELECT_CHANGE': {
+                draft.selectedRows = action.payload;
                 break;
             }
             default:

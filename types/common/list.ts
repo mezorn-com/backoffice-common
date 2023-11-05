@@ -15,4 +15,5 @@ export interface IListState extends ITableState {
     filter?: INormalField[];
     listResponse?: Record<string, unknown>;
     bulkItemActions?: BulkAction;
+    selectedRows: string[];
 }

@@ -71,3 +71,14 @@ export const getArrayObjectByProp = (array: Record<any, any>[], key: string, pro
     const arrayClone = clone(array);
     return arrayClone.find(item => item[propertyKey] === key);
 }
+
+export const replacePathParameters = (url: string, object: Record<string, any>) => {
+    const re = /\{([^}]+)\}/g;
+    return url.replace(re, (completeMatch, match) => {
+        if (!object[match]) {
+            console.warn(`couldn't find a value ${match} in: `, object);
+            return completeMatch;
+        }
+        return object?.[match]?.toString() ?? completeMatch;
+    })
+}

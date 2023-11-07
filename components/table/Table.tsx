@@ -53,7 +53,7 @@ import BulkActionDrawer from '@/backoffice-common/components/table/components/Bu
 import axios from 'axios';
 import { IResponse } from '@/backoffice-common/types/api';
 import { IconAdjustments, IconDots } from '@tabler/icons-react';
-import { replacePathParameters } from '@/utils';
+import { replacePathParameters } from '@/backoffice-common/utils';
 
 
 // compare 2 objects' given props values.

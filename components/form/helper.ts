@@ -97,6 +97,9 @@ export const getInitialValue = (field: INormalField, initialValue?: any) => {
 		case UiType.FILE_UPLOAD: {
 			return initialValue ?? undefined;
 		}
+		case UiType.YEAR: {
+			return initialValue ? new Date(initialValue.toString()) : undefined;
+		}
 		default: {
 			console.warn('Unknown UiType value: ', field.uiType);
 			return undefined;

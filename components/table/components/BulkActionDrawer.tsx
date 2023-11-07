@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Modal } from '@mantine/core';
+import { Drawer } from '@mantine/core';
 import { BulkAction } from '@/backoffice-common/types/api/meta';
 import Form from '@/backoffice-common/components/form/Form';
 import { useConfirmModal } from '@/backoffice-common/hooks';
@@ -11,7 +11,7 @@ interface BulkActionModalProps {
     onSubmit: (values: Record<string, unknown>) => void;
 }
 
-const BulkActionModal = ({
+const BulkActionDrawer = ({
     onClose,
     bulkAction,
     onSubmit
@@ -40,7 +40,11 @@ const BulkActionModal = ({
     }
 
     return (
-        <Modal opened={!!bulkAction} onClose={onClose}>
+        <Drawer
+            opened={!!bulkAction}
+            onClose={onClose}
+            position='right'
+        >
             {
                 bulkAction?.api?.form && (
                     <Form
@@ -49,8 +53,8 @@ const BulkActionModal = ({
                     />
                 )
             }
-        </Modal>
+        </Drawer>
     )
 }
 
-export default BulkActionModal
+export default BulkActionDrawer

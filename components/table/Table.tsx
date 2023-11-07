@@ -49,7 +49,7 @@ import { useRenderField } from '@/backoffice-common/hooks';
 import { TableContext } from '@/backoffice-common/components/table/context';
 import { allPass, append, clone, eqProps, prepend, equals } from 'ramda';
 import { Button, Menu } from '@mantine/core';
-import BulkActionModal from '@/backoffice-common/components/table/components/BulkActionModal';
+import BulkActionDrawer from '@/backoffice-common/components/table/components/BulkActionDrawer.tsx';
 import axios from 'axios';
 import { IResponse } from '@/backoffice-common/types/api';
 
@@ -257,7 +257,7 @@ const Table = ({
         }
         return (
             <>
-                <BulkActionModal
+                <BulkActionDrawer
                     onClose={() => {
                         dispatch({
                             type: 'UPDATE_BULK_ACTION',

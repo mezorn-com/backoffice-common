@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { BulkAction } from '@/backoffice-common/types/api/meta.ts';
+import { BulkAction } from '@/backoffice-common/types/api/meta';
 
 interface ITableState {
     filter: Record<string, unknown>;

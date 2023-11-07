@@ -48,9 +48,8 @@ import { useRenderField } from '@/backoffice-common/hooks';
 
 import { TableContext } from '@/backoffice-common/components/table/context';
 import { allPass, append, clone, eqProps, prepend, equals } from 'ramda';
-import { BulkAction } from '@/backoffice-common/types/api/meta.ts';
 import { Button, Menu } from '@mantine/core';
-import BulkActionModal from '@/backoffice-common/components/table/components/BulkActionModal.tsx';
+import BulkActionModal from '@/backoffice-common/components/table/components/BulkActionModal';
 import axios from 'axios';
 import { IResponse } from '@/backoffice-common/types/api';
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Modal } from '@mantine/core';
-import { BulkAction } from '@/backoffice-common/types/api/meta.ts';
-import Form from '@/backoffice-common/components/form/Form.tsx';
+import { BulkAction } from '@/backoffice-common/types/api/meta';
+import Form from '@/backoffice-common/components/form/Form';
 import { useConfirmModal } from '@/backoffice-common/hooks';
 import { useTranslation } from 'react-i18next';
 

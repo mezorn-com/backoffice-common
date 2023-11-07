@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TableContext } from '../context.ts';
+import { TableContext } from '../context';
 
 interface ObservedCellProps {
     children?: React.ReactNode;

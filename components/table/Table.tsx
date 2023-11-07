@@ -44,7 +44,7 @@ import { initialState, reducer } from './reducer';
 import { useBodyScrolls } from '@/backoffice-common/components/table/hooks';
 import TablePagination from '@/backoffice-common/components/table/components/pagination/TablePagination';
 import { isRenderField } from '@/backoffice-common/utils';
-import { useRenderField } from '@/backoffice-common/hooks';
+import { usePathParameter, useRenderField } from '@/backoffice-common/hooks';
 
 import { TableContext } from '@/backoffice-common/components/table/context';
 import { allPass, append, clone, eqProps, prepend, equals } from 'ramda';
@@ -53,6 +53,7 @@ import BulkActionDrawer from '@/backoffice-common/components/table/components/Bu
 import axios from 'axios';
 import { IResponse } from '@/backoffice-common/types/api';
 import { IconAdjustments, IconDots } from '@tabler/icons-react';
+import { replacePathParameters } from '@/utils';
 
 
 // compare 2 objects' given props values.
@@ -76,6 +77,7 @@ const Table = ({
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
     const columnObserverRef = React.useRef<ResizeObserver | null>(null);
 
+    const pathParameter = usePathParameter();
     const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
     const renderField = useRenderField();
 
@@ -268,7 +270,7 @@ const Table = ({
                     bulkAction={state.selectedBulkAction}
                     onSubmit={async (values) => {
                         const response = await axios<IResponse<unknown>>({
-                            url: state?.selectedBulkAction?.api?.uri,
+                            url: replacePathParameters(state?.selectedBulkAction?.api?.uri ?? '', pathParameter),
                             method: state?.selectedBulkAction?.api?.method,
                             data: {
                                 ...values,

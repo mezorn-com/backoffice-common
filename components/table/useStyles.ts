@@ -42,7 +42,7 @@ export const useStyles = createStyles((theme) => {
             flex: 1
         },
         bulkActions: {
-            width: 111
+            width: 80
         }
     }
 })

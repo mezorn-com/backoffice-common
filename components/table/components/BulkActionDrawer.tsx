@@ -57,4 +57,4 @@ const BulkActionDrawer = ({
     )
 }
 
-export default BulkActionDrawer
+export default BulkActionDrawer;

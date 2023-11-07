@@ -73,21 +73,11 @@ const Table = ({
 }: ITableProps) => {
     const { classes } = useStyles();
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
-    const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
-
     const columnObserverRef = React.useRef<ResizeObserver | null>(null);
+
+    const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
     const renderField = useRenderField();
-
-    React.useEffect(() => {
-        columnObserverRef.current = getCellObserver();
-    }, []);
-
-    React.useEffect(() => {
-        table.setColumnPinning({
-            right: ['table-actions-column']
-        })
-    }, []);
 
     const tableColumns = React.useMemo(() => {
         let cols = clone(externalState.columns);
@@ -144,9 +134,6 @@ const Table = ({
                 }
                 return props.renderValue();
             }
-            // minSize: 0,
-            // size: Number.MAX_SAFE_INTEGER,
-            // maxSize: Number.MAX_SAFE_INTEGER,
         },
         manualPagination: true,
         onStateChange: (updater) => {
@@ -159,7 +146,14 @@ const Table = ({
         enablePinning: true,
         enableColumnResizing: true,
         enableRowSelection: true,
-    })
+    });
+
+    React.useEffect(() => {
+        columnObserverRef.current = getCellObserver();
+        table.setColumnPinning({
+            right: ['table-actions-column']
+        })
+    }, []);
 
     React.useEffect(() => {
         const ids = table.getSelectedRowModel().rows.map(row => row.original._id) as string[];
@@ -169,7 +163,18 @@ const Table = ({
                 payload: ids,
             })
         }
-    }, [table.getSelectedRowModel().rows])
+    }, [table.getSelectedRowModel().rows]);
+
+    React.useEffect(() => {
+        table.setOptions(prev => ({
+            ...prev,
+            pageCount: externalState.totalPage,
+            pagination: {
+                pageSize: externalState.pageSize,
+                pageIndex: externalState.page - 1
+            },
+        }));
+    }, [externalState]);
 
     const handleTableStateChange = (updatedTableState: TableState) => {
         const updatedState: ITableState = {
@@ -193,17 +198,6 @@ const Table = ({
         }
         onInteract(params)
     }
-
-    table.setOptions(prev => ({
-        ...prev,
-        // state,
-        pageCount: externalState.totalPage,
-        pagination: {
-            pageSize: externalState.pageSize,
-            pageIndex: externalState.page - 1
-        },
-        // debugTable: true,
-    }));
 
     const renderActionButton = (actionButton: IRowActionButton, index: number, props: CellContext<any, any>) => {
         if (actionButton.visibility) {
@@ -263,7 +257,7 @@ const Table = ({
             return null;
         }
         return (
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <>
                 <BulkActionModal
                     onClose={() => {
                         dispatch({
@@ -322,32 +316,34 @@ const Table = ({
                         }
                     </Menu.Dropdown>
                 </Menu>
-            </div>
+            </>
         )
     }
 
     return (
         <TableContext.Provider value={{ columnObserver: columnObserverRef.current }}>
             <div className={classes.container}>
-                {
-                    renderBulkActions()
-                }
-                <div>
-                    {
-                        externalState.filter && (
-                            <Form
-                                fields={externalState.filter ?? []}
-                                submitButtonProps={{
-                                    style: {
-                                        display: 'none'
-                                    }
-                                }}
-                                direction={'row'}
-                                onSubmit={() => undefined}
-                                onChange={handleFilterChange}
-                            />
-                        )
-                    }
+                <div className={classes.header}>
+                    <div className={classes.filters}>
+                        {
+                            externalState.filter && (
+                                <Form
+                                    fields={externalState.filter ?? []}
+                                    submitButtonProps={{
+                                        style: {
+                                            display: 'none'
+                                        }
+                                    }}
+                                    direction={'row'}
+                                    onSubmit={() => undefined}
+                                    onChange={handleFilterChange}
+                                />
+                            )
+                        }
+                    </div>
+                    <div className={classes.bulkActions}>
+                        {renderBulkActions()}
+                    </div>
                 </div>
                 <div className={classes.tableWrapper}>
                     <div className={classes.table} ref={tablesContainerRef}>

@@ -33,6 +33,16 @@ export const useStyles = createStyles((theme) => {
             border: '1px solid',
             borderColor,
             borderRadius: theme.radius.sm
+        },
+        header: {
+            display: 'flex',
+            alignItems: 'center'
+        },
+        filters: {
+            flex: 1
+        },
+        bulkActions: {
+            width: 111
         }
     }
 })

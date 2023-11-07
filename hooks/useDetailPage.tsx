@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { last } from 'ramda';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { actionColors } from '@/backoffice-common/utils/styles';
-import { useConfirmModal } from '@/backoffice-common/hooks/useConfirmModal.ts';
+import { useConfirmModal } from '@/backoffice-common/hooks/useConfirmModal';
 
 interface IConfig {
     apiRoute: string;

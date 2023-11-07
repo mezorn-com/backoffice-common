@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TableContext } from '@/backoffice-common/components/table/context';
+import { TableContext } from '../context.ts';
 
 interface ObservedCellProps {
     children?: React.ReactNode;

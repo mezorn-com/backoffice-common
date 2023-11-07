@@ -4,7 +4,7 @@ import { TableSectionType } from './types';
 import { useStyles } from './useStyles';
 import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
 import TableSection from './components/TableSection';
-import { COLUMN_UID_ATTR, getCellObserver, getDOMRectObserver, ROW_PREFIX } from './utils';
+import { getCellObserver } from './utils';
 import Form from '@/backoffice-common/components/form/Form';
 
 // react-table props below
@@ -76,11 +76,10 @@ const Table = ({
     const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
 
-    const columnObserverRef = React.useRef<ResizeObserver>(null);
+    const columnObserverRef = React.useRef<ResizeObserver | null>(null);
     const renderField = useRenderField();
 
     React.useEffect(() => {
-        // @ts-ignore
         columnObserverRef.current = getCellObserver();
     }, []);
 
@@ -302,8 +301,10 @@ const Table = ({
                     <Menu.Dropdown>
                         {
                             Object.keys(externalState.bulkItemActions).map(key => {
-                                // @ts-ignore TODO: remove ignore
-                                const bulkAction = externalState.bulkItemActions[key] as BulkAction;
+                                const bulkAction = externalState.bulkItemActions?.[key];
+                                if (!bulkAction) {
+                                    return null;
+                                }
                                 return (
                                     <Menu.Item
                                         key={key}
@@ -359,7 +360,7 @@ const Table = ({
                             section={TableSectionType.CENTER}
                             table={table}
                             bodyRef={centerBodyRef}
-                            rowSelect={!!dispatchExternalState}
+                            rowSelect={!!externalState.bulkItemActions}
                         />
                         <TableSection
                             section={TableSectionType.RIGHT}

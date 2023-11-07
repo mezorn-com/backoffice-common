@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Cell, flexRender, HeaderGroup, Row, Table, RowSelectionState } from '@tanstack/react-table';
+import { Cell, flexRender, HeaderGroup, Row, Table } from '@tanstack/react-table';
+import { Checkbox, CheckboxProps } from '@mantine/core';
 import { useSectionStyles } from './useSectionStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
 import { COLUMN_UID_ATTR, ROW_PREFIX } from '../utils';
 import TableRow from './Row';
 import { TableSectionType } from '../types';
-import ObservedCell from '@/backoffice-common/components/table/components/ObservedCell';
-import { Checkbox, CheckboxProps } from '@mantine/core';
+import ObservedCell from './ObservedCell';
 
 interface TableElementProps {
     section: TableSectionType,
@@ -37,60 +37,6 @@ const TableSection = ({
 }: TableElementProps) => {
     const { classes } = useSectionStyles({ sectionType: section });
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
-
-    // console.log('ROW SELECTION>>>', table.getState());
-    // console.log('ROW SELECTION>>>', table.getSelectedRowModel());
-
-    // console.log('table>>>', table.setRowSelection({
-    //
-    // }));
-
-    React.useEffect(() => {
-        if (section === 'center' &&  tablesContainerRef.current) {
-
-            // Temp code to make table full width when table is small.
-            // const tableWidthObserver = getCenterTableWidthObserver();
-            // const container = tablesContainerRef.current.parentElement;
-            // container && tableWidthObserver.observe(container);
-
-
-            // const tableHead = tablesContainerRef.current.querySelector('.thead');
-            //
-            // if (tableHead) {
-            //     if (tableHead.children.length) {
-            //         for (const row of tableHead.children) {
-            //             assignZ(row, '.thead')
-            //         }
-            //     }
-            //     const mutationObserver = getTableRowMutationObserver('.thead');
-            //     mutationObserver.observe(tableHead,{
-            //         attributes: false,
-            //         childList: true,
-            //         subtree: false
-            //     });
-            //     // return () => {
-            //     //     mutationObserver.disconnect();
-            //     // }
-            // }
-
-
-
-            // const tableBody = tablesContainerRef.current.querySelector('.tbody');
-            // if (tableBody) {
-            //     const mutationObserver = getTableRowMutationObserver('.tbody');
-            //     mutationObserver.observe(tableBody,{
-            //         attributes: false,
-            //         childList: true,
-            //         subtree: false
-            //     });
-            //     return () => {
-            //         mutationObserver.disconnect();
-            //     }
-            // }
-        }
-    }, [])
-
-    console.log('selectrow>>', rowSelect);
 
     const getHeaderGroups = (): HeaderGroup<ListDoc>[] => {
         switch(section) {
@@ -195,7 +141,6 @@ const TableSection = ({
                                                 <ObservedCell
                                                     attrs={colAttributes}
                                                     key={header.id}
-                                                    // className={classes.headerCell}
                                                 >
                                                     {
                                                         header.isPlaceholder

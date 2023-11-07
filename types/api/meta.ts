@@ -67,7 +67,7 @@ export interface IListMetaResponse {
     listActions: Partial<Record<ListActionKey, ListAction>>;
     listItemActions: Partial<Record<ListItemActionKey, ListItemAction>>;
     filter?: INormalField[];
-    bulkItemActions: Record<string, BulkAction>
+    bulkItemActions: Record<string, BulkAction>;
 }
 
 export interface Form {

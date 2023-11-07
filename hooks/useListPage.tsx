@@ -64,7 +64,7 @@ type SetMetaData = {
         listActions?: IListMetaResponse['listActions'];
         listItemActions?: IListMetaResponse['listItemActions'];
         filter?: INormalField[];
-        bulkItemActions?: BulkAction;
+        bulkItemActions?: Record<string, BulkAction>;
     };
 }
 

@@ -19,8 +19,6 @@ const BulkActionModal = ({
 
     const { t } = useTranslation();
 
-    // console.log('bulk ACTION>>>', bulkAction);
-
     const confirmModal = useConfirmModal();
 
     const handleSubmit = (values: Record<string, unknown>) => {

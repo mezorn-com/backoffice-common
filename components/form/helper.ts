@@ -253,7 +253,7 @@ const getTransformedValue = (field: IFormField, value: unknown): Promise<unknown
 					resolve(url);
 					return;
 				}
-				resolve(undefined);
+				resolve(value || undefined);
 				return;
 			}
 			case UiType.CHECKBOX: {

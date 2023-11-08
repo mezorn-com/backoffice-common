@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ROW_PREFIX } from '../utils';
+import { ROW_UID_ATTR } from '../utils';
 import { createStyles } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 
@@ -13,7 +13,7 @@ const useStyles = createStyles(() => {
         container: {
             display: 'flex',
             alignItems: 'flex-end',
-            height: 'fit-content'
+            height: 'fit-content',
         }
     }
 })
@@ -41,7 +41,7 @@ const TableRow = ({
     }
 
     const customAttrs = {
-        [ROW_PREFIX]: rowId
+        [ROW_UID_ATTR]: rowId
     }
 
     return (

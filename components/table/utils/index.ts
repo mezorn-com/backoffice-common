@@ -1,5 +1,6 @@
-export const ROW_PREFIX = 'table-row-id';
+export const ROW_UID_ATTR = 'table-row-id';
 export const COLUMN_UID_ATTR = 'table-column-id';
+export const ROW_GROUP_UID_ATTR = 'table-row-group';
 
 export const getDOMRectObserver = (key: keyof Omit<DOMRectReadOnly, 'toJSON' | 'x' | 'y'>) => {
     return new ResizeObserver((entries) => {
@@ -19,83 +20,146 @@ export const getDOMRectObserver = (key: keyof Omit<DOMRectReadOnly, 'toJSON' | '
     });
 }
 
+interface ColumnSize {
+    colId: string;
+    additionalWidth?: number;
+    innerWidth: number;
+}
+
+interface RowSize {
+    rowId: string;
+    height: number;
+}
+
+const getColumnSizes = (horizontalScrollItem: Element) => {
+    const columnSizes: ColumnSize[] = [];
+    for (const rowGroup of horizontalScrollItem.children) {
+        for (const row of rowGroup.children) {
+            for (const cell of row.children) {
+                const colId = cell.getAttribute(COLUMN_UID_ATTR);
+                if (colId) {
+                    const innerWidth = cell.children[0].getBoundingClientRect().width;
+                    const existingInfoIndex = columnSizes.findIndex(col => col.colId === colId);
+                    if (existingInfoIndex > -1) {
+                        if (innerWidth > columnSizes[existingInfoIndex].innerWidth) {
+                            columnSizes[existingInfoIndex].innerWidth = innerWidth;
+                        }
+                    } else {
+                        columnSizes.push({
+                            innerWidth: innerWidth,
+                            colId
+                        })
+                    }
+                }
+            }
+        }
+    }
+    return columnSizes;
+}
+
+const getColumnResizes = (centerElement: HTMLElement): ColumnSize[] => {
+    const centerSectionWrapper = centerElement.getBoundingClientRect().width;
+    const horizontalScrollItem = centerElement.children[0];
+    const horizontalScrollItemWidth = horizontalScrollItem.getBoundingClientRect().width;
+    const columnSizes: ColumnSize[] = getColumnSizes(horizontalScrollItem);
+
+    let exceededWidth: number;
+
+    if (centerSectionWrapper > horizontalScrollItemWidth) {
+        // increase column width
+        exceededWidth = centerSectionWrapper - horizontalScrollItemWidth;
+    } else {
+        // try to reduce width if possible
+        exceededWidth = centerSectionWrapper - columnSizes.reduce((sum, b) => sum + (b.innerWidth ?? 0), 0);
+    }
+    const widthPerColumn = exceededWidth / columnSizes.length;
+    return columnSizes.map((col => {
+        return {
+            ...col,
+            additionalWidth: widthPerColumn
+        }
+    }))
+}
+
+export enum RowGroup {
+    HEADER = 'header',
+    BODY = 'body',
+    FOOTER = 'footer',
+}
+
+type RowSizes = Record<RowGroup, RowSize[]>;
+
+const getRowSizes = (table: Element): RowSizes => {
+    const object: RowSizes = {
+        header: [],
+        body: [],
+        footer: [],
+    }
+
+    for (const section of table.children) {
+        // TODO: Rename q.
+        const q = section.children[0];
+        for (const rowGroup of q.children) {
+            for (const row of rowGroup.children) {
+                for (const cell of row.children) {
+                    const rowGroup = cell.getAttribute(ROW_GROUP_UID_ATTR) as (RowGroup | null);
+                    const rowId = cell.getAttribute(ROW_UID_ATTR);
+                    const cellHeight = cell.getBoundingClientRect().height;
+                    if (rowId && rowGroup && Object.values(RowGroup).includes(rowGroup)) {
+                        const index = object[rowGroup].findIndex(row => row.rowId === rowId);
+                        if (index > -1) {
+                            if (cellHeight > object[rowGroup][index].height) {
+                                object[rowGroup][index].height = cellHeight;
+                            }
+                        } else {
+                            object[rowGroup].push({
+                                rowId,
+                                height: cellHeight
+                            })
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    return object;
+}
+
 export const getCellObserver = () => {
     return new ResizeObserver((entries) => {
-        // TODO: make code shorter
-        for (const entry of entries) {
-            const { target, contentRect } = entry;
-            const columnId = target.getAttribute(COLUMN_UID_ATTR);
-            let rowId = target.getAttribute(ROW_PREFIX);
-            const isHeaderColumn = target.getAttribute('header-col') === 'true';
+        let columnSizes: ColumnSize[] = [];
 
-            const tbodyOrThead = target.parentElement?.parentElement;
-            const wrapper = tbodyOrThead?.parentElement?.parentElement?.parentElement;
-            if (wrapper) {
-                const rows: HTMLDivElement[] = [];
-                for (const section of wrapper.children) {
-                    const colCells: HTMLDivElement[] = [];
-                    const head = section.querySelector('.thead');
-                    const body = section.querySelector('.tbody');
+        // TODO: Remove nested parent selector
+        const tableElement = entries[0].target.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement;
 
-                    if (head) {
-                        for (const row of head.children) {
-                            if (row.getAttribute(ROW_PREFIX) === rowId && isHeaderColumn && row instanceof HTMLDivElement) {
-                                rows.push(row);
-                            }
+        if (tableElement) {
+            const center = tableElement.children[1];
+            if (center instanceof HTMLElement) {
+                columnSizes = getColumnResizes(center);
+            }
+            const rowSizes = getRowSizes(tableElement);
+            for (const cell of entries) {
+                // Iterate through whole table cells instead of entry items(which its dimension is just changed) if needed.
+                const cellContainer = cell.target.parentElement;
+                if (cellContainer) {
+                    const columnId = cellContainer.getAttribute(COLUMN_UID_ATTR);
+                    const rowId = cellContainer.getAttribute(ROW_UID_ATTR);
+                    const columnIndex = columnSizes.findIndex(col => col.colId === columnId);
+                    const rowGroup = cellContainer.getAttribute(ROW_GROUP_UID_ATTR) as (RowGroup | null);
 
-                            for (const cell of row.children) {
-                                if (cell.getAttribute(COLUMN_UID_ATTR) === columnId && cell instanceof HTMLDivElement) {
-                                    colCells.push(cell);
-                                }
-                            }
-
-                        }
+                    if (columnId && columnIndex > -1) {
+                        const additionalWidth = ((columnSizes?.[columnIndex]?.additionalWidth ?? 0) > 0 ? columnSizes[columnIndex].additionalWidth : 0) as number;
+                        const width = columnSizes[columnIndex].innerWidth;
+                        cellContainer.style.width = width + additionalWidth + 'px';
                     }
-
-                    if (body) {
-                        for (const row of body.children) {
-                            if (row.getAttribute(ROW_PREFIX) === rowId && row instanceof HTMLDivElement && !isHeaderColumn) {
-                                rows.push(row);
-                            }
-
-                            for (const cell of row.children) {
-                                if (cell instanceof HTMLDivElement && cell.getAttribute(COLUMN_UID_ATTR) === columnId) {
-                                    colCells.push(cell);
-                                }
-                            }
-                        }
-                    }
-
-                    let maxWidth = 0;
-
-                    for (const c of colCells) {
-                        if (c.getBoundingClientRect().width > maxWidth) {
-                            maxWidth = c.getBoundingClientRect().width;
-                        }
-                    }
-
-                    for (const c of colCells) {
-                        c.style.width = maxWidth + 'px';
-                    }
-                }
-
-                let maxHeight = 0;
-                for (const row of rows) {
-                    for (const cell of row.children) {
-                        if (cell.getBoundingClientRect().height > maxHeight) {
-                            maxHeight = cell.getBoundingClientRect().height;
+                    if (rowId && rowGroup && Object.values(RowGroup).includes(rowGroup as RowGroup)) {
+                        const rowIndex = rowSizes[rowGroup].findIndex(row => row.rowId === rowId);
+                        if (rowIndex > -1) {
+                            cellContainer.style.height = rowSizes[rowGroup][rowIndex].height + 'px';
                         }
                     }
                 }
-
-                for (const row of rows) {
-                    for (const cell of row.children) {
-                        if (cell instanceof HTMLDivElement) {
-                            cell.style.height = maxHeight + 'px';
-                        }
-                    }
-                }
-
             }
         }
     })

@@ -5,7 +5,8 @@ interface StylesProps {
     sectionType: TableSectionType;
 }
 const headerBackground = '#d7d7d7';
-const cellPadding = '.3rem .5rem';
+// const cellPadding = '.3rem .5rem';
+const cellPadding = 0;
 
 export const useSectionStyles = createStyles((theme, { sectionType }: StylesProps) => {
     return {
@@ -23,7 +24,8 @@ export const useSectionStyles = createStyles((theme, { sectionType }: StylesProp
             flexDirection: 'column',
             flex: 1,
             overflow: 'hidden',
-            width: 'fit-content'
+            width: 'fit-content',
+            // border: '1px solid red',
         },
         head: {
             background: headerBackground,

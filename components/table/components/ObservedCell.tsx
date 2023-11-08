@@ -22,14 +22,21 @@ const ObservedCell = ({
     return (
         <div
             {...attrs}
-            ref={ref}
             style={{
                 wordBreak: 'keep-all',
                 whiteSpace: 'nowrap',
-                padding: '.3rem .5rem'
             }}
         >
-            {children}
+            <div
+                {...attrs}
+                style={{
+                width: 'min-content',
+                padding: '.3rem .5rem'
+            }}
+                 ref={ref}
+            >
+                {children}
+            </div>
         </div>
     )
 }

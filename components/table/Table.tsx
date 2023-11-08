@@ -55,7 +55,6 @@ import { IResponse } from '@/backoffice-common/types/api';
 import { IconAdjustments, IconDots } from '@tabler/icons-react';
 import { replacePathParameters } from '@/backoffice-common/utils';
 
-
 // compare 2 objects' given props values.
 const check = allPass([
     eqProps('page'),

@@ -3,7 +3,7 @@ import { Cell, flexRender, HeaderGroup, Row, Table } from '@tanstack/react-table
 import { Checkbox, CheckboxProps } from '@mantine/core';
 import { useSectionStyles } from './useSectionStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
-import { COLUMN_UID_ATTR, ROW_PREFIX } from '../utils';
+import { COLUMN_UID_ATTR, ROW_GROUP_UID_ATTR, ROW_UID_ATTR, RowGroup } from '../utils';
 import TableRow from './Row';
 import { TableSectionType } from '../types';
 import ObservedCell from './ObservedCell';
@@ -15,11 +15,11 @@ interface TableElementProps {
     rowSelect?: boolean;
 }
 
-const getColumnAttributes = (columnId: string, rowId: string, isHeaderCol?: 'true') => {
+const getColumnAttributes = (columnId: string, rowId: string, rowGroup: RowGroup) => {
     return {
         [COLUMN_UID_ATTR]: columnId,
-        [ROW_PREFIX]: rowId,
-        ['header-col']: isHeaderCol
+        [ROW_UID_ATTR]: rowId,
+        [ROW_GROUP_UID_ATTR]: rowGroup
     }
 }
 
@@ -94,14 +94,16 @@ const TableSection = ({
             return null;
         }
 
+        const isHeader = isHeaderGroup(row);
+
         let rowId = row.id;
 
         const props: CheckboxProps = {
             size: 'xs',
-            indeterminate: isHeaderGroup(row) && table.getIsSomeRowsSelected(),
+            indeterminate: isHeader && table.getIsSomeRowsSelected(),
         }
 
-        if (isHeaderGroup(row)) {
+        if (isHeader) {
             rowId = rowId.split('_')[1];
             props.checked = table.getIsAllPageRowsSelected();
             props.onChange = () => table.toggleAllPageRowsSelected(!table.getIsAllPageRowsSelected())
@@ -109,8 +111,10 @@ const TableSection = ({
             props.checked = row.getIsSelected();
             props.onChange = () => row.toggleSelected(!row.getIsSelected());
         }
+        let rowGroup = isHeader ? RowGroup.HEADER : RowGroup.BODY;
         return (
-            <ObservedCell attrs={getColumnAttributes(CHECKBOX_COLUMN_ID, rowId)}>
+            // assuming checkboxes won't be rendered in footer group
+            <ObservedCell attrs={getColumnAttributes(CHECKBOX_COLUMN_ID, rowId, rowGroup)}>
                 <div style={{ height: '100%', display: 'flex', placeItems: 'center' }}>
                     <Checkbox
                         {...props}
@@ -136,7 +140,7 @@ const TableSection = ({
                                     {renderCheckBox(headerGroup)}
                                     {
                                         headerGroup.headers.map(header => {
-                                            const colAttributes = getColumnAttributes(header.id, rowId, 'true')
+                                            const colAttributes = getColumnAttributes(header.id, rowId, RowGroup.HEADER)
                                             return (
                                                 <ObservedCell
                                                     attrs={colAttributes}
@@ -169,7 +173,7 @@ const TableSection = ({
                                     {
                                         getVisibleCells(row).map(cell => {
 
-                                            const colAttributes = getColumnAttributes(cell.column.id, row.id)
+                                            const colAttributes = getColumnAttributes(cell.column.id, row.id, RowGroup.BODY)
                                             return (
                                                 <ObservedCell
                                                     attrs={colAttributes}

@@ -1,5 +1,19 @@
 import * as React from 'react';
 import { TableContext } from '../context';
+import { createStyles } from '@mantine/core';
+
+const useStyles = createStyles(() => {
+    return {
+        container: {
+            wordBreak: 'keep-all',
+            whiteSpace: 'nowrap'
+        },
+        cell: {
+            width: 'min-content',
+            padding: '.3rem .5rem'
+        }
+    }
+})
 
 interface ObservedCellProps {
     children?: React.ReactNode;
@@ -10,6 +24,7 @@ const ObservedCell = ({
     children,
     attrs
 }: ObservedCellProps) => {
+    const { classes } = useStyles();
     const { columnObserver } = React.useContext(TableContext);
     const ref = React.useRef<HTMLDivElement>(null);
 
@@ -20,20 +35,11 @@ const ObservedCell = ({
     }, [ columnObserver ]);
 
     return (
-        <div
-            {...attrs}
-            style={{
-                wordBreak: 'keep-all',
-                whiteSpace: 'nowrap',
-            }}
-        >
+        <div {...attrs} className={classes.container}>
             <div
                 {...attrs}
-                style={{
-                width: 'min-content',
-                padding: '.3rem .5rem'
-            }}
-                 ref={ref}
+                ref={ref}
+                className={classes.cell}
             >
                 {children}
             </div>

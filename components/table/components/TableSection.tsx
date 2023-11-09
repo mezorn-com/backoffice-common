@@ -3,9 +3,9 @@ import { Cell, flexRender, HeaderGroup, Row, Table } from '@tanstack/react-table
 import { Checkbox, CheckboxProps } from '@mantine/core';
 import { useSectionStyles } from './useSectionStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
-import { COLUMN_UID_ATTR, ROW_GROUP_UID_ATTR, ROW_UID_ATTR, RowGroup } from '../utils';
+import { COLUMN_UID_ATTR, ROW_GROUP_UID_ATTR, ROW_UID_ATTR } from '../utils';
 import TableRow from './Row';
-import { TableSectionType } from '../types';
+import { TableSectionType, RowGroup } from '../types';
 import ObservedCell from './ObservedCell';
 
 interface TableElementProps {

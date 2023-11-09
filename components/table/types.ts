@@ -29,3 +29,9 @@ export enum TableSectionType {
     CENTER = 'center',
     RIGHT = 'right'
 }
+
+export enum RowGroup {
+    HEADER = 'header',
+    BODY = 'body',
+    FOOTER = 'footer',
+}

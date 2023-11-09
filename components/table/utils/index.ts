@@ -1,3 +1,18 @@
+import { RowGroup } from '../types';
+
+interface ColumnSize {
+    colId: string;
+    additionalWidth?: number;
+    innerWidth: number;
+}
+
+interface RowSize {
+    rowId: string;
+    height: number;
+}
+
+type RowSizes = Record<RowGroup, RowSize[]>;
+
 export const ROW_UID_ATTR = 'table-row-id';
 export const COLUMN_UID_ATTR = 'table-column-id';
 export const ROW_GROUP_UID_ATTR = 'table-row-group';
@@ -20,17 +35,6 @@ export const getDOMRectObserver = (key: keyof Omit<DOMRectReadOnly, 'toJSON' | '
     });
 }
 
-interface ColumnSize {
-    colId: string;
-    additionalWidth?: number;
-    innerWidth: number;
-}
-
-interface RowSize {
-    rowId: string;
-    height: number;
-}
-
 const getColumnSizes = (horizontalScrollItem: Element) => {
     const columnSizes: ColumnSize[] = [];
     for (const rowGroup of horizontalScrollItem.children) {
@@ -39,14 +43,14 @@ const getColumnSizes = (horizontalScrollItem: Element) => {
                 const colId = cell.getAttribute(COLUMN_UID_ATTR);
                 if (colId) {
                     const innerWidth = cell.children[0].getBoundingClientRect().width;
-                    const existingInfoIndex = columnSizes.findIndex(col => col.colId === colId);
-                    if (existingInfoIndex > -1) {
-                        if (innerWidth > columnSizes[existingInfoIndex].innerWidth) {
-                            columnSizes[existingInfoIndex].innerWidth = innerWidth;
+                    const sizeIndex = columnSizes.findIndex(col => col.colId === colId);
+                    if (sizeIndex > -1) {
+                        if (innerWidth > columnSizes[sizeIndex].innerWidth) {
+                            columnSizes[sizeIndex].innerWidth = innerWidth;
                         }
                     } else {
                         columnSizes.push({
-                            innerWidth: innerWidth,
+                            innerWidth,
                             colId
                         })
                     }
@@ -81,14 +85,6 @@ const getColumnResizes = (centerElement: HTMLElement): ColumnSize[] => {
     }))
 }
 
-export enum RowGroup {
-    HEADER = 'header',
-    BODY = 'body',
-    FOOTER = 'footer',
-}
-
-type RowSizes = Record<RowGroup, RowSize[]>;
-
 const getRowSizes = (table: Element): RowSizes => {
     const object: RowSizes = {
         header: [],
@@ -97,9 +93,8 @@ const getRowSizes = (table: Element): RowSizes => {
     }
 
     for (const section of table.children) {
-        // TODO: Rename q.
-        const q = section.children[0];
-        for (const rowGroup of q.children) {
+        const sectionScroll = section.children[0];
+        for (const rowGroup of sectionScroll.children) {
             for (const row of rowGroup.children) {
                 for (const cell of row.children) {
                     const rowGroup = cell.getAttribute(ROW_GROUP_UID_ATTR) as (RowGroup | null);
@@ -121,7 +116,6 @@ const getRowSizes = (table: Element): RowSizes => {
                 }
             }
         }
-
     }
     return object;
 }
@@ -139,24 +133,34 @@ export const getCellObserver = () => {
                 columnSizes = getColumnResizes(center);
             }
             const rowSizes = getRowSizes(tableElement);
-            for (const cell of entries) {
-                // Iterate through whole table cells instead of entry items(which its dimension is just changed) if needed.
-                const cellContainer = cell.target.parentElement;
-                if (cellContainer) {
-                    const columnId = cellContainer.getAttribute(COLUMN_UID_ATTR);
-                    const rowId = cellContainer.getAttribute(ROW_UID_ATTR);
-                    const columnIndex = columnSizes.findIndex(col => col.colId === columnId);
-                    const rowGroup = cellContainer.getAttribute(ROW_GROUP_UID_ATTR) as (RowGroup | null);
 
-                    if (columnId && columnIndex > -1) {
-                        const additionalWidth = ((columnSizes?.[columnIndex]?.additionalWidth ?? 0) > 0 ? columnSizes[columnIndex].additionalWidth : 0) as number;
-                        const width = columnSizes[columnIndex].innerWidth;
-                        cellContainer.style.width = width + additionalWidth + 'px';
-                    }
-                    if (rowId && rowGroup && Object.values(RowGroup).includes(rowGroup as RowGroup)) {
-                        const rowIndex = rowSizes[rowGroup].findIndex(row => row.rowId === rowId);
-                        if (rowIndex > -1) {
-                            cellContainer.style.height = rowSizes[rowGroup][rowIndex].height + 'px';
+            for (const section of tableElement.children) {
+                const scrollElement = section.children[0];
+                for (const rowGroup of scrollElement.children) {
+                    for (const row of rowGroup.children) {
+                        for (const cellContainer of row.children) {
+                            if (cellContainer) {
+                                const columnId = cellContainer.getAttribute(COLUMN_UID_ATTR);
+                                const rowId = cellContainer.getAttribute(ROW_UID_ATTR);
+                                const columnIndex = columnSizes.findIndex(col => col.colId === columnId);
+                                const rowGroup = cellContainer.getAttribute(ROW_GROUP_UID_ATTR) as (RowGroup | null);
+
+                                if (columnId && columnIndex > -1) {
+                                    const additionalWidth = ((columnSizes?.[columnIndex]?.additionalWidth ?? 0) > 0 ? columnSizes[columnIndex].additionalWidth : 0) as number;
+                                    const width = columnSizes[columnIndex].innerWidth;
+                                    if (cellContainer instanceof HTMLElement) {
+                                        cellContainer.style.width = width + additionalWidth + 'px';
+                                    }
+                                }
+                                if (rowId && rowGroup && Object.values(RowGroup).includes(rowGroup as RowGroup)) {
+                                    const rowIndex = rowSizes[rowGroup].findIndex(row => row.rowId === rowId);
+                                    if (rowIndex > -1) {
+                                        if (cellContainer instanceof HTMLElement) {
+                                            cellContainer.style.height = rowSizes[rowGroup][rowIndex].height + 'px';
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

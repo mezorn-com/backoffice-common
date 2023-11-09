@@ -12,6 +12,10 @@ export const useFormStyles = createStyles((theme) => {
             '.mantine-Card-cardSection': {
                 overflow: 'visible',
             },
+        },
+        checkboxLabel: {
+            wordBreak: 'keep-all',
+            whiteSpace: 'nowrap'
         }
     }
 })

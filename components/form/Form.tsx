@@ -409,7 +409,14 @@ const Form = ({
 				);
 			}
 			case UiType.CHECKBOX: {
-				return <Checkbox {...omit(['withAsterisk'], props)} />;
+				return <Checkbox
+					{...omit(['withAsterisk'], props)}
+					label={(
+						<div className={classes.checkboxLabel}>
+							{props.label}
+						</div>
+					)}
+				/>;
 			}
 			case UiType.MAP_ADDRESS_PICKER: {
 				return (
@@ -495,7 +502,7 @@ const Form = ({
 				onSubmit={form.onSubmit(handleSubmit, handleError)}
 				onReset={form.onReset}
 			>
-				<Flex direction={direction} gap='xs'>{renderFormFields()}</Flex>
+				<Flex direction={direction} gap='xs' wrap={direction === 'row' ? 'wrap' : undefined}>{renderFormFields()}</Flex>
 				<Flex
 					justify='flex-end'
 					align='center'

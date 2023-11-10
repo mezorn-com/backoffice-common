@@ -3,9 +3,8 @@ import { Cell, flexRender, HeaderGroup, Row, Table } from '@tanstack/react-table
 import { Checkbox, CheckboxProps } from '@mantine/core';
 import { useSectionStyles } from './useSectionStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
-import { COLUMN_UID_ATTR, ROW_GROUP_UID_ATTR, ROW_UID_ATTR } from '../utils';
 import TableRow from './Row';
-import { TableSectionType, RowGroup } from '../types';
+import { RowGroup, TableSectionType } from '../types';
 import ObservedCell from './ObservedCell';
 
 interface TableElementProps {
@@ -13,14 +12,6 @@ interface TableElementProps {
     table: Table<ListDoc>,
     bodyRef: React.MutableRefObject<HTMLDivElement | null>;
     rowSelect?: boolean;
-}
-
-const getColumnAttributes = (columnId: string, rowId: string, rowGroup: RowGroup) => {
-    return {
-        [COLUMN_UID_ATTR]: columnId,
-        [ROW_UID_ATTR]: rowId,
-        [ROW_GROUP_UID_ATTR]: rowGroup
-    }
 }
 
 const isHeaderGroup = (row: Row<ListDoc> | HeaderGroup<ListDoc>): row is HeaderGroup<ListDoc> => {
@@ -114,7 +105,7 @@ const TableSection = ({
         let rowGroup = isHeader ? RowGroup.HEADER : RowGroup.BODY;
         return (
             // assuming checkboxes won't be rendered in footer group
-            <ObservedCell attrs={getColumnAttributes(CHECKBOX_COLUMN_ID, rowId, rowGroup)}>
+            <ObservedCell rowGroup={rowGroup} rowId={rowId} columnId={CHECKBOX_COLUMN_ID}>
                 <div style={{ height: '100%', display: 'flex', placeItems: 'center' }}>
                     <Checkbox
                         {...props}
@@ -130,8 +121,7 @@ const TableSection = ({
                 className={classes.wrapper}
                 ref={section === TableSectionType.CENTER ? tablesContainerRef : undefined}
             >
-                {/*Using `thead` class for css selector */}
-                <div className={`thead ${classes.head}`}>
+                <div className={classes.head}>
                     {
                         getHeaderGroups().map(headerGroup => {
                             const rowId = headerGroup.id.split('_')[1];
@@ -140,11 +130,12 @@ const TableSection = ({
                                     {renderCheckBox(headerGroup)}
                                     {
                                         headerGroup.headers.map(header => {
-                                            const colAttributes = getColumnAttributes(header.id, rowId, RowGroup.HEADER)
                                             return (
                                                 <ObservedCell
-                                                    attrs={colAttributes}
                                                     key={header.id}
+                                                    columnId={header.id}
+                                                    rowId={rowId}
+                                                    rowGroup={RowGroup.HEADER}
                                                 >
                                                     {
                                                         header.isPlaceholder
@@ -163,8 +154,7 @@ const TableSection = ({
                         })
                     }
                 </div>
-                {/*Using `tbody` class for css selector */}
-                <div className={`tbody ${classes.body}`} ref={bodyRef}>
+                <div className={classes.body} ref={bodyRef}>
                     {
                         table.getRowModel().rows.map(row => {
                             return (
@@ -172,12 +162,12 @@ const TableSection = ({
                                     {renderCheckBox(row)}
                                     {
                                         getVisibleCells(row).map(cell => {
-
-                                            const colAttributes = getColumnAttributes(cell.column.id, row.id, RowGroup.BODY)
                                             return (
                                                 <ObservedCell
-                                                    attrs={colAttributes}
                                                     key={cell.id}
+                                                    columnId={cell.column.id}
+                                                    rowId={row.id}
+                                                    rowGroup={RowGroup.BODY}
                                                 >
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </ObservedCell>

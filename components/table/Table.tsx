@@ -47,7 +47,7 @@ import { usePathParameter, useRenderField } from '@/backoffice-common/hooks';
 
 import { TableContext } from '@/backoffice-common/components/table/context';
 import { allPass, append, clone, eqProps, prepend, equals } from 'ramda';
-import { ActionIcon, Button, Menu } from '@mantine/core';
+import { Button, Menu } from '@mantine/core';
 import BulkActionDrawer from '@/backoffice-common/components/table/components/BulkActionDrawer';
 import axios from 'axios';
 import { IResponse } from '@/backoffice-common/types/api';

@@ -1,30 +1,48 @@
 import * as React from 'react';
 import { TableContext } from '../context';
 import { createStyles } from '@mantine/core';
+import { TABLE_BORDER_COLOR, TABLE_BORDER_COLOR_INDEX } from '../constants';
+import { RowGroup } from '../types';
+import { COLUMN_UID_ATTR, ROW_GROUP_UID_ATTR, ROW_UID_ATTR } from '../utils';
 
-const useStyles = createStyles(() => {
+interface StyleParams {
+    rowGroup: RowGroup
+}
+
+const useStyles = createStyles((theme, { rowGroup }: StyleParams) => {
     return {
         container: {
             wordBreak: 'keep-all',
-            whiteSpace: 'nowrap'
+            whiteSpace: 'nowrap',
+            borderRight: `1px solid ${theme.colors[TABLE_BORDER_COLOR][TABLE_BORDER_COLOR_INDEX]}`,
+            '&:last-of-type': {
+                borderRightWidth: 0
+            }
         },
         cell: {
             width: 'min-content',
-            padding: '.3rem .5rem'
+            padding: '.3rem .5rem',
+            fontSize: rowGroup === RowGroup.HEADER ? 15 : 14,
+            fontWeight: rowGroup === RowGroup.HEADER ? 500 : undefined,
+            color: theme.colors.gray[8]
         }
     }
 })
 
 interface ObservedCellProps {
     children?: React.ReactNode;
-    attrs: any;
+    columnId: string;
+    rowId: string;
+    rowGroup: RowGroup;
 }
 
 const ObservedCell = ({
     children,
-    attrs
+    columnId,
+    rowId,
+    rowGroup
 }: ObservedCellProps) => {
-    const { classes } = useStyles();
+    const { classes } = useStyles({ rowGroup });
     const { columnObserver } = React.useContext(TableContext);
     const ref = React.useRef<HTMLDivElement>(null);
 
@@ -34,10 +52,18 @@ const ObservedCell = ({
         }
     }, [ columnObserver ]);
 
+    const attributes = React.useMemo(() => {
+        return {
+            [COLUMN_UID_ATTR]: columnId,
+            [ROW_UID_ATTR]: rowId,
+            [ROW_GROUP_UID_ATTR]: rowGroup
+        }
+    }, [ columnId, rowId, rowGroup ])
+
     return (
-        <div {...attrs} className={classes.container}>
+        <div {...attributes} className={classes.container}>
             <div
-                {...attrs}
+                {...attributes}
                 ref={ref}
                 className={classes.cell}
             >

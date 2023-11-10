@@ -4,8 +4,6 @@ import { TableSectionType } from '@/backoffice-common/components/table/types';
 interface StylesProps {
     sectionType: TableSectionType;
 }
-const headerBackground = '#d7d7d7';
-const cellPadding = 0;
 
 export const useSectionStyles = createStyles((theme, { sectionType }: StylesProps) => {
     return {
@@ -26,7 +24,8 @@ export const useSectionStyles = createStyles((theme, { sectionType }: StylesProp
             width: 'fit-content',
         },
         head: {
-            background: headerBackground,
+            background: theme.colors.gray[2],
+            borderBottom: `1px solid ${theme.colors.gray[5]}`
         },
         body: {
             flex: 1,
@@ -34,25 +33,6 @@ export const useSectionStyles = createStyles((theme, { sectionType }: StylesProp
             overflowX: 'hidden',
             '::-webkit-scrollbar': {
                 width: sectionType === TableSectionType.CENTER ? 0 : undefined,
-            }
-        },
-        headerCell: {
-            padding: cellPadding,
-            '> div': {
-                width: 'min-content',
-                wordBreak: 'keep-all',
-                whiteSpace: 'nowrap',
-                textAlign: 'center',
-            }
-        },
-        cell: {
-            borderBottom: '1px solid',
-            borderBottomColor: theme.colors.gray[2],
-            padding: cellPadding,
-            '> div': {
-                wordBreak: 'keep-all',
-                whiteSpace: 'nowrap',
-                width: 'min-content'
             }
         },
     }

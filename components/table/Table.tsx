@@ -38,7 +38,6 @@ import {
     TableState,
     useReactTable
 } from '@tanstack/react-table'
-import { IRowActionButton } from '@/backoffice-common/hooks/useListPage';
 import { IFormValues } from '@/backoffice-common/components/form/helper';
 import { initialState, reducer } from './reducer';
 import { useBodyScrolls } from '@/backoffice-common/components/table/hooks';
@@ -54,6 +53,7 @@ import axios from 'axios';
 import { IResponse } from '@/backoffice-common/types/api';
 import { IconAdjustments, IconDots } from '@tabler/icons-react';
 import { replacePathParameters } from '@/backoffice-common/utils';
+import RowActionButtons from './components/row-action-buttons';
 
 // compare 2 objects' given props values.
 const check = allPass([
@@ -88,11 +88,10 @@ const Table = ({
                 id: 'table-actions-column',
                 cell(props) {
                     return (
-                        <div className={classes.actionButtons}>
-                            {
-                                rowActionButtons.map((actionButton, index) => renderActionButton(actionButton, index, props))
-                            }
-                        </div>
+                        <RowActionButtons
+                            buttons={rowActionButtons}
+                            row={props.row}
+                        />
                     )
                 },
                 enablePinning: true,
@@ -198,44 +197,6 @@ const Table = ({
             ...value,
         }
         onInteract(params)
-    }
-
-    const renderActionButton = (actionButton: IRowActionButton, index: number, props: CellContext<any, any>) => {
-        if (actionButton.visibility) {
-            if ('hasValue' in actionButton.visibility) {
-                if (!props.row.original[actionButton.visibility.key]) {
-                    return null;
-                }
-            }
-            if ('value' in actionButton.visibility) {
-                if (props.row.original[actionButton.visibility.key] !== actionButton.visibility.value) {
-                    return null;
-                }
-            }
-            if ('valueNotEquals' in actionButton.visibility) {
-                if (props.row.original[actionButton.visibility.key] === actionButton.visibility.valueNotEquals) {
-                    return null;
-                }
-            }
-        }
-        if (typeof actionButton.label === 'function') {
-            return (
-                <div
-                    key={`action-button-${index}`}
-                    onClick={() => actionButton.onClick?.(props.row.original)}
-                >
-                    {actionButton.label(props.row.original)}
-                </div>
-            )
-        }
-        return (
-            <div
-                key={`action-button-${index}`}
-                onClick={() => actionButton.onClick?.(props.row.original)}
-            >
-                {actionButton.label ?? null}
-            </div>
-        )
     }
 
     const handleFilterChange = (values: IFormValues) => {

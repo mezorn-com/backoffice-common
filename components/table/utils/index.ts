@@ -77,12 +77,22 @@ const getColumnResizes = (centerElement: HTMLElement): ColumnSize[] => {
         exceededWidth = centerSectionWrapper - columnSizes.reduce((sum, b) => sum + (b.innerWidth ?? 0), 0);
     }
     const widthPerColumn = exceededWidth / columnSizes.length;
-    return columnSizes.map((col => {
+    const result = columnSizes.map((col => {
         return {
             ...col,
             additionalWidth: widthPerColumn
         }
     }))
+
+    const totalAdditionalWidth = result.reduce((sum, val) => sum + val.additionalWidth, 0);
+    const totalInnerWidth = result.reduce((sum, val) => sum + val.innerWidth, 0);
+
+    // console.log('totalAdditionalWidth>>>>>', totalAdditionalWidth);
+    // console.log('additionalWidth>>>>>', totalInnerWidth);
+    // console.log('totalXXDXD>>>>', totalInnerWidth + totalAdditionalWidth);
+    // console.log('COLUMN SIZES>>>>>', result);
+    // console.log('width to fill>>>>>', centerSectionWrapper)
+    return result
 }
 
 const getRowSizes = (table: Element): RowSizes => {

@@ -13,7 +13,7 @@ import {
 import type { ColumnDef } from '@tanstack/react-table';
 import { IListState } from '@/backoffice-common/types/common/list';
 import { produce } from 'immer';
-import { ActionIcon, Button, MantineColor, MANTINE_COLORS } from '@mantine/core';
+import { Button, useMantineTheme } from '@mantine/core';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { IconEdit, IconEye, IconTrash, IconFilePlus } from '@tabler/icons-react';
@@ -147,9 +147,13 @@ const reducer = produce(
     }
 );
 
+const ACTION_ICON_SIZE = 16;
+
 const useListPage = ({
     apiRoute,
 }: IConfig) => {
+
+    const theme = useMantineTheme();
 
     const navigate = useNavigate();
     const { pathname } = useLocation();
@@ -194,12 +198,17 @@ const useListPage = ({
     };
 
     const getRowActionButton = (key: ListItemActionKey, action: ListItemAction): IRowActionButton => {
+        const actionColor = actionColors[key];
+        const primaryShade: number = typeof theme.primaryShade !== 'number' ? theme.primaryShade.light : theme.primaryShade;
+
+        const color = theme.colors[actionColor][primaryShade];
         let icon: React.ReactNode = null;
         let label: React.ReactNode = null;
         let actionFn: undefined | ((record: Record<string, any>) => void);
         switch(key) {
             case 'update': {
-                icon = <IconEdit size={18}/>;
+                label = 'Засах';
+                icon = <IconEdit size={ACTION_ICON_SIZE} color={color}/>;
 
                 actionFn = (record: Record<string, any>) => {
                     let editPath = '';
@@ -214,7 +223,8 @@ const useListPage = ({
                 break;
             }
             case 'delete': {
-                icon = <IconTrash size={18}/>;
+                label = 'Устгах';
+                icon = <IconTrash size={ACTION_ICON_SIZE} color={color}/>;
 
                 actionFn = (record: Record<string, any>) => {
                     openConfirmModal({
@@ -239,7 +249,8 @@ const useListPage = ({
                 break;
             }
             case 'get': {
-                icon = <IconEye size={18}/>;
+                label = 'Харах';
+                icon = <IconEye size={ACTION_ICON_SIZE} color={color}/>;
                 actionFn = (record: Record<string, any>) => {
                     let detailPath = '';
                     const { _id } = record;
@@ -272,17 +283,18 @@ const useListPage = ({
             }
         }
 
-        let labelElement = <Button
-            leftIcon={icon}
-        >
-            {label}
-        </Button>
+        let labelElement: React.ReactNode = (
+            <Button
+                fullWidth
+                compact
+                variant={'light'}
+                leftIcon={icon}
+            >
+                {label}
+            </Button>
+        )
         if (!label) {
-            labelElement = (
-                <ActionIcon variant='filled' color={actionColors[key]}>
-                    {icon}
-                </ActionIcon>
-            )
+            labelElement = icon ?? '';
         }
 
         return {
@@ -327,6 +339,7 @@ const useListPage = ({
                     label(row: Record<string, any>) {
                         return (
                             <Button
+                                fullWidth
                                 compact
                                 component={Link}
                                 to={getSubResourceUrl(subResourceKey, [

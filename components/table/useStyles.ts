@@ -17,13 +17,6 @@ export const useStyles = createStyles((theme) => {
             gap: '1rem',
             width: '100%',
         },
-        actionButtons: {
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'row',
-            gap: '5px',
-            justifyContent:'end'
-        },
         table: {
             minWidth: '100%',
             display: 'flex',

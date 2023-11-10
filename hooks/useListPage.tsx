@@ -198,7 +198,7 @@ const useListPage = ({
     };
 
     const getRowActionButton = (key: ListItemActionKey, action: ListItemAction): IRowActionButton => {
-        const actionColor = actionColors[key];
+        const actionColor = actionColors?.[key] || 'blue';
         const primaryShade: number = typeof theme.primaryShade !== 'number' ? theme.primaryShade.light : theme.primaryShade;
 
         const color = theme.colors[actionColor][primaryShade];

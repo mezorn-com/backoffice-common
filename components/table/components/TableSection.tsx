@@ -149,7 +149,7 @@ const TableSection = ({
                         getHeaderGroups().map(headerGroup => {
                             const rowId = headerGroup.id.split('_')[1];
                             return (
-                                <TableRow key={headerGroup.id} rowId={rowId}>
+                                <TableRow key={headerGroup.id} rowId={rowId} rowGroup={RowGroup.HEADER}>
                                     {renderCheckBox(headerGroup)}
                                     {
                                         headerGroup.headers.map(header => {
@@ -181,7 +181,7 @@ const TableSection = ({
                     {
                         table.getRowModel().rows.map(row => {
                             return (
-                                <TableRow key={row.id} rowId={row.id}>
+                                <TableRow key={row.id} rowId={row.id} rowGroup={RowGroup.BODY}>
                                     {renderCheckBox(row)}
                                     {
                                         getVisibleCells(row).map(cell => {

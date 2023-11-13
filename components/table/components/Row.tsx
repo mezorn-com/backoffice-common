@@ -3,13 +3,19 @@ import { ROW_UID_ATTR } from '../utils';
 import { createStyles } from '@mantine/core';
 import { useForceUpdate } from '@mantine/hooks';
 import { TABLE_BORDER_COLOR, TABLE_BORDER_COLOR_INDEX } from '../constants';
+import { RowGroup } from '../types';
 
 interface TableRowProps {
     children: React.ReactNode;
     rowId: string;
+    rowGroup: RowGroup;
 }
 
-const useStyles = createStyles((theme) => {
+interface StyleParams extends Pick<TableRowProps, 'rowGroup'> {
+
+}
+
+const useStyles = createStyles((theme, { rowGroup }: StyleParams) => {
     return {
         container: {
             display: 'flex',
@@ -20,7 +26,7 @@ const useStyles = createStyles((theme) => {
                 borderBottomWidth: 0
             },
             '&:hover': {
-                backgroundColor: theme.colors.gray[0]
+                backgroundColor: rowGroup !== RowGroup.HEADER ? theme.colors.gray[0] : 'transparent'
             }
         }
     }
@@ -29,9 +35,10 @@ const useStyles = createStyles((theme) => {
 const TableRow = ({
     children,
     rowId,
+    rowGroup
 }: TableRowProps) => {
 
-    const { classes } = useStyles();
+    const { classes } = useStyles({ rowGroup });
     const rowRef = React.useRef<HTMLDivElement>(null);
     const forceUpdate = useForceUpdate();
 

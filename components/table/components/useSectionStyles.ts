@@ -9,11 +9,10 @@ interface StylesProps {
 export const useSectionStyles = createStyles((theme, { sectionType, visible }: StylesProps) => {
     return {
         container: {
-            visibility: visible ? 'visible' : 'hidden',
             overflowX: 'auto',
             overflowY: 'hidden',
             maxHeight: '100%',
-            display: 'flex',
+            display: visible ? 'flex' : 'none',
             flexDirection: 'column',
             boxShadow: sectionType === TableSectionType.RIGHT ? '10px 0 20px 5px #c7c7c7' : undefined,
             flex: sectionType === TableSectionType.CENTER ? 1 : undefined,

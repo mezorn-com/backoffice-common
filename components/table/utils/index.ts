@@ -92,7 +92,7 @@ const getColumnResizes = (centerElement: HTMLElement): ColumnSize[] => {
 
     // const totalAdditionalWidth = result.reduce((sum, val) => sum + val.additionalWidth, 0);
     // const totalInnerWidth = result.reduce((sum, val) => sum + (val.innerWidth ?? 0), 0);
-
+    //
     // console.log('centerElement>>>>', centerElement);
     // console.log('width to fill>>>>>', centerSectionWrapper)
     // console.log('WRAPPER NI>>>', horizontalScrollItem);

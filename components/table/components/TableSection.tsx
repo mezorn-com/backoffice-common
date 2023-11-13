@@ -6,6 +6,7 @@ import { ListDoc } from '@/backoffice-common/types/common/list';
 import TableRow from './Row';
 import { RowGroup, TableSectionType } from '../types';
 import ObservedCell from './ObservedCell';
+import Placeholder from './Placeholder';
 
 interface TableElementProps {
     section: TableSectionType,
@@ -177,31 +178,38 @@ const TableSection = ({
                         })
                     }
                 </div>
-                <div className={classes.body} ref={bodyRef}>
-                    {
-                        table.getRowModel().rows.map(row => {
-                            return (
-                                <TableRow key={row.id} rowId={row.id} rowGroup={RowGroup.BODY}>
-                                    {renderCheckBox(row)}
-                                    {
-                                        getVisibleCells(row).map(cell => {
-                                            return (
-                                                <ObservedCell
-                                                    key={cell.id}
-                                                    columnId={cell.column.id}
-                                                    rowId={row.id}
-                                                    rowGroup={RowGroup.BODY}
-                                                >
-                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </ObservedCell>
-                                            )
-                                        })
-                                    }
-                                </TableRow>
-                            )
-                        })
-                    }
-                </div>
+                {
+                    table.getRowModel().rows.length
+                    ?   <div className={classes.body} ref={bodyRef}>
+                            {
+                                table.getRowModel().rows.map(row => {
+                                    return (
+                                        <TableRow key={row.id} rowId={row.id} rowGroup={RowGroup.BODY}>
+                                            {renderCheckBox(row)}
+                                            {
+                                                getVisibleCells(row).map(cell => {
+                                                    return (
+                                                        <ObservedCell
+                                                            key={cell.id}
+                                                            columnId={cell.column.id}
+                                                            rowId={row.id}
+                                                            rowGroup={RowGroup.BODY}
+                                                        >
+                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                        </ObservedCell>
+                                                    )
+                                                })
+                                            }
+                                        </TableRow>
+                                    )
+                                })
+                            }
+                        </div>
+                    :   flatHeaders.length === 0
+                        ?   <Placeholder/>
+                        :   null
+                }
+
                 <div className='tfoot'>
                     {
                         getFooterGroups().map(footerGroup => {

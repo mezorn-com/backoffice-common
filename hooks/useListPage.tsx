@@ -11,7 +11,7 @@ import {
     ListItemActionKey,
 } from '@/backoffice-common/types/api/meta';
 import type { ColumnDef } from '@tanstack/react-table';
-import { IListState } from '@/backoffice-common/types/common/list';
+import type { IListState } from '@/backoffice-common/types/common/list';
 import { produce } from 'immer';
 import { Button, useMantineTheme } from '@mantine/core';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -20,8 +20,8 @@ import { IconEdit, IconEye, IconTrash, IconFilePlus } from '@tabler/icons-react'
 import { openConfirmModal } from '@mantine/modals';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
-import { ITableInteraction, ITableState } from '@/backoffice-common/components/table/types';
-import { INormalField, IVisibility } from '@/backoffice-common/types/form';
+import type { ITableInteraction, ITableState } from '@/backoffice-common/components/table/types';
+import type { INormalField, IVisibility } from '@/backoffice-common/types/form';
 import { actionColors } from '@/backoffice-common/utils/styles';
 
 type IRowActionButtonKey = 'update' | 'delete' | 'get';

@@ -3,11 +3,13 @@ import { TableSectionType } from '@/backoffice-common/components/table/types';
 
 interface StylesProps {
     sectionType: TableSectionType;
+    visible: boolean;
 }
 
-export const useSectionStyles = createStyles((theme, { sectionType }: StylesProps) => {
+export const useSectionStyles = createStyles((theme, { sectionType, visible }: StylesProps) => {
     return {
         container: {
+            visibility: visible ? 'visible' : 'hidden',
             overflowX: 'auto',
             overflowY: 'hidden',
             maxHeight: '100%',

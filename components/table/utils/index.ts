@@ -46,7 +46,7 @@ const getColumnSizes = (horizontalScrollItem: Element) => {
                     const sizeIndex = columnSizes.findIndex(col => col.colId === colId);
                     if (sizeIndex > -1) {
                         if (innerWidth > columnSizes[sizeIndex].innerWidth) {
-                            columnSizes[sizeIndex].innerWidth = innerWidth;
+                            columnSizes[sizeIndex].innerWidth = Math.ceil(innerWidth);
                         }
                     } else {
                         columnSizes.push({
@@ -64,34 +64,49 @@ const getColumnSizes = (horizontalScrollItem: Element) => {
 const getColumnResizes = (centerElement: HTMLElement): ColumnSize[] => {
     const centerSectionWrapper = centerElement.getBoundingClientRect().width;
     const horizontalScrollItem = centerElement.children[0];
-    const horizontalScrollItemWidth = horizontalScrollItem.getBoundingClientRect().width;
+    const horizontalScrollItemWidth = horizontalScrollItem.scrollWidth;
     const columnSizes: ColumnSize[] = getColumnSizes(horizontalScrollItem);
 
-    let exceededWidth: number;
+    // let exceededWidth: number;
+    let exceededWidth: number = centerSectionWrapper - columnSizes.reduce((sum, { innerWidth }) => sum + (innerWidth ?? 0), 0);;
 
-    if (centerSectionWrapper > horizontalScrollItemWidth) {
-        // increase column width
-        exceededWidth = centerSectionWrapper - horizontalScrollItemWidth;
-    } else {
-        // try to reduce width if possible
-        exceededWidth = centerSectionWrapper - columnSizes.reduce((sum, b) => sum + (b.innerWidth ?? 0), 0);
-    }
+    // if (centerSectionWrapper > horizontalScrollItemWidth) {
+    //     console.log('HERE')
+    //     // increase column width
+    //     exceededWidth = centerSectionWrapper - horizontalScrollItemWidth;
+    // } else {
+    //     console.log('NO HERE')
+    //     // try to reduce width if possible
+    //     exceededWidth = centerSectionWrapper - columnSizes.reduce((sum, { innerWidth }) => sum + (innerWidth ?? 0), 0);
+    // }
     const widthPerColumn = exceededWidth / columnSizes.length;
-    const result = columnSizes.map((col => {
+    const result = columnSizes.map(((col, index, array) => {
+        const isLast = index === array.length - 1;
         return {
             ...col,
+            // additionalWidth: 0
             additionalWidth: widthPerColumn
+            // additionalWidth: widthPerColumn + (!isLast ? 1 : 0)
         }
     }))
 
-    const totalAdditionalWidth = result.reduce((sum, val) => sum + val.additionalWidth, 0);
-    const totalInnerWidth = result.reduce((sum, val) => sum + val.innerWidth, 0);
+    // const totalAdditionalWidth = result.reduce((sum, val) => sum + val.additionalWidth, 0);
+    // const totalInnerWidth = result.reduce((sum, val) => sum + (val.innerWidth ?? 0), 0);
 
-    // console.log('totalAdditionalWidth>>>>>', totalAdditionalWidth);
-    // console.log('additionalWidth>>>>>', totalInnerWidth);
-    // console.log('totalXXDXD>>>>', totalInnerWidth + totalAdditionalWidth);
-    // console.log('COLUMN SIZES>>>>>', result);
+    // console.log('centerElement>>>>', centerElement);
     // console.log('width to fill>>>>>', centerSectionWrapper)
+    // console.log('WRAPPER NI>>>', horizontalScrollItem);
+    // console.log('EHLEED BGAA UTGA>>>', horizontalScrollItemWidth);
+    // console.log('TESTESTTEST>>>>', {
+    //     scrollWidth: horizontalScrollItem.scrollWidth,
+    //     clientWidth: horizontalScrollItem.clientWidth,
+    //     boundRectWidth: horizontalScrollItem.getBoundingClientRect().width
+    // })
+    // console.log('totalAdditionalWidth>>>>>', totalAdditionalWidth);
+    // console.log('totalInnerWidth>>>>>', totalInnerWidth);
+    // console.log('totalXXDXD>>>>', totalInnerWidth + totalAdditionalWidth);
+    // console.log('exceeded width>>>>', exceededWidth);
+    // console.log('COLUMN SIZES>>>>>', result);
     return result
 }
 

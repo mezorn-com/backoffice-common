@@ -82,7 +82,7 @@ const Table = ({
 
     const tableColumns = React.useMemo(() => {
         let cols = clone(externalState.columns);
-        if (rowActionButtons?.length) {
+        if (rowActionButtons?.length && externalState.docs.length) {
             const actionButtonsColumn: ColumnDef<Record<string, unknown>> = {
                 header: '',
                 id: 'table-actions-column',

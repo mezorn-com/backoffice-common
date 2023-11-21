@@ -100,6 +100,15 @@ export const getInitialValue = (field: INormalField, initialValue?: any) => {
 		case UiType.YEAR: {
 			return initialValue ? new Date(initialValue.toString()) : undefined;
 		}
+		case UiType.LOCATION: {
+			if (initialValue?.latitude && initialValue?.longitude) {
+				return {
+					lat: initialValue.latitude,
+					lng: initialValue.longitude
+				}
+			}
+			return undefined;
+		}
 		default: {
 			console.warn('Unknown UiType value: ', field.uiType);
 			return undefined;

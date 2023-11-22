@@ -1,7 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 import { IListResponse, IResponse } from '@/backoffice-common/types/api';
-import { formatColumns, getMeta } from '@/backoffice-common/utils';
+import { formatColumns, getMeta, replacePathParameters } from '@/backoffice-common/utils';
 import {
     BulkAction,
     IListMetaResponse,
@@ -15,14 +15,14 @@ import type { IListState } from '@/backoffice-common/types/common/list';
 import { produce } from 'immer';
 import { Button, useMantineTheme } from '@mantine/core';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { IconEdit, IconEye, IconTrash, IconFilePlus } from '@tabler/icons-react';
-import { openConfirmModal } from '@mantine/modals';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
 import type { ITableInteraction, ITableState } from '@/backoffice-common/components/table/types';
 import type { INormalField, IVisibility } from '@/backoffice-common/types/form';
 import { actionColors } from '@/backoffice-common/utils/styles';
+import { useConfirmModal } from '@/backoffice-common/hooks/useConfirmModal';
+import { usePathParameter } from '@/backoffice-common/hooks/usePathParameter';
 
 type IRowActionButtonKey = 'update' | 'delete' | 'get';
 
@@ -158,6 +158,8 @@ const useListPage = ({
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const { t } = useTranslation();
+    const confirmModal = useConfirmModal();
+    const pathParameter = usePathParameter();
 
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
 
@@ -227,16 +229,7 @@ const useListPage = ({
                 icon = <IconTrash size={ACTION_ICON_SIZE} color={color}/>;
 
                 actionFn = (record: Record<string, any>) => {
-                    openConfirmModal({
-                        title: t('delete.modalTitle', { ns: 'common' }),
-                        children: t('delete.description', { ns: 'common' }),
-                        labels: {
-                            confirm: t('delete.title', { ns: 'common' }),
-                            cancel: t('cancel', { ns: 'common' })
-                        },
-                        confirmProps: {
-                            color: 'red',
-                        },
+                    confirmModal({
                         async onConfirm() {
                             const { data } = await axios.delete<IResponse<any>>(`${apiRoute}/${record._id}`);
                             if (data.success) {
@@ -267,15 +260,31 @@ const useListPage = ({
                 label = action === true ? undefined : action.label;
                 if (action !== true && action.api) {
                     actionFn = async (record: Record<string, any>) => {
-                        const { data } = await axios<IResponse<any>>({
-                            url: getSubResourceUrl(action.api?.uri ?? '', [
-                                { match: '{_id}', replace: record._id }
-                            ]),
-                            method: action.api?.method
-                        });
-                        if (data.success) {
-                            showMessage(t('success', { ns: 'common' }), 'green');
-                            void fetchData();
+                        const onConfirm = async () => {
+                            const { data } = await axios<IResponse<any>>({
+                                url: replacePathParameters(action.api?.uri ?? '', { ...pathParameter, ...record }),
+                                method: action.api?.method
+                            });
+                            if (data.success) {
+                                showMessage(t('success', { ns: 'common' }), 'green');
+                                void fetchData();
+                            }
+                        }
+                        if (action.confirmation) {
+                            confirmModal({
+                                title: '',
+                                children: action.confirmation.dialogText,
+                                labels: {
+                                    confirm: action.confirmation.buttonText,
+                                    cancel: t('cancel', { ns: 'common' })
+                                },
+                                confirmProps: {
+                                    color: 'blue',
+                                },
+                                onConfirm
+                            })
+                        } else {
+                            void onConfirm();
                         }
                     }
                 }
@@ -305,7 +314,7 @@ const useListPage = ({
                 } else {
                     if (action !== true) {
                         if (action.confirmation) {
-                            openConfirmModal({
+                            confirmModal({
                                 title: '',
                                 children: action.confirmation.dialogText,
                                 labels: {
@@ -342,9 +351,7 @@ const useListPage = ({
                                 fullWidth
                                 compact
                                 component={Link}
-                                to={getSubResourceUrl(subResourceKey, [
-                                    { match: '{_id}', replace: row._id },
-                                ])}
+                                to={replacePathParameters(subResourceKey, row)}
                                 radius={'sm'}
                                 variant={'light'}
                             >
@@ -399,13 +406,32 @@ const useListPage = ({
                 label = action === true ? undefined : action.label;
                 if (action !== true && action.api) {
                     actionFn = async () => {
-                        const { data } = await axios<IResponse<any>>({
-                            url: action.api?.uri,
-                            method: action.api?.method
-                        });
-                        if (data.success) {
-                            showMessage(t('success', { ns: 'common' }), 'green');
-                            void fetchData();
+
+                        const onConfirm = async () => {
+                            const { data } = await axios<IResponse<any>>({
+                                url: action.api?.uri,
+                                method: action.api?.method
+                            });
+                            if (data.success) {
+                                showMessage(t('success', { ns: 'common' }), 'green');
+                                void fetchData();
+                            }
+                        }
+                        if (action.confirmation) {
+                            confirmModal({
+                                title: '',
+                                children: action.confirmation.dialogText,
+                                labels: {
+                                    confirm: action.confirmation.buttonText,
+                                    cancel: t('cancel', { ns: 'common' })
+                                },
+                                confirmProps: {
+                                    color: 'blue',
+                                },
+                                onConfirm
+                            })
+                        } else {
+                            void onConfirm();
                         }
                     }
                 }
@@ -423,7 +449,7 @@ const useListPage = ({
                     } else {
                         if (action !== true) {
                             if (action.confirmation) {
-                                openConfirmModal({
+                                confirmModal({
                                     title: '',
                                     children: action.confirmation.dialogText,
                                     labels: {

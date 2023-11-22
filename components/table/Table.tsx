@@ -61,7 +61,7 @@ const check = allPass([
     eqProps('pageSize'),
 ])
 
-const eqValues = (a1: unknown[], a2: unknown[]) => equals(new Set(a1), new Set(a2))
+const eqValues = (a1: unknown[], a2: unknown[]) => equals(new Set(a1), new Set(a2));
 
 const Table = ({
     onInteract,
@@ -109,7 +109,7 @@ const Table = ({
             }
         }
         return cols;
-    }, [ externalState.columns, rowActionButtons ]);
+    }, [ externalState.columns, rowActionButtons, externalState.docs.length, rowActionButtonPosition ]);
 
     const table = useReactTable({
         data: externalState.docs,
@@ -120,6 +120,9 @@ const Table = ({
             pagination: {
                 pageSize: externalState.pageSize,
                 pageIndex: externalState.page - 1,
+            },
+            columnPinning: {
+                right: ['table-actions-column']
             }
         },
         defaultColumn: {
@@ -146,13 +149,11 @@ const Table = ({
         enablePinning: true,
         enableColumnResizing: true,
         enableRowSelection: true,
+        enableColumnPinning: true,
     });
 
     React.useEffect(() => {
         columnObserverRef.current = getCellObserver();
-        table.setColumnPinning({
-            right: ['table-actions-column']
-        })
     }, []);
 
     React.useEffect(() => {
@@ -214,6 +215,7 @@ const Table = ({
         })
     }
 
+    // TODO: Split into its own file
     const renderBulkActions = () => {
         if (!externalState.bulkItemActions  || !externalState.selectedRows?.length) {
             return null;

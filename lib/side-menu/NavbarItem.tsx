@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Collapse, createStyles, Group, rem, ThemeIcon, UnstyledButton } from '@mantine/core';
+import { Box, Collapse, createStyles, Group, rem, UnstyledButton } from '@mantine/core';
 import { IconChevronRight } from '@tabler/icons-react';
-import * as icons from './Icons';
+import * as icons from '@/lib/icons/common';
 
-interface IStyleParams {
+interface StyleParams {
     isActive: boolean;
     hasLinks: boolean;
 }
 
-const useStyles = createStyles((theme, { isActive, hasLinks }: IStyleParams) => {
+const useStyles = createStyles((theme, { isActive, hasLinks }: StyleParams) => {
     return {
         control: {
             fontWeight: 500,
@@ -104,9 +104,7 @@ const NavbarItem = ({
             return null;
         }
         return (
-            <ThemeIcon variant="light" size={30}>
-                <Icon size="1.1rem" />
-            </ThemeIcon>
+            <Icon size="1.1rem" />
         )
     }, [ icon ])
 

@@ -22,22 +22,20 @@ const isHeaderGroup = (row: Row<ListDoc> | HeaderGroup<ListDoc>): row is HeaderG
 const CHECKBOX_COLUMN_ID = 'table-bulk-action-checkbox';
 
 const useSectionFlatHeaders = (section: TableSectionType, table: Table<ListDoc>) => {
-    return React.useMemo(() => {
-        switch(section) {
-            case TableSectionType.LEFT: {
-                return table.getLeftFlatHeaders();
-            }
-            case TableSectionType.CENTER: {
-                return table.getCenterFlatHeaders();
-            }
-            case TableSectionType.RIGHT: {
-                return table.getRightFlatHeaders();
-            }
-            default: {
-                return []
-            }
+    switch(section) {
+        case TableSectionType.LEFT: {
+            return table.getLeftFlatHeaders();
         }
-    }, [ table, section ]);
+        case TableSectionType.CENTER: {
+            return table.getCenterFlatHeaders();
+        }
+        case TableSectionType.RIGHT: {
+            return table.getRightFlatHeaders();
+        }
+        default: {
+            return []
+        }
+    }
 }
 
 const TableSection = ({

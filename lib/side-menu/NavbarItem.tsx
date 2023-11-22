@@ -104,7 +104,7 @@ const NavbarItem = ({
             return null;
         }
         return (
-            <Icon size="1.1rem" />
+            <Icon size="1.1rem" stroke={1.5}/>
         )
     }, [ icon ])
 

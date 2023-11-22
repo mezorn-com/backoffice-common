@@ -204,10 +204,9 @@ const TableSection = ({
                             }
                         </div>
                     :   flatHeaders.length === 0
-                        ?   <Placeholder/>
-                        :   null
+                        ?   null
+                        :   <Placeholder/>
                 }
-
                 <div className='tfoot'>
                     {
                         getFooterGroups().map(footerGroup => {

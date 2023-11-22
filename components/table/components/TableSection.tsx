@@ -50,8 +50,7 @@ const TableSection = ({
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
     const { classes } = useSectionStyles({
         sectionType: section,
-        // visible: section === TableSectionType.CENTER || flatHeaders.length > 0,
-        visible: true,
+        visible: section === TableSectionType.CENTER || flatHeaders.length > 0,
     });
 
     const getHeaderGroups = (): HeaderGroup<ListDoc>[] => {

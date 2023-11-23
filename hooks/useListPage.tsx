@@ -514,22 +514,7 @@ const useListPage = ({
                                 key
                             }
                         })
-                        // modals.open({
-                        //     title: 'Subscribe to newsletter',
-                        //     children: (
-                        //         <>
-                        //             <Form
-                        //                 fields={action.api.form.fields}
-                        //                 onSubmit={(values) => {
-                        //                     console.log('submit>>>', values);
-                        //                 }}
-                        //             />
-                        //         </>
-                        //     ),
-                        // })
                     }
-
-
                     // if (typeof actionFn === 'function') {
                     //     actionFn();
                     // } else {

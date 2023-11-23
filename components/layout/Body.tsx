@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { createStyles } from '@mantine/core';
+import { createStyles, rem } from '@mantine/core';
 
 const useStyles = createStyles(() => {
     return {
         wrapper: {
             overflow: 'auto',
-            flex: 1
+            flex: 1,
+            padding: rem(15)
         }
     }
 })

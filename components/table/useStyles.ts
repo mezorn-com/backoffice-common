@@ -7,7 +7,6 @@ export const useStyles = createStyles((theme) => {
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
-            padding: `0 ${rem(20)}`,
         },
         tableWrapper: {
             flex: 1,

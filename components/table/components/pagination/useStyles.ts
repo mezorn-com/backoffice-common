@@ -9,7 +9,6 @@ export const useStyles = createStyles((theme) => {
             gap: '20px',
             justifyContent: 'end',
             alignItems: 'center',
-            marginBottom: theme.spacing.sm
         },
         paginationControls: {
             display: 'flex',

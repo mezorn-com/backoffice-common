@@ -236,7 +236,7 @@ const useListPage = ({
                 page: data.data.page,
                 totalPage: data.data.totalPage,
                 limit: data.data.limit,
-                totalData: data.data.totalData,
+                totalData: data.data.total,
                 listResponse: data.data
             }
         })

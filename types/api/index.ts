@@ -10,7 +10,7 @@ export interface IListResponseData {
     limit: number;
     page: number;
     totalPage: number;
-    totalData?: number;
+    total?: number;
     [key: string]: unknown;
 }
 

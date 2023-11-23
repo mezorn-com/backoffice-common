@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, createStyles, Flex, Title } from '@mantine/core';
+import { Button, createStyles, Flex, rem, Title } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { IconChevronLeft } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
@@ -68,10 +68,10 @@ const useStyles = createStyles((theme) => {
         pageHeader: {
             display: 'flex',
             justifyContent: 'space-between',
-            padding: '40px 20px 20px 20px',
+            padding: `${rem(10)} ${rem(20)}`,
             backgroundColor: theme.colors.gray[0],
             borderBottom: `1px solid ${theme.colors.gray[2]}`,
-            alignItems: 'center'
+            alignItems: 'center',
         },
         children: {
             flex: 1,

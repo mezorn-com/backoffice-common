@@ -18,11 +18,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IconEdit, IconEye, IconTrash, IconFilePlus } from '@tabler/icons-react';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
-import type { ITableInteraction, ITableState } from '@/backoffice-common/components/table/types';
+import type { ITableInteraction } from '@/backoffice-common/components/table/types';
 import type { INormalField, IVisibility } from '@/backoffice-common/types/form';
 import { actionColors } from '@/backoffice-common/utils/styles';
-import { useConfirmModal } from '@/backoffice-common/hooks/useConfirmModal';
-import { usePathParameter } from '@/backoffice-common/hooks/usePathParameter';
+import { useConfirmModal, usePathParameter } from '@/backoffice-common/hooks';
 
 type IRowActionButtonKey = 'update' | 'delete' | 'get';
 
@@ -78,11 +77,31 @@ type HandleRowSelectChange = {
     payload: string[];
 }
 
+type UpdateActiveListAction = {
+    type: 'UPDATE_ACTIVE_LIST_ACTION',
+    payload?: {
+        action: ListAction;
+        key: string;
+    };
+}
+
+type UpdateListActionFormValue = {
+    type: 'UPDATE_LIST_ACTION_FORM_VALUE',
+    payload: Record<string, unknown>;
+}
+
+type HandleActionComplete = {
+    type: 'HANDLE_ACTION_COMPLETE'
+}
+
 export type Action =
     SetListResponse
     | SetMetaData
     | HandleTableInteract
     | HandleRowSelectChange
+    | UpdateActiveListAction
+    | UpdateListActionFormValue
+    | HandleActionComplete
     ;
 
 const initialState: IListState = {
@@ -99,7 +118,9 @@ const initialState: IListState = {
     filter: undefined,
     listResponse: undefined,
     bulkItemActions: undefined,
-    selectedRows: []
+    selectedRows: [],
+    activeListAction: undefined,
+    listActionValues: undefined
 }
 
 interface IBaseListParams {
@@ -139,6 +160,28 @@ const reducer = produce(
             }
             case 'HANDLE_ROW_SELECT_CHANGE': {
                 draft.selectedRows = action.payload;
+                break;
+            }
+            case 'UPDATE_ACTIVE_LIST_ACTION': {
+                if (action.payload) {
+                    draft.activeListAction = {
+                        action: action.payload?.action,
+                        key: action.payload?.key
+                    }
+                } else {
+                    draft.activeListAction = undefined;
+                }
+                break;
+            }
+            case 'UPDATE_LIST_ACTION_FORM_VALUE': {
+                if (action.payload) {
+                    draft.listActionValues = action.payload
+                }
+                break;
+            }
+            case 'HANDLE_ACTION_COMPLETE': {
+                draft.activeListAction = undefined;
+                draft.listActionValues = undefined;
                 break;
             }
             default:
@@ -205,7 +248,7 @@ const useListPage = ({
 
         const color = theme.colors[actionColor][primaryShade];
         let icon: React.ReactNode = null;
-        let label: React.ReactNode = null;
+        let label: React.ReactNode;
         let actionFn: undefined | ((record: Record<string, any>) => void);
         switch(key) {
             case 'update': {
@@ -213,7 +256,7 @@ const useListPage = ({
                 icon = <IconEdit size={ACTION_ICON_SIZE} color={color}/>;
 
                 actionFn = (record: Record<string, any>) => {
-                    let editPath = '';
+                    let editPath: string;
                     const { _id } = record;
                     if (pathname.endsWith('/')) {
                         editPath = `${pathname}${_id}/edit`;
@@ -245,7 +288,7 @@ const useListPage = ({
                 label = 'Харах';
                 icon = <IconEye size={ACTION_ICON_SIZE} color={color}/>;
                 actionFn = (record: Record<string, any>) => {
-                    let detailPath = '';
+                    let detailPath: string;
                     const { _id } = record;
                     if (pathname.endsWith('/')) {
                         detailPath = `${pathname}${_id}`
@@ -373,7 +416,7 @@ const useListPage = ({
             }
         }
         return rowActionButtonList;
-    }, [ state.subResources, state.listActions, apiRoute ]);
+    }, [ state.subResources, state.listItemActions ]);
 
     const handleInteract = (payload: ITableInteraction) => {
         const { state: payloadState } = payload;
@@ -387,6 +430,25 @@ const useListPage = ({
             filter: payload.filter
         })
     }
+
+    React.useEffect(() => {
+        if (state.listActionValues && state.activeListAction) {
+            const submit = async () => {
+                if (state.activeListAction?.action !== true) {
+                    const { data } = await axios<IResponse<unknown>>({
+                        url: replacePathParameters(state.activeListAction?.action.api?.uri ?? '', pathParameter),
+                        method: state.activeListAction?.action.api?.method,
+                        data: state.listActionValues
+                    });
+                    if (data.success) {
+                        dispatch({ type: 'HANDLE_ACTION_COMPLETE' })
+                        void fetchData()
+                    }
+                }
+            }
+            void submit();
+        }
+    }, [state.listActionValues]);
 
     const getListAction = (key: ListActionKey, action: ListAction): React.ReactNode => {
         let icon: React.ReactNode;
@@ -444,26 +506,50 @@ const useListPage = ({
                 radius={'md'}
                 leftIcon={icon}
                 onClick={() => {
-                    if (typeof actionFn === 'function') {
-                        actionFn();
-                    } else {
-                        if (action !== true) {
-                            if (action.confirmation) {
-                                confirmModal({
-                                    title: '',
-                                    children: action.confirmation.dialogText,
-                                    labels: {
-                                        confirm: action.confirmation.buttonText ?? 'confirm',
-                                        cancel: t('cancel', { ns: 'common' })
-                                    },
-                                    async onConfirm() {
-                                        typeof actionFn === 'function' && actionFn();
-                                        actionFn = undefined;
-                                    }
-                                })
+                    if (action !== true && action.api) {
+                        dispatch({
+                            type: 'UPDATE_ACTIVE_LIST_ACTION',
+                            payload: {
+                                action,
+                                key
                             }
-                        }
+                        })
+                        // modals.open({
+                        //     title: 'Subscribe to newsletter',
+                        //     children: (
+                        //         <>
+                        //             <Form
+                        //                 fields={action.api.form.fields}
+                        //                 onSubmit={(values) => {
+                        //                     console.log('submit>>>', values);
+                        //                 }}
+                        //             />
+                        //         </>
+                        //     ),
+                        // })
                     }
+
+
+                    // if (typeof actionFn === 'function') {
+                    //     actionFn();
+                    // } else {
+                    //     if (action !== true) {
+                    //         if (action.confirmation) {
+                    //             confirmModal({
+                    //                 title: '',
+                    //                 children: action.confirmation.dialogText,
+                    //                 labels: {
+                    //                     confirm: action.confirmation.buttonText ?? 'confirm',
+                    //                     cancel: t('cancel', { ns: 'common' })
+                    //                 },
+                    //                 async onConfirm() {
+                    //                     typeof actionFn === 'function' && actionFn();
+                    //                     actionFn = undefined;
+                    //                 }
+                    //             })
+                    //         }
+                    //     }
+                    // }
                 }}
             >
                 {label}

@@ -21,7 +21,7 @@ export interface ITableProps {
     rowActionButtonPosition?: 'left' | 'right';
     state: IListState;
     pageSizes?: number[];
-    dispatch?: Dispatch<Action>;
+    dispatch: Dispatch<Action>;
 }
 
 export enum TableSectionType {

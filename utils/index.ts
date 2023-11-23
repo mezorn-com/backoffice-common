@@ -74,11 +74,15 @@ export const getArrayObjectByProp = (array: Record<any, any>[], key: string, pro
 
 export const replacePathParameters = (url: string, object: Record<string, any>) => {
     const re = /\{([^}]+)\}/g;
-    return url.replace(re, (completeMatch, match) => {
+    const result = url.replace(re, (completeMatch, match) => {
         if (!object[match]) {
-            console.warn(`couldn't find a value ${match} in: `, object);
+            console.warn(`Couldn't find a value ${match} in: `, object);
             return completeMatch;
         }
         return object?.[match]?.toString() ?? completeMatch;
     })
+    if (result.startsWith('/')) {
+        return result;
+    }
+    return `/${result}`;
 }

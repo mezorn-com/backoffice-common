@@ -47,7 +47,7 @@ import { usePathParameter, useRenderField } from '@/backoffice-common/hooks';
 
 import { TableContext } from '@/backoffice-common/components/table/context';
 import { allPass, append, clone, eqProps, prepend, equals } from 'ramda';
-import { Button, Menu } from '@mantine/core';
+import { Button, Drawer, Menu, Modal } from '@mantine/core';
 import BulkActionDrawer from '@/backoffice-common/components/table/components/BulkActionDrawer';
 import axios from 'axios';
 import { IResponse } from '@/backoffice-common/types/api';
@@ -347,6 +347,23 @@ const Table = ({
                     pageSizes={pageSizes}
                 />
             </div>
+            <Drawer
+                opened={!!externalState.activeListAction}
+                onClose={() => dispatchExternalState?.({ type: 'UPDATE_ACTIVE_LIST_ACTION' })}
+                position='right'
+            >
+                <Form
+                    fields={externalState.activeListAction?.action === true ? [] : (externalState.activeListAction?.action.api?.form.fields ?? [])}
+                    onSubmit={(values) => {
+                        if (externalState.activeListAction && externalState.activeListAction?.action !== true) {
+                            dispatchExternalState?.({
+                                type: 'UPDATE_LIST_ACTION_FORM_VALUE',
+                                payload: values
+                            })
+                        }
+                    }}
+                />
+            </Drawer>
         </TableContext.Provider>
     )
 }

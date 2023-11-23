@@ -89,7 +89,7 @@ export const getInitialValue = (field: INormalField, initialValue?: any) => {
 			return date.isValid() ? date.format(field.format ?? 'YYYY-MM-DD') : undefined;
 		}
 		case UiType.CHECKBOX: {
-			return false;
+			return !!initialValue;
 		}
 		case UiType.SEARCH_SELECT: {
 			return initialValue ?? undefined;

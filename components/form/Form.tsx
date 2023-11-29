@@ -258,6 +258,7 @@ const Form = ({
 			key: valueKey,
 			label: field.label ?? '-',
 			size: 'sm',
+			autoComplete: 'off',
 			withAsterisk: isFieldRequired(field, fields, form.values),
 			...form.getInputProps(valueKey, {
 				type: field.uiType === UiType.CHECKBOX ? 'checkbox' : 'input',
@@ -269,7 +270,7 @@ const Form = ({
 					return (
 						<PasswordInput
 							{...props}
-							autoComplete={'off'}
+							autoComplete={'new-password'}
 						/>
 					);
 				}
@@ -279,6 +280,7 @@ const Form = ({
 							{...props}
 							autosize
 							minRows={2}
+							autoComplete={'off'}
 						/>
 					);
 				}

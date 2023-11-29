@@ -347,23 +347,6 @@ const Table = ({
                     pageSizes={pageSizes}
                 />
             </div>
-            <Drawer
-                opened={!!externalState.activeListAction}
-                onClose={() => dispatchExternalState?.({ type: 'UPDATE_ACTIVE_LIST_ACTION' })}
-                position='right'
-            >
-                <Form
-                    fields={externalState.activeListAction?.action === true ? [] : (externalState.activeListAction?.action.api?.form.fields ?? [])}
-                    onSubmit={(values) => {
-                        if (externalState.activeListAction && externalState.activeListAction?.action !== true) {
-                            dispatchExternalState?.({
-                                type: 'UPDATE_LIST_ACTION_FORM_VALUE',
-                                payload: values
-                            })
-                        }
-                    }}
-                />
-            </Drawer>
         </TableContext.Provider>
     )
 }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IFormField } from '@/backoffice-common/types/form';
 import {
     IFormMetaResponse,
-    ListAction,
+    ItemAction,
     ListActionKey,
     MetaType,
     SubResources
@@ -30,7 +30,7 @@ export interface IDetailPageState {
     details: IFormField[];
     values: Record<string, any>;
     subResources?: SubResources;
-    actions?: Record<MetaType | string, ListAction>;
+    actions?: Record<MetaType | string, ItemAction>;
 }
 
 const ICON_SIZE = 18;
@@ -77,7 +77,7 @@ const useDetailPage = ({
         }))
     }
 
-    const getAction = (key: ListActionKey, action: ListAction): React.ReactNode => {
+    const getAction = (key: ListActionKey, action: ItemAction): React.ReactNode => {
         let icon: React.ReactNode;
         let label: React.ReactNode = action === true ? undefined : action.label;
         let actionFn: undefined | (() => void);

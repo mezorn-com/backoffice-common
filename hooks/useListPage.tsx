@@ -1,41 +1,26 @@
 import * as React from 'react';
 import axios from 'axios';
-import { IListResponse, IResponse } from '@/backoffice-common/types/api';
+import type { IListResponse } from '@/backoffice-common/types/api';
 import { formatColumns, getMeta, replacePathParameters } from '@/backoffice-common/utils';
-import {
-    BulkAction,
-    IListMetaResponse,
-    ListAction,
-    ListActionKey,
-    ListItemAction,
-    ListItemActionKey,
-} from '@/backoffice-common/types/api/meta';
+import type { BulkAction, IListMetaResponse, } from '@/backoffice-common/types/api/meta';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { IListState } from '@/backoffice-common/types/common/list';
 import { produce } from 'immer';
-import { Button, useMantineTheme } from '@mantine/core';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { IconEdit, IconEye, IconTrash, IconFilePlus } from '@tabler/icons-react';
-import { showMessage } from '@/backoffice-common/lib/notification';
-import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import type { ITableInteraction } from '@/backoffice-common/components/table/types';
 import type { INormalField, IVisibility } from '@/backoffice-common/types/form';
-import { actionColors } from '@/backoffice-common/utils/styles';
-import { useConfirmModal, usePathParameter } from '@/backoffice-common/hooks';
-
-type IRowActionButtonKey = 'update' | 'delete' | 'get';
+import ActionButton, { ActionButtonProps } from '@/backoffice-common/components/common/action-button';
 
 interface IConfig {
     apiRoute: string;
-    rowActionButtons?: IRowActionButtonKey[];
 }
 
 export type IRowActionButton = {
-    onClick?: (record: Record<string, any>) => void;
+    onClick?: (record: Record<string, unknown>) => void;
     visibility?: IVisibility;
 } &
     ({
-        label(row: Record<string, any>): React.ReactNode;
+        label(row: Record<string, unknown>): React.ReactNode;
     }
     |
     {
@@ -57,7 +42,7 @@ type SetListResponse = {
 type SetMetaData = {
     type: 'SET_META_DATA',
     payload: {
-        columns: ColumnDef<Record<string, any>>[];
+        columns: ColumnDef<Record<string, unknown>>[];
         pageTitle?: string;
         subResources?: IListMetaResponse['subResources'];
         listActions?: IListMetaResponse['listActions'];
@@ -77,31 +62,11 @@ type HandleRowSelectChange = {
     payload: string[];
 }
 
-type UpdateActiveListAction = {
-    type: 'UPDATE_ACTIVE_LIST_ACTION',
-    payload?: {
-        action: ListAction;
-        key: string;
-    };
-}
-
-type UpdateListActionFormValue = {
-    type: 'UPDATE_LIST_ACTION_FORM_VALUE',
-    payload: Record<string, unknown>;
-}
-
-type HandleActionComplete = {
-    type: 'HANDLE_ACTION_COMPLETE'
-}
-
 export type Action =
     SetListResponse
     | SetMetaData
     | HandleTableInteract
     | HandleRowSelectChange
-    | UpdateActiveListAction
-    | UpdateListActionFormValue
-    | HandleActionComplete
     ;
 
 const initialState: IListState = {
@@ -119,14 +84,12 @@ const initialState: IListState = {
     listResponse: undefined,
     bulkItemActions: undefined,
     selectedRows: [],
-    activeListAction: undefined,
-    listActionValues: undefined
 }
 
 interface IBaseListParams {
     page: number;
     limit: number;
-    filter?: Record<string, any>;
+    filter?: Record<string, unknown>;
 }
 
 const reducer = produce(
@@ -162,47 +125,17 @@ const reducer = produce(
                 draft.selectedRows = action.payload;
                 break;
             }
-            case 'UPDATE_ACTIVE_LIST_ACTION': {
-                if (action.payload) {
-                    draft.activeListAction = {
-                        action: action.payload?.action,
-                        key: action.payload?.key
-                    }
-                } else {
-                    draft.activeListAction = undefined;
-                }
-                break;
-            }
-            case 'UPDATE_LIST_ACTION_FORM_VALUE': {
-                if (action.payload) {
-                    draft.listActionValues = action.payload
-                }
-                break;
-            }
-            case 'HANDLE_ACTION_COMPLETE': {
-                draft.activeListAction = undefined;
-                draft.listActionValues = undefined;
-                break;
-            }
             default:
                 break;
         }
     }
 );
 
-const ACTION_ICON_SIZE = 16;
-
 const useListPage = ({
     apiRoute,
 }: IConfig) => {
 
-    const theme = useMantineTheme();
-
     const navigate = useNavigate();
-    const { pathname } = useLocation();
-    const { t } = useTranslation();
-    const confirmModal = useConfirmModal();
-    const pathParameter = usePathParameter();
 
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
 
@@ -242,167 +175,24 @@ const useListPage = ({
         })
     };
 
-    const getRowActionButton = (key: ListItemActionKey, action: ListItemAction): IRowActionButton => {
-        const actionColor = actionColors?.[key] || 'blue';
-        const primaryShade: number = typeof theme.primaryShade !== 'number' ? theme.primaryShade.light : theme.primaryShade;
-
-        const color = theme.colors[actionColor][primaryShade];
-        let icon: React.ReactNode = null;
-        let label: React.ReactNode;
-        let actionFn: undefined | ((record: Record<string, any>) => void);
-        switch(key) {
-            case 'update': {
-                label = 'Засах';
-                icon = <IconEdit size={ACTION_ICON_SIZE} color={color}/>;
-
-                actionFn = (record: Record<string, any>) => {
-                    let editPath: string;
-                    const { _id } = record;
-                    if (pathname.endsWith('/')) {
-                        editPath = `${pathname}${_id}/edit`;
-                    } else {
-                        editPath = `${pathname}/${_id}/edit`;
-                    }
-                    navigate(editPath);
-                }
-                break;
-            }
-            case 'delete': {
-                label = 'Устгах';
-                icon = <IconTrash size={ACTION_ICON_SIZE} color={color}/>;
-
-                actionFn = (record: Record<string, any>) => {
-                    confirmModal({
-                        async onConfirm() {
-                            const { data } = await axios.delete<IResponse<any>>(`${apiRoute}/${record._id}`);
-                            if (data.success) {
-                                showMessage(t('success', { ns: 'common' }), 'green');
-                                void fetchData();
-                            }
-                        }
-                    })
-                }
-                break;
-            }
-            case 'get': {
-                label = 'Харах';
-                icon = <IconEye size={ACTION_ICON_SIZE} color={color}/>;
-                actionFn = (record: Record<string, any>) => {
-                    let detailPath: string;
-                    const { _id } = record;
-                    if (pathname.endsWith('/')) {
-                        detailPath = `${pathname}${_id}`
-                    } else {
-                        detailPath = `${pathname}/${_id}`
-                    }
-                    navigate(detailPath);
-                }
-                break;
-            }
-            default: {
-                label = action === true ? undefined : action.label;
-                if (action !== true && action.api) {
-                    actionFn = async (record: Record<string, any>) => {
-                        const onConfirm = async () => {
-                            const { data } = await axios<IResponse<any>>({
-                                url: replacePathParameters(action.api?.uri ?? '', { ...pathParameter, ...record }),
-                                method: action.api?.method
-                            });
-                            if (data.success) {
-                                showMessage(t('success', { ns: 'common' }), 'green');
-                                void fetchData();
-                            }
-                        }
-                        if (action.confirmation) {
-                            confirmModal({
-                                title: '',
-                                children: action.confirmation.dialogText,
-                                labels: {
-                                    confirm: action.confirmation.buttonText,
-                                    cancel: t('cancel', { ns: 'common' })
-                                },
-                                confirmProps: {
-                                    color: 'blue',
-                                },
-                                onConfirm
-                            })
-                        } else {
-                            void onConfirm();
-                        }
-                    }
-                }
-                break;
-            }
-        }
-
-        let labelElement: React.ReactNode = (
-            <Button
-                fullWidth
-                compact
-                variant={'light'}
-                leftIcon={icon}
-            >
-                {label}
-            </Button>
-        )
-        if (!label) {
-            labelElement = icon ?? '';
-        }
-
-        return {
-            label: labelElement,
-            onClick: (record: Record<string, any>) => {
-                if (typeof actionFn === 'function') {
-                    actionFn(record);
-                } else {
-                    if (action !== true) {
-                        if (action.confirmation) {
-                            confirmModal({
-                                title: '',
-                                children: action.confirmation.dialogText,
-                                labels: {
-                                    confirm: action.confirmation.buttonText ?? 'confirm',
-                                    cancel: t('cancel', { ns: 'common' })
-                                },
-                                confirmProps: {
-                                    color: key === 'delete' ? 'red' : undefined,
-                                },
-                                async onConfirm() {
-                                    typeof actionFn === 'function' && actionFn(record);
-                                    actionFn = undefined;
-                                }
-                            })
-                        }
-                    }
-                }
-            },
-            visibility: action === true ? undefined : action?.condition,
-        }
-    }
-
     const rowActionButtons = React.useMemo(() => {
 
-        const rowActionButtonList: IRowActionButton[] = [];
+        const rowActionButtonList: ActionButtonProps[] = [];
 
         for (const subResourceKey in state.subResources) {
             const subResource = state.subResources[subResourceKey];
             if (subResource) {
                 rowActionButtonList.push({
-                    label(row: Record<string, any>) {
-                        return (
-                            <Button
-                                fullWidth
-                                compact
-                                component={Link}
-                                to={replacePathParameters(subResourceKey, row)}
-                                radius={'sm'}
-                                variant={'light'}
-                            >
-                                {subResource.label}
-                            </Button>
-                        )
+                    action: {
+                        condition: subResource.condition,
+                        label: subResource.label
                     },
-                    visibility: subResource.condition
+                    actionKey: subResourceKey,
+                    onClick(row) {
+                        if (row) {
+                            navigate(replacePathParameters(subResourceKey, row))
+                        }
+                    }
                 })
             }
         }
@@ -411,12 +201,15 @@ const useListPage = ({
             for (const listItemActionKey in state.listItemActions) {
                 const action = state.listItemActions[listItemActionKey];
                 if (action) {
-                    rowActionButtonList.push(getRowActionButton(listItemActionKey, action))
+                    rowActionButtonList.push({
+                        action,
+                        actionKey: listItemActionKey,
+                    })
                 }
             }
         }
         return rowActionButtonList;
-    }, [ state.subResources, state.listItemActions ]);
+    }, [ state.subResources, state.listItemActions, navigate ]);
 
     const handleInteract = (payload: ITableInteraction) => {
         const { state: payloadState } = payload;
@@ -431,117 +224,6 @@ const useListPage = ({
         })
     }
 
-    React.useEffect(() => {
-        if (state.listActionValues && state.activeListAction) {
-            const submit = async () => {
-                if (state.activeListAction?.action !== true) {
-                    const { data } = await axios<IResponse<unknown>>({
-                        url: replacePathParameters(state.activeListAction?.action.api?.uri ?? '', pathParameter),
-                        method: state.activeListAction?.action.api?.method,
-                        data: state.listActionValues
-                    });
-                    if (data.success) {
-                        dispatch({ type: 'HANDLE_ACTION_COMPLETE' })
-                        void fetchData()
-                    }
-                }
-            }
-            void submit();
-        }
-    }, [state.listActionValues]);
-
-    const getListAction = (key: ListActionKey, action: ListAction): React.ReactNode => {
-        let icon: React.ReactNode;
-        let label: React.ReactNode;
-        let actionFn: undefined | (() => void);
-        switch(key) {
-            case 'create': {
-                icon = <IconFilePlus size={16}/>;
-                label = t('create', { ns: 'common' });
-                actionFn = () => {
-                    navigate(pathname + '/new');
-                }
-                break;
-            }
-            default: {
-                // icon = logic to get icon
-                label = action === true ? undefined : action.label;
-                if (action !== true && action.api) {
-                    actionFn = async () => {
-
-                        const onConfirm = async () => {
-                            const { data } = await axios<IResponse<any>>({
-                                url: action.api?.uri,
-                                method: action.api?.method
-                            });
-                            if (data.success) {
-                                showMessage(t('success', { ns: 'common' }), 'green');
-                                void fetchData();
-                            }
-                        }
-                        if (action.confirmation) {
-                            confirmModal({
-                                title: '',
-                                children: action.confirmation.dialogText,
-                                labels: {
-                                    confirm: action.confirmation.buttonText,
-                                    cancel: t('cancel', { ns: 'common' })
-                                },
-                                confirmProps: {
-                                    color: 'blue',
-                                },
-                                onConfirm
-                            })
-                        } else {
-                            void onConfirm();
-                        }
-                    }
-                }
-                break;
-            }
-        }
-        return (
-            <Button
-                key={key}
-                radius={'md'}
-                leftIcon={icon}
-                onClick={() => {
-                    if (action !== true && action.api) {
-                        dispatch({
-                            type: 'UPDATE_ACTIVE_LIST_ACTION',
-                            payload: {
-                                action,
-                                key
-                            }
-                        })
-                    }
-                    // if (typeof actionFn === 'function') {
-                    //     actionFn();
-                    // } else {
-                    //     if (action !== true) {
-                    //         if (action.confirmation) {
-                    //             confirmModal({
-                    //                 title: '',
-                    //                 children: action.confirmation.dialogText,
-                    //                 labels: {
-                    //                     confirm: action.confirmation.buttonText ?? 'confirm',
-                    //                     cancel: t('cancel', { ns: 'common' })
-                    //                 },
-                    //                 async onConfirm() {
-                    //                     typeof actionFn === 'function' && actionFn();
-                    //                     actionFn = undefined;
-                    //                 }
-                    //             })
-                    //         }
-                    //     }
-                    // }
-                }}
-            >
-                {label}
-            </Button>
-        );
-    }
-
     const listActionButtons: React.ReactNode = React.useMemo(() => {
         const buttonList: React.ReactNode[] = [];
 
@@ -549,7 +231,13 @@ const useListPage = ({
             for (const listActionKey in state.listActions) {
                 const listAction = state.listActions[listActionKey];
                 if (listAction) {
-                    buttonList.push(getListAction(listActionKey, listAction))
+                    buttonList.push(
+                        <ActionButton
+                            key={listActionKey}
+                            actionKey={listActionKey}
+                            action={listAction}
+                        />
+                    )
                 }
             }
         }

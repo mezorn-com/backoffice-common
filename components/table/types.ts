@@ -1,6 +1,8 @@
+import type { ReactNode } from 'react';
 import type { Action, IRowActionButton } from '@/backoffice-common/hooks/useListPage';
 import { IListState } from '@/backoffice-common/types/common/list';
 import { Dispatch } from 'react';
+import { ActionButtonProps } from '@/backoffice-common/components/common/action-button';
 
 export interface ITableState {
     page: number;
@@ -17,7 +19,7 @@ export interface ITableInteraction {
 
 export interface ITableProps {
     onInteract: (state: ITableInteraction) => void;
-    rowActionButtons?: IRowActionButton[];
+    rowActionButtons?: ActionButtonProps[];
     rowActionButtonPosition?: 'left' | 'right';
     state: IListState;
     pageSizes?: number[];

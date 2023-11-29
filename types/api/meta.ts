@@ -49,23 +49,23 @@ interface Invokable {
     api?: {
         uri: string
         method: Method;
-        form: Form;
+        form?: Form;
     }
 }
 
 export type ListItemActionKey =  'update' | 'delete' | 'get' | string;
-export type ListItemAction = true | WithCondition & Confirmable & Invokable & WithIcon & WithLabel
 
 export type ListActionKey = 'create' | string;
-export type ListAction = true | WithCondition & Confirmable & Invokable & WithIcon & WithLabel;
+
+export type ItemAction = true | (WithCondition & Confirmable & Invokable & WithIcon & WithLabel);
 
 export type BulkAction = Invokable & WithLabel & Confirmable;
 
 export interface IListMetaResponse {
     form: Form;
     subResources: SubResources;
-    listActions: Partial<Record<ListActionKey, ListAction>>;
-    listItemActions: Partial<Record<ListItemActionKey, ListItemAction>>;
+    listActions: Partial<Record<ListActionKey, ItemAction>>;
+    listItemActions: Partial<Record<ListItemActionKey, ItemAction>>;
     filter?: INormalField[];
     bulkItemActions: Record<string, BulkAction>;
 }
@@ -79,7 +79,7 @@ export interface Form {
 export interface IFormMetaResponse {
     form: Form;
     subResources?: SubResources;
-    actions?: Record<MetaType | string, ListAction>;
+    actions?: Record<MetaType | string, ItemAction>;
 }
 
 export type MetaType =

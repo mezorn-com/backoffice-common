@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import * as icons from '@/lib/icons/common';
 import { replacePathParameters } from '@/backoffice-common/utils';
 import { useConfirmModal, usePathParameter } from '@/backoffice-common/hooks';
+import { last } from 'ramda';
 
 export interface ActionButtonProps {
 	data?: Record<string, unknown>;
@@ -86,8 +87,10 @@ const ActionButton = ({
 					if (data) {
 						let editPath: string;
 						const { _id } = data;
-						if (pathname.endsWith('/')) {
-							editPath = `${pathname}${_id}/edit`;
+						const currentPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+						const currentPathParts = currentPath.split('/');
+						if (_id && last(currentPathParts) === _id) {
+							editPath = `${pathname}/edit`;
 						} else {
 							editPath = `${pathname}/${_id}/edit`;
 						}
@@ -114,7 +117,17 @@ const ActionButton = ({
 
 				actionFn = async () => {
 					if (data) {
-						const { data: responseData } = await axios.delete<IResponse<any>>(`/api${pathname}/${data._id}`);
+						let deletePath: string;
+						const { _id } = data;
+						const currentPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+						const currentPathParts = currentPath.split('/');
+						if (_id && last(currentPathParts) === _id) {
+							deletePath = `${pathname}`;
+						} else {
+							deletePath = `${pathname}/${_id}`;
+						}
+
+						const { data: responseData } = await axios.delete<IResponse<any>>(`/api${deletePath}`);
 						if (responseData.success) {
 							showMessage(t('success', { ns: 'common' }), 'green');
 							// TODO: update logic

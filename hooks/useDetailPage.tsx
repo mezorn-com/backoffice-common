@@ -1,24 +1,12 @@
 import * as React from 'react';
-import { IFormField } from '@/backoffice-common/types/form';
-import {
-    IFormMetaResponse,
-    ItemAction,
-    ListActionKey,
-    MetaType,
-    SubResources
-} from '@/backoffice-common/types/api/meta';
-import { getMeta } from '@/backoffice-common/utils';
+import type { IFormField } from '@/backoffice-common/types/form';
+import type { IFormMetaResponse, ItemAction, MetaType, SubResources } from '@/backoffice-common/types/api/meta';
+import { getMeta, replacePathParameters } from '@/backoffice-common/utils';
 import axios from 'axios';
-import { IResponse } from '@/backoffice-common/types/api';
-import { ActionIcon, Button } from '@mantine/core';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
-import { showMessage } from '@/backoffice-common/lib/notification';
-import { useTranslation } from 'react-i18next';
-import { last } from 'ramda';
-import { getSubResourceUrl } from '@/backoffice-common/utils/route';
-import { actionColors } from '@/backoffice-common/utils/styles';
-import { useConfirmModal } from '@/backoffice-common/hooks/useConfirmModal';
+import type { IResponse } from '@/backoffice-common/types/api';
+import { useNavigate } from 'react-router-dom';
+import ActionButton from '@/backoffice-common/components/common/action-button';
+import { usePathParameter } from '@/backoffice-common/hooks/usePathParameter';
 
 interface IConfig {
     apiRoute: string;
@@ -33,8 +21,6 @@ export interface IDetailPageState {
     actions?: Record<MetaType | string, ItemAction>;
 }
 
-const ICON_SIZE = 18;
-
 const useDetailPage = ({
     apiRoute,
     id
@@ -48,16 +34,13 @@ const useDetailPage = ({
         actions: undefined,
     });
 
-    const { t } = useTranslation();
-    const { pathname } = useLocation();
     const navigate = useNavigate();
-    const confirmModal = useConfirmModal()
+    const pathParameter = usePathParameter();
 
     React.useEffect(() => {
         const fetchData = async () => {
             void fetchDetails();
             const data = await getMeta<IFormMetaResponse>(apiRoute, 'get', { resourceId: id });
-            // console.log('data>>>>', data);
             setState(prev => ({
                 ...prev,
                 details: data.form.fields,
@@ -77,153 +60,22 @@ const useDetailPage = ({
         }))
     }
 
-    const getAction = (key: ListActionKey, action: ItemAction): React.ReactNode => {
-        let icon: React.ReactNode;
-        let label: React.ReactNode = action === true ? undefined : action.label;
-        let actionFn: undefined | (() => void);
-        switch(key) {
-            case 'update': {
-                icon = <IconEdit size={ICON_SIZE}/>;
-
-                actionFn = () => {
-                    let editPath: string;
-                    if (pathname.endsWith('/')) {
-                        editPath = `${pathname}edit`;
-                    } else {
-                        editPath = `${pathname}/edit`;
-                    }
-                    navigate(editPath);
-                }
-                break;
-            }
-            case 'delete': {
-                icon = <IconTrash size={ICON_SIZE}/>;
-
-                actionFn = () => {
-                    confirmModal({
-                        async onConfirm() {
-                            const id = last(pathname.split('/'));
-                            const { data } = await axios.delete<IResponse<any>>(`${apiRoute}/${id}`);
-                            if (data.success) {
-                                showMessage(t('success', { ns: 'common' }), 'green');
-                            }
-                        }
-                    })
-                    // openConfirmModal({
-                    //     title: t('delete.modalTitle', { ns: 'common' }),
-                    //     children: t('delete.description', { ns: 'common' }),
-                    //     labels: {
-                    //         confirm: t('delete.title', { ns: 'common' }),
-                    //         cancel: t('cancel', { ns: 'common' })
-                    //     },
-                    //     confirmProps: {
-                    //         color: 'red',
-                    //     },
-                    //     async onConfirm() {
-                    //         const id = last(pathname.split('/'));
-                    //         const { data } = await axios.delete<IResponse<any>>(`${apiRoute}/${id}`);
-                    //         if (data.success) {
-                    //             showMessage(t('success', { ns: 'common' }), 'green');
-                    //             // void fetchData();
-                    //         }
-                    //     }
-                    // })
-                }
-                break;
-            }
-        }
-
-        if (action !== true && action.api) {
-            actionFn = async () => {
-                const { data } = await axios<IResponse<any>>({
-                    url: action.api?.uri,
-                    method: action.api?.method
-                });
-                if (data.success) {
-                    showMessage(t('success', { ns: 'common' }), 'green');
-                    // void fetchData();
-                }
-            }
-        }
-
-        const handler = () => {
-            if (typeof actionFn === 'function') {
-                actionFn();
-            } else {
-                if (action !== true) {
-                    if (action.confirmation) {
-                        confirmModal({
-                            title: '',
-                            children: action.confirmation.dialogText,
-                            labels: {
-                                confirm: action.confirmation.buttonText ?? 'confirm',
-                                cancel: t('cancel', { ns: 'common' })
-                            },
-                            async onConfirm() {
-                                typeof actionFn === 'function' && actionFn();
-                                actionFn = undefined;
-                            }
-                        })
-                        // openConfirmModal({
-                        //     title: '',
-                        //     children: action.confirmation.dialogText,
-                        //     labels: {
-                        //         confirm: action.confirmation.buttonText ?? 'confirm',
-                        //         cancel: t('cancel', { ns: 'common' })
-                        //     },
-                        //     async onConfirm() {
-                        //         typeof actionFn === 'function' && actionFn();
-                        //         actionFn = undefined;
-                        //     }
-                        // })
-                    }
-                }
-            }
-        }
-
-        let element = (
-            <Button
-                onClick={handler}
-                leftIcon={icon}
-            >
-                {label}
-            </Button>
-        )
-
-        if (!label) {
-            element = (
-                <ActionIcon
-                    variant='filled'
-                    color={actionColors[key]}
-                    onClick={handler}
-                >
-                    {icon}
-                </ActionIcon>
-            )
-        }
-
-        return element;
-    }
-
     const actionButtons: React.ReactNode = React.useMemo(() => {
         const buttonList: React.ReactNode[] = [];
-
 
         for (const subResourceKey in state.subResources) {
             const subResource = state.subResources[subResourceKey];
             if (subResource) {
                 buttonList.push((
-                    <Button
-                        compact
-                        component={Link}
-                        to={getSubResourceUrl(subResourceKey, [
-                            { match: '{_id}', replace: id },
-                        ])}
-                        radius={'sm'}
-                        variant={'light'}
-                    >
-                        {subResource.label}
-                    </Button>
+                    <ActionButton
+                        key={subResourceKey}
+                        actionKey={subResourceKey}
+                        action={subResource}
+                        onClick={() => {
+                            navigate(replacePathParameters(subResourceKey, pathParameter))
+                        }}
+                        data={state.values}
+                    />
                 ))
             }
         }
@@ -232,13 +84,20 @@ const useDetailPage = ({
             for (const actionKey in state.actions) {
                 const action = state.actions[actionKey];
                 if (action) {
-                    buttonList.push(getAction(actionKey, action))
+                    buttonList.push(
+                        <ActionButton
+                            key={actionKey}
+                            actionKey={actionKey}
+                            action={action}
+                            data={state.values}
+                        />
+                    )
                 }
             }
         }
 
         return buttonList;
-    }, [ state.actions ]);
+    }, [ state.actions, state.subResources, navigate, pathParameter, state.values ]);
 
     return {
         state,

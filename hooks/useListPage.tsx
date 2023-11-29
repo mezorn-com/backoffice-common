@@ -185,7 +185,8 @@ const useListPage = ({
                 rowActionButtonList.push({
                     action: {
                         condition: subResource.condition,
-                        label: subResource.label
+                        label: subResource.label,
+                        icon: subResource.icon
                     },
                     actionKey: subResourceKey,
                     onClick(row) {

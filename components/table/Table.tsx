@@ -111,6 +111,8 @@ const Table = ({
         return cols;
     }, [ externalState.columns, rowActionButtons, externalState.docs.length, rowActionButtonPosition ]);
 
+    console.log('externalState.page>>>>', externalState.page);
+
     const table = useReactTable({
         data: externalState.docs,
         columns: tableColumns,
@@ -136,6 +138,12 @@ const Table = ({
                     return renderField(meta.field, props.getValue(), props.row.original)
                 }
                 return props.renderValue();
+            }
+        },
+        state: {
+            pagination: {
+                pageIndex: externalState.page - 1,
+                pageSize: externalState.pageSize,
             }
         },
         manualPagination: true,
@@ -196,8 +204,8 @@ const Table = ({
             },
             filter: state.filter,
             ...value,
-        }
-        onInteract(params)
+        };
+        onInteract(params);
     }
 
     const handleFilterChange = (values: IFormValues) => {

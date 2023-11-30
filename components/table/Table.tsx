@@ -54,6 +54,8 @@ import { IResponse } from '@/backoffice-common/types/api';
 import { IconAdjustments, IconDots } from '@tabler/icons-react';
 import { replacePathParameters } from '@/backoffice-common/utils';
 import RowActionButtons from './components/row-action-buttons';
+import { showMessage } from '@/backoffice-common/lib/notification';
+import { useTranslation } from 'react-i18next';
 
 // compare 2 objects' given props values.
 const check = allPass([
@@ -75,6 +77,7 @@ const Table = ({
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
     const columnObserverRef = React.useRef<ResizeObserver | null>(null);
+    const { t } = useTranslation();
 
     const pathParameter = usePathParameter();
     const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
@@ -257,6 +260,7 @@ const Table = ({
                                 type: 'HANDLE_ROW_SELECT_CHANGE',
                                 payload: []
                             })
+                            showMessage(t('success', { ns: 'common' }), 'green');
                         }
                     }}
                 />

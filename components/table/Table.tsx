@@ -111,13 +111,14 @@ const Table = ({
         return cols;
     }, [ externalState.columns, rowActionButtons, externalState.docs.length, rowActionButtonPosition ]);
 
-    console.log('externalState.page>>>>', externalState.page);
-
     const table = useReactTable({
         data: externalState.docs,
         columns: tableColumns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        getRowId(originalRow) {
+            return originalRow._id as string;
+        },
         initialState: {
             pagination: {
                 pageSize: externalState.pageSize,

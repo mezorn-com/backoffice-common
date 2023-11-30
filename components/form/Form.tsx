@@ -69,7 +69,7 @@ const Form = ({
 	}, [form.values]);
 
 	// console.log('form initial Values>>>>', getFormInitialValues(fields, values));
-	console.log('FORM VALUES>>>>', form.values);
+	// console.log('FORM VALUES>>>>', form.values);
 
 	const handleError = (validationErrors: any, _values: any, _event: any) => {
 		console.log('Form Error>>>', { validationErrors, _values: _values, _event: _event });

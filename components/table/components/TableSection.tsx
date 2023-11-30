@@ -102,6 +102,8 @@ const TableSection = ({
         }
     }
 
+    console.log('table>>>>', table.getSelectedRowModel())
+
     const renderCheckBox = (row: Row<ListDoc> | HeaderGroup<ListDoc>): React.ReactNode => {
         if (section !== TableSectionType.CENTER || !rowSelect) {
             return null;

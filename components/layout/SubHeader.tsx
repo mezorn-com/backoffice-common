@@ -47,12 +47,13 @@ const SubHeader = ({
                             onClick={goBack}
                             leftIcon={<IconChevronLeft size={16}/>}
                             variant={'light'}
+                            size='xs'
                         >
                             {t('back', { ns: 'common' })}
                         </Button>
                     )
                 }
-                <Title>
+                <Title size={'h2'}>
                     {title}
                 </Title>
             </Flex>

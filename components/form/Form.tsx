@@ -5,7 +5,6 @@ import {
 	Button,
 	Card,
 	Checkbox,
-	FileInput,
 	Flex,
 	NumberInput,
 	PasswordInput,
@@ -257,7 +256,7 @@ const Form = ({
 		const props: any = {
 			key: valueKey,
 			label: field.label ?? '-',
-			size: 'sm',
+			size: direction === 'row' ? 'xs' : 'sm',
 			autoComplete: 'off',
 			withAsterisk: isFieldRequired(field, fields, form.values),
 			...form.getInputProps(valueKey, {

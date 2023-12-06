@@ -150,7 +150,13 @@ export const getCellObserver = () => {
         let columnSizes: ColumnSize[] = [];
 
         // TODO: Remove nested parent selector
-        const tableElement = entries[0].target.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement;
+        let tableElement: HTMLElement | null | undefined;
+        for (const entry of entries) {
+            tableElement = entry.target.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement
+            if (tableElement) {
+                break;
+            }
+        }
 
         if (tableElement) {
             const center = tableElement.children[1];

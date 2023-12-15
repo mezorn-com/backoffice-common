@@ -1,65 +1,10 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Collapse, createStyles, Group, rem, UnstyledButton } from '@mantine/core';
+import { Box, Collapse, Group, UnstyledButton } from '@mantine/core';
 import { IconChevronRight } from '@tabler/icons-react';
 import * as icons from '@/lib/icons/common';
-
-interface StyleParams {
-    isActive: boolean;
-    hasLinks: boolean;
-}
-
-const useStyles = createStyles((theme, { isActive, hasLinks }: StyleParams) => {
-    return {
-        control: {
-            fontWeight: 500,
-            display: 'block',
-            width: '100%',
-            padding: `${theme.spacing.xs} ${theme.spacing.md}`,
-            color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-            fontSize: theme.fontSizes.sm,
-            background: isActive && !hasLinks ? theme.colors.gray[1] : undefined,
-
-            '&:hover': {
-                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-                color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-            },
-        },
-        link: {
-            fontWeight: 500,
-            display: 'block',
-            textDecoration: 'none',
-            padding: `${theme.spacing.xs} ${theme.spacing.md}`,
-            paddingLeft: rem(31),
-            marginLeft: rem(30),
-            fontSize: theme.fontSizes.sm,
-            color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
-            borderLeft: `${rem(1)} solid ${
-                theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
-            }`,
-
-            '&:hover': {
-                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-                color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-            },
-        },
-
-        chevron: {
-            transition: 'transform 200ms ease',
-        },
-        label: {
-            display: 'flex',
-            alignItems: 'center',
-            color: isActive ? theme.colors[theme.primaryColor] : undefined,
-        },
-        children: {
-            marginLeft: '1rem',
-            borderLeftWidth: 1,
-            borderLeftStyle: 'solid',
-            borderColor: theme.colors.gray[3]
-        }
-    }}
-);
+import classes from './NavbarItem.module.scss';
+import { clsx } from 'clsx';
 
 interface IProps {
     children?: React.ReactNode[];
@@ -79,7 +24,6 @@ const NavbarItem = ({
 
     const hasLinks = !!children?.length;
     const navigate =  useNavigate();
-    const { classes, theme } = useStyles({ isActive: !!isActive, hasLinks });
     const [ opened, setOpened ] = React.useState(false);
 
     React.useEffect(() => {
@@ -98,7 +42,7 @@ const NavbarItem = ({
         if (!icon) {
             return null;
         }
-        // @ts-ignore
+        // @ts-expect-error
         const Icon = icons['Icon' + icon];
         if (!Icon) {
             return null;
@@ -106,16 +50,24 @@ const NavbarItem = ({
         return (
             <Icon size="1.1rem" stroke={1.5}/>
         )
-    }, [ icon ])
+    }, [ icon ]);
 
     return (
         <>
             <UnstyledButton
                 onClick={handleClick}
-                className={classes.control}
+                className={clsx({
+                    [classes.control]: true,
+                    [classes.active]: isActive
+                })}
             >
-                <Group position="apart" spacing={0}>
-                    <Box className={classes.label}>
+                <Group justify='space-between' style={{ flexWrap: 'nowrap' }}>
+                    <Box
+                         className={clsx({
+                             [classes.label]: true,
+                             [classes.active]: isActive
+                         })}
+                    >
                         {menuIcon}
                         <Box ml="md">{label}</Box>
                     </Box>

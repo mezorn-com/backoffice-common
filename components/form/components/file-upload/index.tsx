@@ -48,6 +48,7 @@ const FileUpload = ({
             <FileInput
                 {...props}
                 mb='xs'
+                // @ts-expect-error
                 placeholder='Хуулах...'
             />
             {previewFile()}

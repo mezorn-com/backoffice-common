@@ -1,11 +1,11 @@
 import React from 'react';
-import { Footer as MantineFooter } from '@mantine/core';
+import { AppShell } from '@mantine/core';
 
 const Footer = () => {
     return (
-        <MantineFooter height={60} p="md">
+        <AppShell.Footer p='md'>
             Application footer
-        </MantineFooter>
+        </AppShell.Footer>
     );
 };
 

@@ -1,0 +1,28 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+};
+
+.modal {
+    height: 100%;
+};
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--mantine-spacing-xs);
+};
+
+.footer {
+    margin-top: var(--mantine-spacing-xs);
+    text-align: right;
+};
+
+.map {
+    flex: 1;
+    border: 1px solid;
+    border-color: var(--mantine-color-gray-5);
+    border-radius: var(--mantine-radius-md);
+}

@@ -1,0 +1,45 @@
+.inputWrapper {
+    border: 1px solid var(--mantine-color-gray-3);
+    border-radius: var(--mantine-radius-sm);
+    padding: .4rem .8rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3px;
+    &:focus-within {
+        border-color: var(--mantine-primary-color-6);
+    };
+};
+
+.dropdown {
+    max-height: 500px;
+    overflow-y: auto;
+};
+
+.selectedItem {
+    word-break: keep-all;
+    white-space: nowrap;
+    color: var(--mantine-color-black);
+    margin: var(--mantine-spacing-xs);
+    border: 1px solid var(--mantine-color-gray-2);
+    font-size: 13px;
+    cursor: pointer !important;
+    z-index: 12500;
+};
+
+.input {
+    border: 0;
+    outline: none;
+    flex: 1;
+    padding-left: var(--mantine-spacing-md);
+};
+
+.icon {
+    display: grid;
+    place-items: center;
+};
+
+.buttonInner {
+    justify-content: flex-start;
+    color: var(--mantine-color-black);
+}

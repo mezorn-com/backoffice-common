@@ -1,0 +1,11 @@
+.container {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+};
+
+.burger {
+    @media (min-width: $mantine-breakpoint-md) {
+        display: none;
+    }
+}

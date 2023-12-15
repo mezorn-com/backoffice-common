@@ -13,8 +13,8 @@ import {
 	Textarea,
 	TextInput,
 	Title,
-	ButtonProps,
-	MultiSelect
+	type ButtonProps,
+	MultiSelect, Fieldset
 } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, UiType } from '@/backoffice-common/types/form';
@@ -26,10 +26,12 @@ import { DatePickerInput, TimeInput, DateTimePicker, YearPickerInput } from '@ma
 import { IconMinus, IconPlus } from '@tabler/icons-react';
 import { clone, omit } from 'ramda';
 import dayjs from 'dayjs';
-import { useFormStyles } from './styles';
+import classes from './Form.module.scss';
 import { useTranslation } from 'react-i18next';
-import { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
+import type { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
 import { useLocation } from 'react-router-dom';
+
+// TODO: code splitting
 
 interface IFormProps {
 	fields: IFormField[];
@@ -51,7 +53,6 @@ const Form = ({
 	direction = 'column'
 }: IFormProps) => {
 	const { t } = useTranslation();
-	const { classes } = useFormStyles();
 	const { pathname } = useLocation();
 
 	const form = useForm<IFormValues>({
@@ -60,13 +61,8 @@ const Form = ({
 		validate(values) {
 			return validator(fields, values);
 		},
+		onValuesChange: onChange
 	});
-
-	React.useEffect(() => {
-		if (onChange) {
-			onChange(form.values);
-		}
-	}, [form.values]);
 
 	// console.log('form initial Values>>>>', getFormInitialValues(fields, values));
 	// console.log('FORM VALUES>>>>', form.values);
@@ -121,7 +117,7 @@ const Form = ({
 									</ActionIcon>
 									<Title
 										order={6}
-										weight={600}
+										style={{ fontWeight: 600 }}
 									>
 										{field.label}
 									</Title>
@@ -189,37 +185,10 @@ const Form = ({
 				});
 
 				return (
-					<Card
-						key={groupPath}
-						shadow='xs'
-						padding='md'
-						radius='md'
-						withBorder
-						mt='xs'
-						className={classes.card}
-					>
-						{field.label && (
-							<Card.Section
-								inheritPadding
-								withBorder
-								py='xs'
-							>
-								<Title
-									order={6}
-									weight={600}
-								>
-									{field.label}
-								</Title>
-							</Card.Section>
-						)}
-						<Card.Section
-							inheritPadding
-							py='md'
-						>
-							{fieldClone.map(getFormField)}
-						</Card.Section>
-					</Card>
-				);
+					<Fieldset key={groupPath} legend={field.label} >
+						{fieldClone.map(getFormField)}
+					</Fieldset>
+				)
 			}
 			case FieldType.GROUP: {
 				let groupPath = field.groupPath ?? '';
@@ -290,7 +259,6 @@ const Form = ({
 							{...props}
 							autoComplete='off'
 							precision={10}
-							removeTrailingZeros
 						/>
 					);
 				}

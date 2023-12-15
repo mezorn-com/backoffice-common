@@ -56,7 +56,7 @@ const ChangePassword = ({
                     {...form.getInputProps('confirmPassword')}
                 />
 
-                <Group position="right" mt="md">
+                <Group justify='flex-end' mt="md">
                     <Button type="submit">{t('action.submit', { ns: 'common' })}</Button>
                 </Group>
             </form>

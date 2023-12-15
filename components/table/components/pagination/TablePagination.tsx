@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ActionIcon, NumberInput, Select } from '@mantine/core';
 import { IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight } from '@tabler/icons-react';
-import { useStyles } from './useStyles';
+import classes from './Pagination.module.scss';
 
 interface TablePaginationProps {
     canPreviousPage: boolean;
@@ -28,8 +28,6 @@ const TablePagination = ({
     onPreviousPage,
     pageSizes
 }: TablePaginationProps) => {
-
-    const { classes } = useStyles();
 
     return (
         <div className={classes.pagination}>
@@ -70,7 +68,7 @@ const TablePagination = ({
             <div className={classes.totalPage}>
                 Page
                 <NumberInput
-                    type="number"
+                    type='text'
                     value={page}
                     onChange={value => {
                         const page = value ? Number(value) : 0;

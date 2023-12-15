@@ -1,26 +1,11 @@
 import * as React from 'react';
-import { Button, createStyles, Text } from '@mantine/core';
+import { Button, Text } from '@mantine/core';
 import { IconHome, IconReload } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-
-const useStyles = createStyles((theme) => {
-    return {
-        body: {
-            height: '100vh',
-            display: 'grid',
-            placeItems: 'center',
-            background: theme.colors.cyan[0]
-        },
-        buttons: {
-            display: 'flex',
-            gap: '1rem',
-        }
-    }
-})
+import classes from './Error.module.scss';
 
 const ErrorPage = () => {
 
-    const { classes } = useStyles();
     const { t } = useTranslation();
 
     const handleReload = () => {
@@ -40,14 +25,14 @@ const ErrorPage = () => {
                 <div className={classes.buttons}>
                     <Button
                         color='yellow'
-                        leftIcon={<IconReload/>}
+                        leftSection={<IconReload/>}
                         onClick={handleReload}
                     >
                         {t('action.reload', { ns: 'common' })}!
                     </Button>
                     <Button
                         color='cyan'
-                        leftIcon={<IconHome/>}
+                        leftSection={<IconHome/>}
                         onClick={handleBackHome}
                     >
                         {t('action.backHome', { ns: 'common' })}!

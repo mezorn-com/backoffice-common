@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { ListActionKey, ListItemActionKey, ItemAction } from '@/backoffice-common/types/api/meta';
 import { actionColors } from '@/backoffice-common/utils/styles';
-import type { OpenConfirmModal } from '@mantine/modals/lib/context';
+import { OpenConfirmModal } from '@mantine/modals/lib/context';
 import type { TablerIconsProps } from '@tabler/icons-react';
 import axios from 'axios';
 import type { IResponse } from '@/backoffice-common/types/api';
@@ -218,9 +218,9 @@ const ActionButton = ({
 
 		return (
 			<Button
-				compact
+				size='compact-md'
 				variant='light'
-				leftIcon={Icon ? <Icon size={ICON_SIZE} color={theme.colors[color][primaryShade]}/> : undefined}
+				leftSection={Icon ? <Icon size={ICON_SIZE} color={theme.colors[color][primaryShade]}/> : undefined}
 				onClick={() => handler()}
 				color={color}
 			>

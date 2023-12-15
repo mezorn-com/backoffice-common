@@ -1,0 +1,9 @@
+.container {
+    display: flex;
+    align-items: flex-end;
+    height: fit-content;
+    border-bottom: 1px solid var(--mantine-color-gray-3);
+    &:last-of-type {
+        border-bottom-width: 0;
+    };
+};

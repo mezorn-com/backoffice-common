@@ -4,10 +4,10 @@ import { useDebouncedValue, useElementSize } from "@mantine/hooks";
 import axios from "axios";
 import qs from "qs";
 import { IconSearch, IconX } from "@tabler/icons-react";
-import { useStyles } from './styles';
 import type { IResponse } from '@/backoffice-common/types/api';
 import { FormLabel } from '@/backoffice-common/components/form/components';
 import { clone } from 'ramda';
+import classes from './SearchableSelect.module.scss';
 
 interface Option {
     label: string;
@@ -50,7 +50,6 @@ const SearchableSelect = ({
 }: Props) => {
 
     const { ref, width } = useElementSize();
-    const { classes } = useStyles();
     const inputRef = React.useRef<HTMLInputElement>(null);
 
     const [ searchValue, setSearchValue ] = React.useState('');

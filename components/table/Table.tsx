@@ -1,11 +1,11 @@
 import * as React from 'react';
 import type { ITableInteraction, ITableProps, ITableState } from './types';
 import { TableSectionType } from './types';
-import { useStyles } from './useStyles';
 import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
 import TableSection from './components/TableSection';
 import { getCellObserver } from './utils';
 import Form from '@/backoffice-common/components/form/Form';
+import classes from './Table.module.scss';
 
 // react-table props below
 // columnFilters: [],
@@ -73,7 +73,6 @@ const Table = ({
     pageSizes = [10, 20, 50],
     dispatch: dispatchExternalState
 }: ITableProps) => {
-    const { classes } = useStyles();
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
     const columnObserverRef = React.useRef<ResizeObserver | null>(null);
@@ -267,8 +266,8 @@ const Table = ({
                 <Menu shadow="md" width={200}>
                     <Menu.Target>
                         <Button
-                            leftIcon={<IconAdjustments size={18}/>}
-                            rightIcon={<IconDots size={18}/>}
+                            leftSection={<IconAdjustments size={18}/>}
+                            rightSection={<IconDots size={18}/>}
                             size='xs'
                             color={'yellow'}
                         />

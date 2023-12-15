@@ -1,0 +1,27 @@
+.bodyWrapper {
+    overflow: auto;
+    flex: 1;
+    padding: rem(15px);
+}
+
+.pageWrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    padding: rem(10px) rem(20px);
+    background-color: var(--mantine-color-gray-0);
+    border-bottom: 1px solid var(--mantine-color-gray-2);
+    align-items: center;
+};
+
+.pageChildren {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: rem(5px);
+}

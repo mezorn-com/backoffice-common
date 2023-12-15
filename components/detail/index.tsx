@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { path } from 'ramda';
-import { Anchor, createStyles, Flex, SimpleGrid } from '@mantine/core';
+import { Anchor, Flex, SimpleGrid } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, RenderType } from '@/backoffice-common/types/form';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { IDetailPageState } from '@/backoffice-common/hooks/useDetailPage';
 import { useRenderField } from '@/backoffice-common/hooks';
+import classes from './Detail.module.scss';
 
 interface IDetailProps {
 	id: string;
@@ -15,7 +16,6 @@ interface IDetailProps {
 }
 
 const Detail = ({ id, head, apiUrl, state: { values, details, actions } }: IDetailProps) => {
-	const { classes } = useStyles();
 	const renderField = useRenderField();
 
 	const getDetailValue = (field: IFormField, detailValues: Record<string, any>): React.ReactNode => {
@@ -71,46 +71,5 @@ const Detail = ({ id, head, apiUrl, state: { values, details, actions } }: IDeta
 		</div>
 	);
 };
-
-const useStyles = createStyles(theme => {
-	return {
-		grid: {
-			borderBottom: `1px solid ${theme.colors.gray[1]}`,
-			marginTop: theme.spacing.sm,
-		},
-		label: {
-			textAlign: 'right',
-			fontWeight: 700,
-			color: theme.colors.gray[6],
-			fontSize: 12,
-			textTransform: 'uppercase',
-		},
-		value: {
-			fontWeight: 600,
-			textAlign: 'left',
-		},
-		container: {
-			borderRadius: theme.radius.lg,
-			padding: '20px',
-			border: `1px solid ${theme.colors.gray[2]}`,
-			margin: '1rem',
-		},
-		group: {
-			borderWidth: 1,
-			borderStyle: 'solid',
-			borderColor: theme.colors.gray[1],
-			borderRadius: theme.radius.md,
-			marginTop: theme.spacing.md,
-			marginBottom: theme.spacing.md,
-			padding: theme.spacing.md,
-		},
-		table: {
-			width: '100%',
-			'tbody > tr > td': {
-				fontWeight: 400,
-			},
-		},
-	};
-});
 
 export default Detail;

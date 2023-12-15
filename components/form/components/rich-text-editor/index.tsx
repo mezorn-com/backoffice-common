@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { createStyles } from '@mantine/core';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { FormLabel } from '@/backoffice-common/components/form/components';
-import type { HtmlInput, IFormField } from '@/backoffice-common/types/form';
+import type { HtmlInput } from '@/backoffice-common/types/form';
+import classes from './RTE.module.scss';
 
 interface IProps {
     field: HtmlInput;
@@ -11,30 +11,11 @@ interface IProps {
     value: string | undefined;
 }
 
-const useStyles = createStyles((theme) => {
-    return {
-        editor: {
-            ' > div': {
-                '&.ql-toolbar': {
-                    borderTopLeftRadius: theme.radius.sm,
-                    borderTopRightRadius: theme.radius.sm,
-                },
-                '&.ql-container': {
-                    borderBottomLeftRadius: theme.radius.sm,
-                    borderBottomRightRadius: theme.radius.sm,
-                },
-            }
-        }
-    }
-})
-
 const FormRTE = ({
     field,
     onChange,
     value
 }: IProps) => {
-
-    const { classes } = useStyles();
 
     return (
         <>

@@ -1,16 +1,17 @@
 import * as React from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import { TextInput, Button, Modal, createStyles, Text } from '@mantine/core';
-import { IFormField, MapAddressPicker } from '@/backoffice-common/types/form';
-import { IResponse } from '@/backoffice-common/types/api';
+import { TextInput, Button, Modal, Text } from '@mantine/core';
+import { MapAddressPicker } from '@/backoffice-common/types/form';
+import type { IResponse } from '@/backoffice-common/types/api';
 import { INITIAL_ZOOM, MAP_STARTING_POINT, MAX_ZOOM, MIN_ZOOM } from '@/config';
 import { MapContainer, ZoomControl } from 'react-leaflet';
 import GoogleLayer from '@/backoffice-common/components/map/GoogleLayer';
 import Helper from '@/backoffice-common/components/form/components/map-address-picker/Helper';
-import { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
+import type { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
 import { IconSearch } from '@tabler/icons-react';
 import { FormLabel } from '@/backoffice-common/components/form/components';
+import classes from './MapAddressPicker.module.scss';
 
 interface IProps {
     field: MapAddressPicker;
@@ -38,62 +39,11 @@ interface IDetailResponseData {
     }
 }
 
-const useStyles = createStyles((theme) => {
-    return {
-        displayValue: {
-            fontWeight: 600,
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden'
-        },
-        buttonWrapper: {
-            display: 'flex',
-            gap: theme.spacing.sm,
-            alignItems: 'center',
-        },
-        search: {
-            display: 'flex',
-            width: '100%',
-            gap: theme.spacing.sm
-        },
-        input: {
-            flex: 1,
-        },
-        suggestions: {
-            maxHeight: 200,
-            overflowY: 'auto',
-            marginTop: '.5rem'
-        },
-        address: {
-            paddingLeft: theme.spacing.xs,
-            borderColor: theme.colors.gray[3],
-            borderStyle: 'solid',
-            borderWidth: 0,
-            display: 'list-item',
-            listStyleType: 'disc',
-            marginLeft: '1.3rem',
-            cursor: 'pointer',
-            '&:not(last-child)': {
-                borderBottomWidth: 1,
-            },
-            '&:hover': {
-                background: theme.colors.gray[1],
-            }
-        },
-        map: {
-            height: 600,
-            marginTop: '1rem',
-        }
-    }
-})
-
 const MapAddressPicker = ({
     field,
     onChange,
     value
 }: IProps) => {
-
-    const { classes } = useStyles();
 
     const [ showModal, setShowModal ] = React.useState(false);
     const [ searchValue, setSearchValue ] = React.useState('');
@@ -152,7 +102,7 @@ const MapAddressPicker = ({
                         </Text>
                     )
                 }
-                <Button onClick={() => setShowModal(true)} compact>
+                <Button onClick={() => setShowModal(true)} size='compact-md'>
                     Search Address
                 </Button>
             </div>
@@ -170,7 +120,7 @@ const MapAddressPicker = ({
                         onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                     />
                     <Button
-                        leftIcon={<IconSearch size='1rem'/>}
+                        leftSection={<IconSearch size='1rem'/>}
                         onClick={handleSearch}
                     >
                         Search

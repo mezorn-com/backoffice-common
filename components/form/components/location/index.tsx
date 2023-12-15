@@ -1,46 +1,18 @@
 import * as React from 'react';
 import { FormLabel } from '@/backoffice-common/components/form/components';
-import { Button, Modal, createStyles} from '@mantine/core';
+import { Button, Modal } from '@mantine/core';
 import { MapContainer } from 'react-leaflet';
 import { LatLngLiteral } from 'leaflet';
 import { MapHelper } from './MapHelper';
 import GoogleLayer from '@/backoffice-common/components/map/GoogleLayer';
 import { IconMapPin } from '@tabler/icons-react';
+import classes from './Location.module.scss';
 
 // const INITIAL_LOCATION: LatLngTuple = [47.9189, 106.9176];
 const INITIAL_LOCATION: LatLngLiteral = {
     lat: 47.9189,
     lng: 106.9176
 };
-
-const useStyles = createStyles((theme) => {
-    return {
-        wrapper: {
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%'
-        },
-        modal: {
-            height: '100%'
-        },
-        header: {
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: theme.spacing.xs
-        },
-        footer: {
-            marginTop: theme.spacing.xs,
-            textAlign: 'right'
-        },
-        map: {
-            flex: 1,
-            border: '1px solid',
-            borderColor: theme.colors.gray[5],
-            borderRadius: theme.radius.md,
-        }
-    }
-})
 
 interface LocationProps {
     value?: LatLngLiteral;
@@ -55,8 +27,6 @@ const Location = ({
     label,
     withAsterisk = false
 }: LocationProps) => {
-
-    const { classes } = useStyles();
 
     const [ open, setOpen ] = React.useState(false);
     const [ location, setLocation ] = React.useState<LatLngLiteral | undefined>(undefined);
@@ -87,8 +57,8 @@ const Location = ({
             />
             <Button
                 onClick={() => setOpen(true)}
-                leftIcon={<IconMapPin/>}
-                compact
+                leftSection={<IconMapPin/>}
+                size='compact-md'
             >
                 Сонгох
             </Button>

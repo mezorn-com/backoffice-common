@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Cell, flexRender, HeaderGroup, Row, Table } from '@tanstack/react-table';
 import { Checkbox, CheckboxProps } from '@mantine/core';
-import { useSectionStyles } from './useSectionStyles';
 import { ListDoc } from '@/backoffice-common/types/common/list';
 import TableRow from './Row';
 import { RowGroup, TableSectionType } from '../types';
 import ObservedCell from './ObservedCell';
 import Placeholder from './Placeholder';
+import { clsx } from 'clsx';
+import classes from './TableSection.module.scss';
 
 interface TableElementProps {
     section: TableSectionType,
@@ -46,10 +47,8 @@ const TableSection = ({
 }: TableElementProps) => {
     const flatHeaders = useSectionFlatHeaders(section, table);
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
-    const { classes } = useSectionStyles({
-        sectionType: section,
-        visible: section === TableSectionType.CENTER || flatHeaders.length > 0,
-    });
+
+    const visible = section === TableSectionType.CENTER || flatHeaders.length > 0;
 
     const getHeaderGroups = (): HeaderGroup<ListDoc>[] => {
         switch(section) {
@@ -138,7 +137,15 @@ const TableSection = ({
     }
 
     return (
-        <div className={classes.container}>
+        <div
+            className={clsx({
+                [classes.container]: true,
+                [classes.center]: section === TableSectionType.CENTER,
+                [classes.left]: section === TableSectionType.LEFT,
+                [classes.right]: section === TableSectionType.RIGHT,
+                [classes.visible]: visible
+            })}
+        >
             <div
                 className={classes.wrapper}
                 ref={section === TableSectionType.CENTER ? tablesContainerRef : undefined}

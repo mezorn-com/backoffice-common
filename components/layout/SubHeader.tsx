@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Button, createStyles, Flex, rem, Title } from '@mantine/core';
+import { Button, Flex, rem, Title } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { IconChevronLeft } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { last } from 'ramda';
+import classes from './Layout.module.scss';
 
 interface ISubHeaderProps {
     title?: string;
@@ -16,7 +17,6 @@ const SubHeader = ({
    backButton = true,
    children
 }: ISubHeaderProps) => {
-    const { classes } = useStyles();
     const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
@@ -45,7 +45,7 @@ const SubHeader = ({
                     backButton && (
                         <Button
                             onClick={goBack}
-                            leftIcon={<IconChevronLeft size={16}/>}
+                            leftSection={<IconChevronLeft size={16}/>}
                             variant={'light'}
                         >
                             {t('back', { ns: 'common' })}
@@ -56,30 +56,11 @@ const SubHeader = ({
                     {title}
                 </Title>
             </Flex>
-            <div className={classes.children}>
+            <div className={classes.pageChildren}>
                 {children}
             </div>
         </div>
     )
 };
-
-const useStyles = createStyles((theme) => {
-    return {
-        pageHeader: {
-            display: 'flex',
-            justifyContent: 'space-between',
-            padding: `${rem(10)} ${rem(20)}`,
-            backgroundColor: theme.colors.gray[0],
-            borderBottom: `1px solid ${theme.colors.gray[2]}`,
-            alignItems: 'center',
-        },
-        children: {
-            flex: 1,
-            display: 'flex',
-            justifyContent: 'flex-end',
-            gap: 5
-        }
-    }
-})
 
 export default SubHeader;

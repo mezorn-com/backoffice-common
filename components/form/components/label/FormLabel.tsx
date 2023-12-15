@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, TextProps } from '@mantine/core';
-import { useStyles } from './styles'
+import classes from './Label.module.scss';
 
 interface IProps extends TextProps {
     label?: string;
@@ -12,7 +12,6 @@ const FormLabel = ({
     withAsterisk = false,
     ...props
 }: IProps) => {
-    const { classes } = useStyles();
     return (
         <div className={classes.label}>
             {

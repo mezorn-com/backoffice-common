@@ -1,0 +1,50 @@
+.displayValue {
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+};
+
+.buttonWrapper {
+    display: flex;
+    gap: var(--mantine-spacing-sm);
+    align-items: center;
+};
+
+.search {
+    display: flex;
+    width: 100%;
+    gap: var(--mantine-spacing-sm);
+};
+
+.input {
+    flex: 1;
+};
+
+.suggestions {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: .5rem;
+};
+
+.address {
+    padding-left: var(--mantine-spacing-xs);
+    border-color: var(--mantine-color-gray-3);
+    border-style: solid;
+    border-width: 0;
+    display: list-item;
+    list-style-type: disc;
+    margin-left: 1.3rem;
+    cursor: pointer;
+    &:not(last-child) {
+        border-bottom-width: 1px;
+    };
+    &:hover {
+       background: var(--mantine-color-gray-1);
+    }
+};
+
+.map {
+    height: 600px;
+    margin-top: 1rem;
+}

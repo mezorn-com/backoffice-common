@@ -1,9 +1,10 @@
 import * as React from 'react';
 import axios from 'axios';
-import { MultiSelect, SelectItem, Loader, MultiSelectProps, Select } from '@mantine/core';
+import { MultiSelect,Loader, MultiSelectProps, Select, type ComboboxItem } from '@mantine/core';
 import type { ISelectOption, IResponse, IReference } from '@/backoffice-common/types/api';
 import { SelectValue, getTransformedValue } from './helper';
 import { GetInputProps } from '@mantine/form/lib/types';
+
 
 interface CommonProps {
     multiple?: boolean;
@@ -36,7 +37,7 @@ const FetchSelect = ({
 }: Props) => {
 
     const isFetchedRef = React.useRef<boolean | string>(false);
-    const [ options, setOptions ] = React.useState<SelectItem[]>([]);
+    const [ options, setOptions ] = React.useState<ComboboxItem[]>([]);
     const [ isLoading, setIsLoading ] = React.useState<boolean>(false);
 
     React.useEffect(() => {
@@ -85,7 +86,7 @@ const FetchSelect = ({
                 {...props}
                 clearable
                 data={options}
-                icon={isLoading && <Loader variant='oval' size='xs'/>}
+                leftSection={isLoading && <Loader variant='oval' size='xs'/>}
                 onChange={handleChange}
                 value={value}
                 maxDropdownHeight={undefined}
@@ -100,7 +101,7 @@ const FetchSelect = ({
             {...props}
             clearable
             data={options}
-            icon={isLoading && <Loader variant='oval' size='xs'/>}
+            leftSection={isLoading && <Loader variant='oval' size='xs'/>}
             onChange={handleChange}
             value={value ?? []}
         />

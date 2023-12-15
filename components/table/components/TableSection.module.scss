@@ -1,0 +1,45 @@
+.container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: 100%;
+    flex-direction: column;
+    display: none;
+};
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    width: fit-content;
+};
+
+.head {
+    background: var(--mantine-color-gray-2);
+    border-bottom: 1px solid var(--mantine-color-gray-2);
+};
+
+.visible {
+    display: flex;
+}
+
+.body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    &.center::-webkit-scrollbar {
+        width: 0;
+    };
+};
+
+.center {
+    flex: 1;
+}
+
+.right {
+    box-shadow: 10px 0 20px 5px #c7c7c7;
+}
+
+.left {
+
+}

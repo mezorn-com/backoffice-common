@@ -1,13 +1,11 @@
 import { FieldType, IFormField, RenderType } from '@/backoffice-common/types/form';
 import * as React from 'react';
-import { Anchor, createStyles, Flex } from '@mantine/core';
+import { Anchor, Flex } from '@mantine/core';
 import { IconCircleCheck, IconCircleX } from '@tabler/icons-react';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import ImagePreview from '@/backoffice-common/components/common/image-preview';
 
 export const useRenderField = () => {
-    const { classes } = useStyles();
-
     return (field: IFormField, value: unknown, data: Record<string, any>): React.ReactNode => {
         if (field.type !== FieldType.RENDER) {
             return null;
@@ -52,7 +50,7 @@ export const useRenderField = () => {
             }
             case RenderType.TABLE: {
                 return (
-                    <table className={classes.table}>
+                    <table style={{ width: '100%' }}>
                         <thead>
                         <tr>
                             {field.columns.map(column => {
@@ -65,7 +63,7 @@ export const useRenderField = () => {
                             return (
                                 <tr key={index}>
                                     {field.columns.map(column => {
-                                        return <td key={`${column.key}-${index}`}>{row?.[column.key] ?? '-'}</td>;
+                                        return <td key={`${column.key}-${index}`} style={{ fontWeight: 400 }}>{row?.[column.key] ?? '-'}</td>;
                                     })}
                                 </tr>
                             );
@@ -91,15 +89,4 @@ export const useRenderField = () => {
         }
         return null;
     }
-}
-
-const useStyles = createStyles(theme => {
-    return {
-        table: {
-            width: '100%',
-            'tbody > tr > td': {
-                fontWeight: 400,
-            },
-        },
-    };
-});
+};

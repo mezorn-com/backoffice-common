@@ -2,10 +2,6 @@ import { openConfirmModal } from '@mantine/modals';
 import { OpenConfirmModal } from '@mantine/modals/lib/context';
 import { useTranslation } from 'react-i18next';
 
-interface Config extends OpenConfirmModal {
-    // onConfirm: () => void;
-}
-
 export const useConfirmModal = () => {
     const { t } = useTranslation();
     return (config: OpenConfirmModal) => {

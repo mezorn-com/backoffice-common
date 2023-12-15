@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { SelectProps, Select } from '@mantine/core';
+import { SelectProps, Select, type ComboboxItem } from '@mantine/core';
 import { produce } from 'immer';
 import { clone } from 'ramda';
-import type { SelectItem } from '@mantine/core';
 import type { IReference } from '@/backoffice-common/types/api';
 
 export interface CascadingSelectProps extends Omit<SelectProps, 'data'> {
@@ -72,7 +71,7 @@ const CascadingSelect = ({
         }
     };
 
-    const formatToSelectData = (data: IReference[]): SelectItem[] => {
+    const formatToSelectData = (data: IReference[]): ComboboxItem[] => {
         const dataClone = clone(data);
         return dataClone.map(item => {
             return  {

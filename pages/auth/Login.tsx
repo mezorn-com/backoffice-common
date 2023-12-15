@@ -1,13 +1,14 @@
 import * as React from 'react';
 import axios from 'axios';
 import { useForm, hasLength } from '@mantine/form';
-import { Box, TextInput, Group, Button, Title, createStyles, Text, PasswordInput } from '@mantine/core';
+import { Box, TextInput, Group, Button, Title, Text, PasswordInput } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import useStore from '@/store';
 import { IconAt, IconKey, IconChevronRight } from '@tabler/icons-react';
 import { PROJECT_TITLE } from '@/config';
 import ChangePassword from '@/backoffice-common/pages/auth/ChangePassword';
 import { showMessage } from '@/backoffice-common/lib/notification';
+import classes from './Login.module.scss';
 
 import type { IResponse } from '@/backoffice-common/types/api';
 import type { ILoginResponse } from '@/types';
@@ -27,8 +28,6 @@ const Login = ({
 	forgotPasswordButton
 }: ILoginProps) => {
 	const { t } = useTranslation();
-	const { classes } = useStyles();
-
 	const setLoginInfo = useStore(store => store.setAuth);
 	const [ loginResponse, setLoginResponse ] = React.useState<ILoginResponse | null>(null);
 
@@ -78,7 +77,7 @@ const Login = ({
 		<div className={classes.container}>
 			<div className={classes.card}>
 				<Box
-					sx={{ maxWidth: 500 }}
+					style={{ maxWidth: 500 }}
 					mx='auto'
 				>
 					<form
@@ -106,7 +105,7 @@ const Login = ({
 							{t('loginDescription', { ns: 'auth' })}
 						</Text>
 						<TextInput
-							icon={<IconAt size={18} />}
+							leftSection={<IconAt size={18} />}
 							label={t('username', { ns: 'auth' })}
 							placeholder={t('username', { ns: 'auth' })}
 							labelProps={{
@@ -117,7 +116,7 @@ const Login = ({
 						/>
 
 						<PasswordInput
-							icon={<IconKey size={18} />}
+							leftSection={<IconKey size={18} />}
 							label={t('password', { ns: 'auth' })}
 							placeholder='******'
 							labelProps={{
@@ -129,7 +128,7 @@ const Login = ({
 						{forgotPasswordButton}
 
 						<Group
-							position='right'
+							justify='flex-end'
 							mt='md'
 						>
 							<Button
@@ -137,7 +136,7 @@ const Login = ({
 								variant='outline'
 								radius='xl'
 								size='md'
-								rightIcon={<IconChevronRight size={18} />}
+								rightSection={<IconChevronRight size={18} />}
 							>
 								{t('login', { ns: 'auth' })}
 							</Button>
@@ -162,58 +161,5 @@ const Login = ({
 		</div>
 	);
 };
-
-const useStyles = createStyles(() => {
-	return {
-		container: {
-			display: 'flex',
-			height: '100%',
-			backgroundColor: 'white',
-			flexDirection: 'row'
-		},
-		card: {
-			display: 'flex',
-			alignItems: 'center',
-			justifyContent: 'center',
-			width: 500,
-		},
-		image: {
-			backgroundSize: 'cover',
-			backgroundPosition: '50% 50%',
-			minHeight: '100%'
-		},
-		form: {
-			width: 350,
-			display: 'flex',
-			flexDirection: 'column',
-			gap: '0.5rem',
-		},
-		header: {
-			display: 'flex',
-			gap: '1rem',
-			alignItems: 'center',
-		},
-		headerText: {
-			fontWeight: 500,
-			fontSize: 16,
-		},
-		divider: {
-			borderRight: '1px solid black',
-			alignSelf: 'stretch',
-		},
-		version: {
-			borderRadius: '15px',
-			background: '#F1F3F5',
-			padding: '.3rem .8rem',
-			fontSize: 12,
-			color: '#8E8E8F',
-			fontWeight: 600,
-		},
-		label: {
-			fontWeight: 600,
-			fontSize: 16,
-		},
-	};
-});
 
 export default Login;

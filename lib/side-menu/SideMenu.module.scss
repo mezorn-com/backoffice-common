@@ -1,0 +1,38 @@
+.menus {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 15px 0;
+};
+
+.logo {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 20px;
+    flex-direction: row;
+    justify-content: center;
+};
+
+.headerText {
+    font-weight: 500;
+    font-size: 16px;
+};
+
+.divider {
+    border-right: 1px solid black;
+    align-self: stretch;
+};
+
+.version {
+    border-radius: 15px;
+    background: #F1F3F5;
+    padding: .3rem .8rem;
+    font-size: 12px;
+    color: #8E8E8F;
+    font-weight: 600;
+};
+
+.navbarHeader {
+    border-bottom: 1px solid var(--mantine-color-gray-2);
+}

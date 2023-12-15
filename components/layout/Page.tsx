@@ -1,26 +1,15 @@
 import * as React from 'react';
-import { createStyles } from '@mantine/core';
 import SubHeader from './SubHeader';
 import Body from './Body';
-
-const useStyles = createStyles(() => {
-    return {
-        wrapper: {
-            height: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-        }
-    }
-})
+import classes from './Layout.module.scss';
 
 const Page = ({
     children,
     ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
 
-    const { classes } = useStyles();
     return (
-        <div className={classes.wrapper} {...props}>
+        <div className={classes.pageWrapper} {...props}>
             {children}
         </div>
     )

@@ -1,0 +1,14 @@
+.container {
+    word-break: keep-all;
+    white-space: nowrap;
+    border-right: 1px solid var(--mantine-color-gray-3);
+    &:last-of-type {
+        border-right-width: 0;
+    };
+};
+
+.cell {
+    width: min-content;
+    padding: .3rem .5rem;
+    color: var(--mantine-color-gray-8);
+}

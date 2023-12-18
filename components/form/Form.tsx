@@ -17,7 +17,7 @@ import {
 } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, UiType } from '@/backoffice-common/types/form';
-import { getFormInitialValues, getFormValueByKey, IFormValues, isFieldRequired, isFieldVisible, SEPARATOR, transformValuesAsync, validator } from './helper';
+import { getFormInitialValues, getFormValueByKey, IFormValues, isFieldRequired, isFieldVisible, SEPARATOR, transformValuesAsync, validator, formatSelectValue } from './helper';
 import { randomId } from '@mantine/hooks';
 import { CascadingSelect, FetchSelect, FileUpload, FormRTE, MapAddressPicker, Location, SearchableSelect } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
@@ -60,8 +60,14 @@ const Form = ({
 		validate(values) {
 			return validator(fields, values);
 		},
-		onValuesChange: onChange
+		// onValuesChange: onChange
 	});
+
+	React.useEffect(() => {
+		if (onChange) {
+			onChange(form.values)
+		}
+	}, [form.values])
 
 	// console.log('form initial Values>>>>', getFormInitialValues(fields, values));
 	// console.log('FORM VALUES>>>>', form.values);
@@ -290,6 +296,11 @@ const Form = ({
 					}
 
 					const uri = combineURL(field.optionsApi?.uri, params);
+					// return (
+					// 	<div>
+					// 		xDXD
+					// 	</div>
+					// )
 					return (
 						<FetchSelect
 							{...props}
@@ -313,14 +324,15 @@ const Form = ({
 						return (
 							<MultiSelect
 								{...props}
-								data={field.options}
+								value={props.value ?? []}
+								data={formatSelectValue(field.options)}
 							/>
 						);
 					}
 					return (
 						<Select
 							{...props}
-							data={field.options}
+							data={formatSelectValue(field.options)}
 						/>
 					);
 				}
@@ -495,7 +507,7 @@ const FormWrapper = (props: IFormProps) => {
 			fields: props.fields,
 			// fields: refactorFields(props.fields)
 		};
-	}, [props.fields, props.values]);
+	}, [ props.fields, props.values ]);
 
 	return (
 		<Form

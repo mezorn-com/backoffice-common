@@ -5,6 +5,8 @@ import { FieldType, UiType } from '@/backoffice-common/types/form';
 import { getArrayObjectByProp } from '@/backoffice-common/utils';
 import dayjs from 'dayjs';
 import { uploadFile } from '@/backoffice-common/utils/file-upload';
+import type { SelectOption } from '@/backoffice-common/types/form';
+import type { ComboboxItem } from '@mantine/core';
 
 const { t, language } = i18n;
 
@@ -347,6 +349,13 @@ export const transformValuesAsync = (fields: IFormField[], values: IFormValues, 
 		resolve(transformedValues);
 	});
 };
+
+export const formatSelectValue = (options: SelectOption[]): ComboboxItem[] => {
+	return options.map(option => ({
+		value: option.value.toString(),
+		label: option.label
+	}))
+}
 
 // export const transformValues = (values: any): Record<string, any> => {
 //     return map((value) => {

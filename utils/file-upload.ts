@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_STORAGE_PREFIX, API_UPLOAD_URL } from '@/config';
+import { API_UPLOAD_URL } from '@/config';
 import type { IFileUploadResponse } from '@/backoffice-common/types/api';
 import useStore from '@/store';
 import qs from 'qs';

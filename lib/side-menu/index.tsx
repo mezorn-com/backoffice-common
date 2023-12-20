@@ -6,7 +6,7 @@ import routes from '@/routes';
 import { useTranslation } from 'react-i18next';
 import { APP_NAME } from '@/config';
 import type { IRoute } from '@/backoffice-common/types';
-import type { IMenu } from '@/backoffice-common/types/common';
+import type { IMenu } from '@/backoffice-common/types/api';
 import NavbarItem from '@/backoffice-common/lib/side-menu/NavbarItem';
 import classes from './SideMenu.module.scss';
 import Profile from '@/backoffice-common/components/profile';

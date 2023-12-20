@@ -164,7 +164,7 @@ const MapAddressPicker = ({
                 }
                 <div className={classes.map}>
                     <MapContainer
-                        center={MAP_STARTING_POINT}
+                        center={MAP_DEFAULT_STARTING_POINT}
                         zoom={MAP_INITIAL_ZOOM}
                         style={{ width: '100%', height: '100%' }}
                         scrollWheelZoom={false}

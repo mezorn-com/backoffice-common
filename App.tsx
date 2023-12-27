@@ -164,6 +164,16 @@ function App() {
 
 				/** Allows adding `classNames`, `styles` and `defaultProps` to any component */
 				// components: MantineThemeComponents;
+				components: {
+					MultiSelect: {
+						defaultProps: {
+							style: {
+								minWidth: 150,
+							}
+						}
+					}
+
+				},
 
 				/** Any other properties that you want to access with the theme objects */
 				// other: MantineThemeOther;

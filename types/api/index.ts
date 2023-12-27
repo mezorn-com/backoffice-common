@@ -68,3 +68,17 @@ export interface IFileUploadResponse extends IResponse<any>{
     status: string;
     result: FileUploadResult[];
 }
+
+export interface IMenu {
+    name: string;
+    icon: {
+        type: string;
+        value: string;
+    };
+    localizedNames: {
+        [key: string]: string;
+    };
+    resource: string;
+    path?: string;
+    children?: IMenu[];
+}

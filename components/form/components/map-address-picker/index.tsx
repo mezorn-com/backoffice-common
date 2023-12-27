@@ -4,7 +4,7 @@ import qs from 'qs';
 import { TextInput, Button, Modal, Text } from '@mantine/core';
 import { MapAddressPicker } from '@/backoffice-common/types/form';
 import type { IResponse } from '@/backoffice-common/types/api';
-import { INITIAL_ZOOM, MAP_STARTING_POINT, MAX_ZOOM, MIN_ZOOM } from '@/config';
+import { MAP_INITIAL_ZOOM, MAP_DEFAULT_STARTING_POINT, MAP_MAX_ZOOM, MAP_MIN_ZOOM } from '@/config';
 import { MapContainer, ZoomControl } from 'react-leaflet';
 import GoogleLayer from '@/backoffice-common/components/map/GoogleLayer';
 import Helper from '@/backoffice-common/components/form/components/map-address-picker/Helper';
@@ -164,16 +164,16 @@ const MapAddressPicker = ({
                 }
                 <div className={classes.map}>
                     <MapContainer
-                        center={MAP_STARTING_POINT}
-                        zoom={INITIAL_ZOOM}
+                        center={MAP_DEFAULT_STARTING_POINT}
+                        zoom={MAP_INITIAL_ZOOM}
                         style={{ width: '100%', height: '100%' }}
                         scrollWheelZoom={false}
                         touchZoom={false}
                         doubleClickZoom={false}
                         inertia={false}
                         zoomControl={false}
-                        maxZoom={MAX_ZOOM}
-                        minZoom={MIN_ZOOM}
+                        maxZoom={MAP_MAX_ZOOM}
+                        minZoom={MAP_MIN_ZOOM}
                     >
                         <Helper value={value}/>
                         <GoogleLayer/>

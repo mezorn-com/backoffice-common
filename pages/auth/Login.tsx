@@ -5,7 +5,7 @@ import { Box, TextInput, Group, Button, Title, Text, PasswordInput } from '@mant
 import { useTranslation } from 'react-i18next';
 import useStore from '@/store';
 import { IconAt, IconKey, IconChevronRight } from '@tabler/icons-react';
-import { PROJECT_TITLE } from '@/config';
+import { APP_NAME } from '@/config';
 import ChangePassword from '@/backoffice-common/pages/auth/ChangePassword';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import classes from './Login.module.scss';
@@ -85,7 +85,7 @@ const Login = ({
 						className={classes.form}
 					>
 						<div className={classes.header}>
-							<div>{PROJECT_TITLE}</div>
+							<div>{APP_NAME}</div>
 							<div className={classes.divider} />
 							<div className={classes.headerText}>OFFICE</div>
 							<div className={classes.version}>v1.3.5</div>

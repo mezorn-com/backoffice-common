@@ -71,7 +71,9 @@ const Table = ({
     rowActionButtonPosition = TABLE_ROW_ACTION_BUTTON_POSITION,
     state: externalState,
     pageSizes = [10, 20, 50],
-    dispatch: dispatchExternalState
+    dispatch: dispatchExternalState,
+    hideBulkActions = false,
+    bulkActionUrlParser
 }: ITableProps) => {
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
@@ -224,7 +226,7 @@ const Table = ({
 
     // TODO: Split into its own file
     const renderBulkActions = () => {
-        if (!externalState.bulkItemActions  || !externalState.selectedRows?.length) {
+        if (!externalState.bulkItemActions  || !externalState.selectedRows?.length || hideBulkActions) {
             return null;
         }
         return (
@@ -238,8 +240,9 @@ const Table = ({
                     }}
                     bulkAction={state.selectedBulkAction}
                     onSubmit={async (values) => {
+                        const url = replacePathParameters(state?.selectedBulkAction?.api?.uri ?? '', pathParameter);
                         const response = await axios<IResponse<unknown>>({
-                            url: replacePathParameters(state?.selectedBulkAction?.api?.uri ?? '', pathParameter),
+                            url: bulkActionUrlParser ? bulkActionUrlParser(url) : url,
                             method: state?.selectedBulkAction?.api?.method,
                             data: {
                                 ...values,
@@ -333,7 +336,7 @@ const Table = ({
                             section={TableSectionType.CENTER}
                             table={table}
                             bodyRef={centerBodyRef}
-                            rowSelect={!!externalState.bulkItemActions}
+                            rowSelect={hideBulkActions ? false : !!externalState.bulkItemActions}
                         />
                         <TableSection
                             section={TableSectionType.RIGHT}

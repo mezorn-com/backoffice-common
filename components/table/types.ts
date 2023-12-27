@@ -24,6 +24,8 @@ export interface ITableProps {
     state: IListState;
     pageSizes?: number[];
     dispatch: Dispatch<Action>;
+    hideBulkActions?: boolean;
+    bulkActionUrlParser?: (url: string) => string;
 }
 
 export enum TableSectionType {

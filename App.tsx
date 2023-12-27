@@ -167,9 +167,7 @@ function App() {
 				components: {
 					MultiSelect: {
 						defaultProps: {
-							style: {
-								minWidth: 150,
-							}
+							className: classes.multiSelect
 						}
 					}
 

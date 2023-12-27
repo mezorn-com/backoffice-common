@@ -122,10 +122,6 @@ const Table = ({
             return originalRow._id as string;
         },
         initialState: {
-            pagination: {
-                pageSize: externalState.pageSize,
-                pageIndex: externalState.page - 1,
-            },
             columnPinning: {
                 right: ['table-actions-column']
             }
@@ -353,7 +349,9 @@ const Table = ({
                     pageCount={table.getPageCount()}
                     page={externalState.page}
                     onPageSizeChange={value =>  table.setPageSize(value)}
-                    onPageIndexChange={value => table.setPageIndex(value)}
+                    onPageIndexChange={value => {
+                        table.setPageIndex(value)
+                    }}
                     onPreviousPage={table.previousPage}
                     onNextPage={table.nextPage}
                     pageSizes={pageSizes}

@@ -72,7 +72,7 @@ const TablePagination = ({
                     value={page}
                     onChange={value => {
                         const page = value ? Number(value) : 0;
-                        onPageIndexChange(page);
+                        onPageIndexChange(page - 1);
                     }}
                     style={{ width: '100px' }}
                     className={classes.paginationInput}

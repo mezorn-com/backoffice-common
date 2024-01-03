@@ -44,7 +44,6 @@ const Table = ({
     const { t } = useTranslation();
 
     const pathParameter = usePathParameter();
-    const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
     const renderField = useRenderField();
     const fixedColumns = useFixedColumns(rowActionButtons);
 
@@ -280,18 +279,15 @@ const Table = ({
                         <TableSection
                             section={TableSectionType.LEFT}
                             table={table}
-                            bodyRef={leftBodyRef}
                         />
                         <TableSection
                             section={TableSectionType.CENTER}
                             table={table}
-                            bodyRef={centerBodyRef}
                             rowSelect={hideBulkActions ? false : !!externalState.bulkItemActions}
                         />
                         <TableSection
                             section={TableSectionType.RIGHT}
                             table={table}
-                            bodyRef={rightBodyRef}
                         />
                     </div>
                 </div>

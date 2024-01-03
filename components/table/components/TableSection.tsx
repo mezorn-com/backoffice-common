@@ -8,11 +8,11 @@ import ObservedCell from './ObservedCell';
 import Placeholder from './Placeholder';
 import { clsx } from 'clsx';
 import classes from './TableSection.module.scss';
+import SectionBody from '@/backoffice-common/components/table/components/SectionBody';
 
 interface TableElementProps {
     section: TableSectionType,
     table: Table<ListDoc>,
-    bodyRef: React.MutableRefObject<HTMLDivElement | null>;
     rowSelect?: boolean;
 }
 
@@ -42,7 +42,6 @@ const useSectionFlatHeaders = (section: TableSectionType, table: Table<ListDoc>)
 const TableSection = ({
     section,
     table,
-    bodyRef,
     rowSelect
 }: TableElementProps) => {
     const flatHeaders = useSectionFlatHeaders(section, table);
@@ -185,7 +184,12 @@ const TableSection = ({
                 </div>
                 {
                     table.getRowModel().rows.length
-                    ?   <div className={classes.body} ref={bodyRef}>
+                    ?   <SectionBody
+                            className={clsx({
+                                [classes.body]: true,
+                                [classes.scrollHidden]: section === TableSectionType.CENTER
+                            })}
+                        >
                             {
                                 table.getRowModel().rows.map(row => {
                                     return (
@@ -209,7 +213,7 @@ const TableSection = ({
                                     )
                                 })
                             }
-                        </div>
+                        </SectionBody>
                     :   flatHeaders.length === 0
                         ?   null
                         :   <Placeholder/>

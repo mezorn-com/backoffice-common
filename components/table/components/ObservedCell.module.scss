@@ -7,8 +7,19 @@
     };
 };
 
-.cell {
+@mixin cell {
     width: min-content;
     padding: .3rem .5rem;
     color: var(--mantine-color-gray-8);
+}
+
+.header {
+    @include cell;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.cell {
+    @include cell;
+    font-size: 14px;
 }

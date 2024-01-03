@@ -64,50 +64,16 @@ const getColumnSizes = (horizontalScrollItem: Element) => {
 const getColumnResizes = (centerElement: HTMLElement): ColumnSize[] => {
     const centerSectionWrapper = centerElement.getBoundingClientRect().width;
     const horizontalScrollItem = centerElement.children[0];
-    const horizontalScrollItemWidth = horizontalScrollItem.scrollWidth;
     const columnSizes: ColumnSize[] = getColumnSizes(horizontalScrollItem);
 
-    // let exceededWidth: number;
-    let exceededWidth: number = centerSectionWrapper - columnSizes.reduce((sum, { innerWidth }) => sum + (innerWidth ?? 0), 0);;
-
-    // if (centerSectionWrapper > horizontalScrollItemWidth) {
-    //     console.log('HERE')
-    //     // increase column width
-    //     exceededWidth = centerSectionWrapper - horizontalScrollItemWidth;
-    // } else {
-    //     console.log('NO HERE')
-    //     // try to reduce width if possible
-    //     exceededWidth = centerSectionWrapper - columnSizes.reduce((sum, { innerWidth }) => sum + (innerWidth ?? 0), 0);
-    // }
+    let exceededWidth: number = centerSectionWrapper - columnSizes.reduce((sum, { innerWidth }) => sum + (innerWidth ?? 0), 0);
     const widthPerColumn = exceededWidth / columnSizes.length;
-    const result = columnSizes.map(((col, index, array) => {
-        const isLast = index === array.length - 1;
+    return columnSizes.map((col => {
         return {
             ...col,
-            // additionalWidth: 0
             additionalWidth: widthPerColumn
-            // additionalWidth: widthPerColumn + (!isLast ? 1 : 0)
         }
     }))
-
-    // const totalAdditionalWidth = result.reduce((sum, val) => sum + val.additionalWidth, 0);
-    // const totalInnerWidth = result.reduce((sum, val) => sum + (val.innerWidth ?? 0), 0);
-    //
-    // console.log('centerElement>>>>', centerElement);
-    // console.log('width to fill>>>>>', centerSectionWrapper)
-    // console.log('WRAPPER NI>>>', horizontalScrollItem);
-    // console.log('EHLEED BGAA UTGA>>>', horizontalScrollItemWidth);
-    // console.log('TESTESTTEST>>>>', {
-    //     scrollWidth: horizontalScrollItem.scrollWidth,
-    //     clientWidth: horizontalScrollItem.clientWidth,
-    //     boundRectWidth: horizontalScrollItem.getBoundingClientRect().width
-    // })
-    // console.log('totalAdditionalWidth>>>>>', totalAdditionalWidth);
-    // console.log('totalInnerWidth>>>>>', totalInnerWidth);
-    // console.log('totalXXDXD>>>>', totalInnerWidth + totalAdditionalWidth);
-    // console.log('exceeded width>>>>', exceededWidth);
-    // console.log('COLUMN SIZES>>>>>', result);
-    return result
 }
 
 const getRowSizes = (table: Element): RowSizes => {
@@ -145,57 +111,62 @@ const getRowSizes = (table: Element): RowSizes => {
     return object;
 }
 
-export const getCellObserver = () => {
-    return new ResizeObserver((entries) => {
-        let columnSizes: ColumnSize[] = [];
+export const resizeTable = (tableElement: HTMLElement) => {
+    let columnSizes: ColumnSize[] = [];
 
-        // TODO: Remove nested parent selector
-        let tableElement: HTMLElement | null | undefined;
-        for (const entry of entries) {
-            tableElement = entry.target.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement
-            if (tableElement) {
-                break;
-            }
-        }
+    const center = tableElement.children[1];
+    if (center instanceof HTMLElement) {
+        columnSizes = getColumnResizes(center);
+    }
+    const rowSizes = getRowSizes(tableElement);
 
-        if (tableElement) {
-            const center = tableElement.children[1];
-            if (center instanceof HTMLElement) {
-                columnSizes = getColumnResizes(center);
-            }
-            const rowSizes = getRowSizes(tableElement);
+    for (const section of tableElement.children) {
+        const scrollElement = section.children[0];
+        for (const rowGroup of scrollElement.children) {
+            for (const row of rowGroup.children) {
+                for (const cellContainer of row.children) {
+                    if (cellContainer) {
+                        const columnId = cellContainer.getAttribute(COLUMN_UID_ATTR);
+                        const rowId = cellContainer.getAttribute(ROW_UID_ATTR);
+                        const columnIndex = columnSizes.findIndex(col => col.colId === columnId);
+                        const rowGroup = cellContainer.getAttribute(ROW_GROUP_UID_ATTR) as (RowGroup | null);
 
-            for (const section of tableElement.children) {
-                const scrollElement = section.children[0];
-                for (const rowGroup of scrollElement.children) {
-                    for (const row of rowGroup.children) {
-                        for (const cellContainer of row.children) {
-                            if (cellContainer) {
-                                const columnId = cellContainer.getAttribute(COLUMN_UID_ATTR);
-                                const rowId = cellContainer.getAttribute(ROW_UID_ATTR);
-                                const columnIndex = columnSizes.findIndex(col => col.colId === columnId);
-                                const rowGroup = cellContainer.getAttribute(ROW_GROUP_UID_ATTR) as (RowGroup | null);
-
-                                if (columnId && columnIndex > -1) {
-                                    const additionalWidth = ((columnSizes?.[columnIndex]?.additionalWidth ?? 0) > 0 ? columnSizes[columnIndex].additionalWidth : 0) as number;
-                                    const width = columnSizes[columnIndex].innerWidth;
-                                    if (cellContainer instanceof HTMLElement) {
-                                        cellContainer.style.width = width + additionalWidth + 'px';
-                                    }
-                                }
-                                if (rowId && rowGroup && Object.values(RowGroup).includes(rowGroup as RowGroup)) {
-                                    const rowIndex = rowSizes[rowGroup].findIndex(row => row.rowId === rowId);
-                                    if (rowIndex > -1) {
-                                        if (cellContainer instanceof HTMLElement) {
-                                            cellContainer.style.height = rowSizes[rowGroup][rowIndex].height + 'px';
-                                        }
-                                    }
+                        if (columnId && columnIndex > -1) {
+                            const additionalWidth = ((columnSizes?.[columnIndex]?.additionalWidth ?? 0) > 0 ? columnSizes[columnIndex].additionalWidth : 0) as number;
+                            const width = columnSizes[columnIndex].innerWidth;
+                            if (cellContainer instanceof HTMLElement) {
+                                cellContainer.style.width = width + additionalWidth + 'px';
+                            }
+                        }
+                        if (rowId && rowGroup && Object.values(RowGroup).includes(rowGroup as RowGroup)) {
+                            const rowIndex = rowSizes[rowGroup].findIndex(row => row.rowId === rowId);
+                            if (rowIndex > -1) {
+                                if (cellContainer instanceof HTMLElement) {
+                                    cellContainer.style.height = rowSizes[rowGroup][rowIndex].height + 'px';
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+export const getCellObserver = () => {
+    return new ResizeObserver((entries) => {
+
+        // TODO: Remove nested parent selector
+        let tableElement: HTMLElement | null | undefined;
+        for (const entry of entries) {
+            tableElement = entry.target.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement;
+            if (tableElement) {
+                break;
+            }
+        }
+
+        if (tableElement) {
+            resizeTable(tableElement);
         }
     })
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Cell, flexRender, HeaderGroup, Row, Table } from '@tanstack/react-table';
-import { Checkbox, CheckboxProps } from '@mantine/core';
-import { ListDoc } from '@/backoffice-common/types/common/list';
+import { type Cell, flexRender, type HeaderGroup, type Row, type Table } from '@tanstack/react-table';
+import { Checkbox, type CheckboxProps } from '@mantine/core';
+import type { ListDoc } from '@/backoffice-common/types/common/list';
 import TableRow from './Row';
 import { RowGroup, TableSectionType } from '../types';
 import ObservedCell from './ObservedCell';
@@ -127,7 +127,7 @@ const TableSection = ({
         return (
             // assuming checkboxes won't be rendered in footer group
             <ObservedCell rowGroup={rowGroup} rowId={rowId} columnId={CHECKBOX_COLUMN_ID}>
-                <div style={{ height: '100%', display: 'flex', placeItems: 'center' }}>
+                <div className={classes.checkbox}>
                     <Checkbox
                         {...props}
                     />

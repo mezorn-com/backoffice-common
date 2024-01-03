@@ -1,58 +1,24 @@
 import * as React from 'react';
-import type { ITableInteraction, ITableProps, ITableState } from './types';
-import { TableSectionType } from './types';
+import { type ITableInteraction, type ITableProps, type ITableState, TableSectionType  } from './types';
 import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
 import TableSection from './components/TableSection';
-import { getCellObserver } from './utils';
+import { getCellObserver, resizeTable } from './utils';
 import Form from '@/backoffice-common/components/form/Form';
 import classes from './Table.module.scss';
-
-// react-table props below
-// columnFilters: [],
-// columnOrder: [],
-// columnPinning: {  },
-// columnSizing: {  },
-// columnSizingInfo: {
-//     columnSizingStart: [],
-//     deltaOffset: null,
-//     deltaPercentage: null,
-//     isResizingColumn: false,
-//     startOffset: null,
-//     startSize: null
-// },
-// columnVisibility: {},
-// expanded: {  },
-// globalFilter: {  },
-// grouping: [],
-// pagination: {
-//     pageIndex: 1,
-//     pageSize: 1
-// },
-// rowSelection: {},
-// sorting: []
-import {
-    CellContext,
-    ColumnDef,
-    getCoreRowModel,
-    getPaginationRowModel,
-    TableState,
-    useReactTable
-} from '@tanstack/react-table'
-import { IFormValues } from '@/backoffice-common/components/form/helper';
+import { type ColumnDef, getCoreRowModel, getPaginationRowModel, type TableState, useReactTable } from '@tanstack/react-table'
+import type { IFormValues } from '@/backoffice-common/components/form/helper';
 import { initialState, reducer } from './reducer';
-import { useBodyScrolls } from '@/backoffice-common/components/table/hooks';
-import TablePagination from '@/backoffice-common/components/table/components/pagination/TablePagination';
-import { isRenderField } from '@/backoffice-common/utils';
+import { useBodyScrolls } from './hooks';
+import TablePagination from './components/pagination/TablePagination';
+import { isRenderField, replacePathParameters } from '@/backoffice-common/utils';
 import { usePathParameter, useRenderField } from '@/backoffice-common/hooks';
-
 import { TableContext } from '@/backoffice-common/components/table/context';
 import { allPass, append, clone, eqProps, prepend, equals } from 'ramda';
-import { Button, Drawer, Menu, Modal } from '@mantine/core';
-import BulkActionDrawer from '@/backoffice-common/components/table/components/BulkActionDrawer';
+import { Button, Menu } from '@mantine/core';
+import BulkActionDrawer from './components/BulkActionDrawer';
 import axios from 'axios';
-import { IResponse } from '@/backoffice-common/types/api';
+import type { IResponse } from '@/backoffice-common/types/api';
 import { IconAdjustments, IconDots } from '@tabler/icons-react';
-import { replacePathParameters } from '@/backoffice-common/utils';
 import RowActionButtons from './components/row-action-buttons';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
@@ -163,6 +129,16 @@ const Table = ({
 
     React.useEffect(() => {
         columnObserverRef.current = getCellObserver();
+
+        if (tablesContainerRef.current) {
+            const observer = new ResizeObserver((entries) => {
+                const table = entries[0].target;
+                if (table instanceof HTMLElement) {
+                    resizeTable(table);
+                }
+            });
+            observer.observe(tablesContainerRef.current);
+        }
     }, []);
 
     React.useEffect(() => {
@@ -268,7 +244,7 @@ const Table = ({
                             leftSection={<IconAdjustments size={18}/>}
                             rightSection={<IconDots size={18}/>}
                             size='xs'
-                            color={'yellow'}
+                            color='yellow'
                         />
                     </Menu.Target>
 
@@ -352,9 +328,7 @@ const Table = ({
                     pageCount={table.getPageCount()}
                     page={externalState.page}
                     onPageSizeChange={value =>  table.setPageSize(value)}
-                    onPageIndexChange={value => {
-                        table.setPageIndex(value)
-                    }}
+                    onPageIndexChange={value => table.setPageIndex(value)}
                     onPreviousPage={table.previousPage}
                     onNextPage={table.nextPage}
                     pageSizes={pageSizes}

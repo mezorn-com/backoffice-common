@@ -3,6 +3,7 @@ import { TableContext } from '../context';
 import classes from './ObservedCell.module.scss';
 import { RowGroup } from '../types';
 import { COLUMN_UID_ATTR, ROW_GROUP_UID_ATTR, ROW_UID_ATTR } from '../utils';
+import { clsx } from 'clsx';
 
 interface ObservedCellProps {
     children?: React.ReactNode;
@@ -39,11 +40,10 @@ const ObservedCell = ({
             <div
                 {...attributes}
                 ref={ref}
-                className={classes.cell}
-                style={{
-                    fontSize: rowGroup === RowGroup.HEADER ? 15 : 14,
-                    fontWeight: rowGroup === RowGroup.HEADER ? 500 : undefined,
-                }}
+                className={clsx({
+                    [classes.cell]: rowGroup !== RowGroup.HEADER,
+                    [classes.header]: rowGroup === RowGroup.HEADER
+                })}
             >
                 {children}
             </div>

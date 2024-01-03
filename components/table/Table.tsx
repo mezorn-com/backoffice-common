@@ -7,7 +7,7 @@ import classes from './Table.module.scss';
 import { getCoreRowModel, getPaginationRowModel, type TableState, useReactTable } from '@tanstack/react-table'
 import type { IFormValues } from '@/backoffice-common/components/form/helper';
 import { initialState, reducer } from './reducer';
-import { useFixedColumns, useBodyScrolls } from './hooks';
+import { useFixedColumns } from './hooks';
 import TablePagination from './components/pagination/TablePagination';
 import { isRenderField, replacePathParameters } from '@/backoffice-common/utils';
 import { usePathParameter, useRenderField } from '@/backoffice-common/hooks';

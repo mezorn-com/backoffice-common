@@ -8,7 +8,7 @@ export type ListDoc = Record<string, unknown>;
 export interface IListState extends ITableState {
     docs: ListDoc[];
     pageTitle?: string;
-    columns: ColumnDef<Record<string, any>>[];
+    columns: ColumnDef<ListDoc>[];
     subResources?: IListMetaResponse['subResources'];
     listActions?: IListMetaResponse['listActions'];
     listItemActions?: IListMetaResponse['listItemActions'];

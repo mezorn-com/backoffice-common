@@ -20,7 +20,6 @@ export interface ITableInteraction {
 export interface ITableProps {
     onInteract: (state: ITableInteraction) => void;
     rowActionButtons?: ActionButtonProps[];
-    rowActionButtonPosition?: 'left' | 'right';
     state: IListState;
     pageSizes?: number[];
     dispatch: Dispatch<Action>;

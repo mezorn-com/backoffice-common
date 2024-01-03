@@ -1,25 +1,23 @@
 import * as React from 'react';
 import { type ITableInteraction, type ITableProps, type ITableState, TableSectionType  } from './types';
-import { TABLE_ROW_ACTION_BUTTON_POSITION } from '@/config';
 import TableSection from './components/TableSection';
 import { getCellObserver, resizeTable } from './utils';
 import Form from '@/backoffice-common/components/form/Form';
 import classes from './Table.module.scss';
-import { type ColumnDef, getCoreRowModel, getPaginationRowModel, type TableState, useReactTable } from '@tanstack/react-table'
+import { getCoreRowModel, getPaginationRowModel, type TableState, useReactTable } from '@tanstack/react-table'
 import type { IFormValues } from '@/backoffice-common/components/form/helper';
 import { initialState, reducer } from './reducer';
-import { useBodyScrolls } from './hooks';
+import { useFixedColumns, useBodyScrolls } from './hooks';
 import TablePagination from './components/pagination/TablePagination';
 import { isRenderField, replacePathParameters } from '@/backoffice-common/utils';
 import { usePathParameter, useRenderField } from '@/backoffice-common/hooks';
 import { TableContext } from '@/backoffice-common/components/table/context';
-import { allPass, append, clone, eqProps, prepend, equals } from 'ramda';
+import { allPass, eqProps, equals } from 'ramda';
 import { Button, Menu } from '@mantine/core';
 import BulkActionDrawer from './components/BulkActionDrawer';
 import axios from 'axios';
 import type { IResponse } from '@/backoffice-common/types/api';
 import { IconAdjustments, IconDots } from '@tabler/icons-react';
-import RowActionButtons from './components/row-action-buttons';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
 
@@ -34,7 +32,6 @@ const eqValues = (a1: unknown[], a2: unknown[]) => equals(new Set(a1), new Set(a
 const Table = ({
     onInteract,
     rowActionButtons,
-    rowActionButtonPosition = TABLE_ROW_ACTION_BUTTON_POSITION,
     state: externalState,
     pageSizes = [10, 20, 50],
     dispatch: dispatchExternalState,
@@ -49,37 +46,14 @@ const Table = ({
     const pathParameter = usePathParameter();
     const { leftBodyRef, centerBodyRef, rightBodyRef } = useBodyScrolls();
     const renderField = useRenderField();
+    const fixedColumns = useFixedColumns(rowActionButtons);
 
     const tableColumns = React.useMemo(() => {
-        let cols = clone(externalState.columns);
-        if (rowActionButtons?.length && externalState.docs.length) {
-            const actionButtonsColumn: ColumnDef<Record<string, unknown>> = {
-                header: '',
-                id: 'table-actions-column',
-                cell(props) {
-                    return (
-                        <RowActionButtons
-                            buttons={rowActionButtons}
-                            row={props.row}
-                        />
-                    )
-                },
-                enablePinning: true,
-            }
-            if (rowActionButtonPosition === 'right') {
-                cols = append(
-                    actionButtonsColumn,
-                    externalState.columns
-                );
-            } else {
-                cols = prepend(
-                    actionButtonsColumn,
-                    externalState.columns
-                );
-            }
-        }
-        return cols;
-    }, [ externalState.columns, rowActionButtons, externalState.docs.length, rowActionButtonPosition ]);
+        return [
+            ...fixedColumns,
+            ...externalState.columns
+        ]
+    }, [ externalState.columns, fixedColumns ]);
 
     const table = useReactTable({
         data: externalState.docs,

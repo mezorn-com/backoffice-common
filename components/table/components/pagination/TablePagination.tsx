@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActionIcon, NumberInput, Select } from '@mantine/core';
+import { ActionIcon, type ActionIconProps, NumberInput, Select } from '@mantine/core';
 import { IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight } from '@tabler/icons-react';
 import classes from './Pagination.module.scss';
 
@@ -14,6 +14,11 @@ interface TablePaginationProps {
     onNextPage: () => void;
     onPreviousPage: () => void;
     pageSizes: number[];
+}
+
+const actionIconProps: ActionIconProps = {
+    variant: 'filled',
+    color: 'var(--mantine-primary-color-6)'
 }
 
 const TablePagination = ({
@@ -33,32 +38,28 @@ const TablePagination = ({
         <div className={classes.pagination}>
             <div className={classes.paginationControls}>
                 <ActionIcon
-                    variant='filled'
-                    color='color.primary'
+                    {...actionIconProps}
                     onClick={() => onPageIndexChange(0)}
                     disabled={!canPreviousPage}
                 >
                     <IconChevronsLeft size={16}/>
                 </ActionIcon>
                 <ActionIcon
-                    variant='filled'
-                    color='color.primary'
+                    {...actionIconProps}
                     onClick={onPreviousPage}
                     disabled={!canPreviousPage}
                 >
                     <IconChevronLeft size={16}/>
                 </ActionIcon>
                 <ActionIcon
-                    variant='filled'
-                    color='color.primary'
+                    {...actionIconProps}
                     onClick={onNextPage}
                     disabled={!canNextPage}
                 >
                     <IconChevronRight size={16}/>
                 </ActionIcon>
                 <ActionIcon
-                    variant='filled'
-                    color='color.primary'
+                    {...actionIconProps}
                     onClick={() => onPageIndexChange(pageCount - 1)}
                     disabled={!canNextPage}
                 >
@@ -74,7 +75,6 @@ const TablePagination = ({
                         const page = value ? Number(value) : 0;
                         onPageIndexChange(page - 1);
                     }}
-                    style={{ width: '100px' }}
                     className={classes.paginationInput}
                     min={1}
                     size='xs'
@@ -89,9 +89,7 @@ const TablePagination = ({
                     }
                 }}
                 wrapperProps={{
-                    style: {
-                        width: 80
-                    }
+                    className: classes.select,
                 }}
                 value={pageSize}
                 size='xs'

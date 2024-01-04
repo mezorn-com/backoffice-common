@@ -48,11 +48,14 @@ const Table = ({
     const fixedColumns = useFixedColumns(rowActionButtons);
 
     const tableColumns = React.useMemo(() => {
+        if (!externalState.docs.length) {
+            return externalState.columns;
+        }
         return [
             ...fixedColumns,
             ...externalState.columns
         ]
-    }, [ externalState.columns, fixedColumns ]);
+    }, [ externalState.columns, fixedColumns, externalState.docs.length ]);
 
     const table = useReactTable({
         data: externalState.docs,

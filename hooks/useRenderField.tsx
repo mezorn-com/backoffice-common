@@ -77,9 +77,10 @@ export const useRenderField = () => {
                     return (
                         <Stack gap='xs'>
                             {
-                                value.map(src => {
+                                value.map((src, index) => {
                                     return (
                                         <ImagePreview
+                                            key={index}
                                             src={src}
                                             width={'200'}
                                             height={'100'}

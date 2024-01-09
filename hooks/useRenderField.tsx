@@ -1,6 +1,6 @@
 import { FieldType, IFormField, RenderType } from '@/backoffice-common/types/form';
 import * as React from 'react';
-import { Anchor, Flex } from '@mantine/core';
+import { Anchor, Flex, Stack } from '@mantine/core';
 import { IconCircleCheck, IconCircleX } from '@tabler/icons-react';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import ImagePreview from '@/backoffice-common/components/common/image-preview';
@@ -73,6 +73,23 @@ export const useRenderField = () => {
                 );
             }
             case RenderType.IMAGE: {
+                if (Array.isArray(value)) {
+                    return (
+                        <Stack gap='xs'>
+                            {
+                                value.map(src => {
+                                    return (
+                                        <ImagePreview
+                                            src={src}
+                                            width={'200'}
+                                            height={'100'}
+                                        />
+                                    )
+                                })
+                            }
+                        </Stack>
+                    )
+                }
                 return (
                     <ImagePreview
                         src={value as string}

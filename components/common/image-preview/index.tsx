@@ -48,7 +48,7 @@ const ImagePreview: React.FC<IImagePreviewProps> = ({
 
     return (
         <>
-            <div className={classes.container}>\
+            <div className={classes.container}>
                 <Image
                     radius={radius || 0}
                     className={className}
@@ -62,7 +62,7 @@ const ImagePreview: React.FC<IImagePreviewProps> = ({
                 <div
                     onClick={toggleOverlay}
                     style={{ cursor: 'pointer' }}
-                    className={`textContainer`}
+                    className={classes.textContainer}
                 >
                     <IconEye size={iconSize || 20} />{" "}
                     <p style={{ ...textStyle }} className={textClassName}>

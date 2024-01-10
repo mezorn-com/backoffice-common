@@ -23,7 +23,7 @@ import { CascadingSelect, FetchSelect, FileUpload, FormRTE, MapAddressPicker, Lo
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
 import { DatePickerInput, TimeInput, DateTimePicker, YearPickerInput } from '@mantine/dates';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
-import { clone, omit } from 'ramda';
+import { clone, mergeDeepLeft, omit } from 'ramda';
 import dayjs from 'dayjs';
 import classes from './Form.module.scss';
 import { useTranslation } from 'react-i18next';
@@ -40,6 +40,7 @@ interface IFormProps {
 	submitButtonProps?: ButtonProps;
 	onChange?: (value: IFormValues) => void;
 	direction?: React.CSSProperties['flexDirection'];
+	getFetchParams?: (currentParams: Record<string, unknown>) => Record<string, unknown>;
 }
 
 const Form = ({
@@ -49,7 +50,8 @@ const Form = ({
 	values,
 	submitButtonProps,
 	onChange,
-	direction = 'column'
+	direction = 'column',
+	getFetchParams
 }: IFormProps) => {
 	const { t } = useTranslation();
 	const { pathname } = useLocation();
@@ -295,7 +297,10 @@ const Form = ({
 						params.parentId = pathname.split('/')?.[2] ?? '';
 					}
 
-					const uri = combineURL(field.optionsApi?.uri, params);
+					const uri = combineURL(
+						field.optionsApi?.uri,
+						getFetchParams ? mergeDeepLeft(params, getFetchParams(params)) : params
+					);
 					return (
 						<FetchSelect
 							{...props}

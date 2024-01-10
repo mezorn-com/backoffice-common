@@ -48,7 +48,11 @@ export const combineURL = (url: string, parameters: Record<string, unknown>): st
     if (isEmpty(parameters)) {
         return url;
     }
-    return `${url}?${qs.stringify(parameters)}`;
+    const queryParams = qs.stringify(parameters)
+    if (url.includes('?')) {
+        return `${url}&${queryParams}`
+    }
+    return `${url}?${queryParams}`;
 };
 
 export const capitalize = (string: string) => {

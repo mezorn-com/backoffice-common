@@ -9,12 +9,14 @@ interface BulkActionModalProps {
     onClose: () => void;
     bulkAction?: BulkAction;
     onSubmit: (values: Record<string, unknown>) => void;
+    filterValues?: Record<string, unknown>;
 }
 
 const BulkActionDrawer = ({
     onClose,
     bulkAction,
-    onSubmit
+    onSubmit,
+    filterValues  = {}
 }: BulkActionModalProps) => {
 
     const { t } = useTranslation();
@@ -50,6 +52,7 @@ const BulkActionDrawer = ({
                     <Form
                         fields={bulkAction.api.form?.fields}
                         onSubmit={handleSubmit}
+                        getFetchParams={() => filterValues}
                     />
                 )
             }

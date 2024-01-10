@@ -176,7 +176,7 @@ const Table = ({
         })
     }
 
-    // TODO: Split into its own file
+    // TODO: Split into its' own file
     const renderBulkActions = () => {
         if (!externalState.bulkItemActions  || !externalState.selectedRows?.length || hideBulkActions) {
             return null;
@@ -184,6 +184,7 @@ const Table = ({
         return (
             <>
                 <BulkActionDrawer
+                    filterValues={state.filter}
                     onClose={() => {
                         dispatch({
                             type: 'UPDATE_BULK_ACTION',

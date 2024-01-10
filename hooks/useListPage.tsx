@@ -237,6 +237,7 @@ const useListPage = ({
                             key={listActionKey}
                             actionKey={listActionKey}
                             action={listAction}
+                            callback={fetchData}
                         />
                     )
                 }

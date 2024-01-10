@@ -20,6 +20,7 @@ export interface ActionButtonProps {
 	actionKey: ListActionKey | ListItemActionKey;
 	action: ItemAction;
 	onClick?: (data?: Record<string, unknown>) => void;
+	callback?:() => void;
 }
 
 const ICON_SIZE = 16;
@@ -28,7 +29,8 @@ const ActionButton = ({
 	data,
 	actionKey,
 	action,
-	onClick
+	onClick,
+	callback
 }: ActionButtonProps) => {
 
 	const theme = useMantineTheme();
@@ -166,6 +168,7 @@ const ActionButton = ({
 					if (responseData.success) {
 						showMessage(t('success', { ns: 'common' }), 'green');
 						setShowDrawer(false);
+						callback?.()
 						// TODO: update logic
 						// void fetchData();
 					}

@@ -1,6 +1,6 @@
 import { FieldType, IFormField, RenderType } from '@/backoffice-common/types/form';
 import * as React from 'react';
-import { Anchor, Flex } from '@mantine/core';
+import { Anchor, Stack } from '@mantine/core';
 import { IconCircleCheck, IconCircleX } from '@tabler/icons-react';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import ImagePreview from '@/backoffice-common/components/common/image-preview';
@@ -18,21 +18,18 @@ export const useRenderField = () => {
                 break;
             }
             case RenderType.BOOLEAN: {
+                let icon: React.ReactNode = undefined;
                 if (value === true) {
-                    return (
-                        <Flex justify='center' align='center'>
-                            <IconCircleCheck color='green'/>
-                        </Flex>
-                    )
+                    icon = <IconCircleCheck color='green'/>
                 }
                 if (value === false) {
-                    return (
-                        <Flex justify='center' align='center'>
-                            <IconCircleX color='red'/>
-                        </Flex>
-                    )
+                    icon =<IconCircleX color='red'/>
                 }
-                return null;
+                return (
+                    <div>
+                        {icon}
+                    </div>
+                )
             }
             case RenderType.LINK: {
                 if (typeof value === 'string') {
@@ -73,6 +70,24 @@ export const useRenderField = () => {
                 );
             }
             case RenderType.IMAGE: {
+                if (Array.isArray(value)) {
+                    return (
+                        <Stack gap='xs'>
+                            {
+                                value.map((src, index) => {
+                                    return (
+                                        <ImagePreview
+                                            key={index}
+                                            src={src}
+                                            width={'200'}
+                                            height={'100'}
+                                        />
+                                    )
+                                })
+                            }
+                        </Stack>
+                    )
+                }
                 return (
                     <ImagePreview
                         src={value as string}
@@ -82,7 +97,7 @@ export const useRenderField = () => {
                 )
             }
             default: {
-                // @ts-ignore
+                // @ts-expect-error
                 console.warn(`Unknown render type "${field.renderType}"`);
                 return '-';
             }

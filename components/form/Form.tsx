@@ -296,11 +296,6 @@ const Form = ({
 					}
 
 					const uri = combineURL(field.optionsApi?.uri, params);
-					// return (
-					// 	<div>
-					// 		xDXD
-					// 	</div>
-					// )
 					return (
 						<FetchSelect
 							{...props}

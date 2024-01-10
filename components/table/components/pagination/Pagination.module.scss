@@ -2,7 +2,7 @@
     text-align: right;
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    gap: rem(20px);
     justify-content: flex-end;
     align-items: center;
 };
@@ -10,7 +10,7 @@
 .paginationControls {
     display: flex;
     flex-direction: row;
-    gap: 5px;
+    gap: rem(5px);
 };
 
 .paginationControlsButton {
@@ -18,8 +18,8 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: rem(30px);
+    height: rem(30px);
     border-radius: var(--mantine-radius-sm);
     border-width: 1px;
     border-color: var(--mantine-color-gray-2);
@@ -36,8 +36,8 @@
 };
 
 .paginationInput {
-    max-width: 50px;
-    height: 35px;
+    width: rem(50px);
+    height: rem(35px);
     text-align: center;
     border-radius: var(--mantine-radius-sm);
     &:disabled {
@@ -51,3 +51,7 @@
     align-items: center;
     gap: var(--mantine-spacing-sm);
 };
+
+.select {
+    width: rem(70px);
+}

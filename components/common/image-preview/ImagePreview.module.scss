@@ -13,19 +13,21 @@
     }
     & img {
         transition: all .8s ease;
+        min-width: 150px;
     }
-    & div.textContainer {
-        margin: 0;
-        position: absolute;
-        display: none;
-        gap: .2rem;
-        align-items: center;
-        color: var(--mantine-color-white);
-        font-size: medium;
-        z-index: 2;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        transition: all .8s ease;
-    }
+}
+
+.textContainer {
+    margin: 0;
+    position: absolute;
+    display: none;
+    gap: .2rem;
+    align-items: center;
+    color: var(--mantine-color-white);
+    font-size: medium;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all .8s ease;
 }

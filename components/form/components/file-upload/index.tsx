@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { FileInput, FileInputProps, Image } from '@mantine/core';
+import { FileInput, type FileInputProps, Image } from '@mantine/core';
+import classes from './FileUpload.module.scss';
 
 interface FileUploadProps extends Omit<FileInputProps, 'value'> {
     value: string | File | null | undefined;
@@ -29,7 +30,7 @@ const FileUpload = ({
         if (typeof value === 'string') {
             return (
                 <Image
-                    style={{ display: 'none' }}
+                    className={classes.image}
                     src={value}
                     onError={() => {
                         console.log('ERROR>>>>')

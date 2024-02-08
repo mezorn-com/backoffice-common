@@ -13,17 +13,17 @@ import {
 	TextInput,
 	Title,
 	type ButtonProps,
-	MultiSelect, Fieldset
+	MultiSelect, 
+	Fieldset
 } from '@mantine/core';
-import type { IFormField } from '@/backoffice-common/types/form';
-import { FieldType, UiType } from '@/backoffice-common/types/form';
-import { getFormInitialValues, getFormValueByKey, IFormValues, isFieldRequired, isFieldVisible, SEPARATOR, transformValuesAsync, validator, formatSelectValue } from './helper';
+import { type IFormField, FieldType, UiType } from '@/backoffice-common/types/form';
+import { getFormInitialValues, getFormValueByKey, IFormValues, isFieldRequired, isFieldVisible, SEPARATOR, transformValuesAsync, validator, formatSelectValue, getFormItemPathByKey } from './helper';
 import { randomId } from '@mantine/hooks';
 import { CascadingSelect, FetchSelect, FileUpload, FormRTE, MapAddressPicker, Location, SearchableSelect } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
 import { DatePickerInput, TimeInput, DateTimePicker, YearPickerInput } from '@mantine/dates';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
-import { clone, mergeDeepLeft, omit } from 'ramda';
+import { clone, mergeDeepLeft, omit, path } from 'ramda';
 import dayjs from 'dayjs';
 import classes from './Form.module.scss';
 import { useTranslation } from 'react-i18next';
@@ -72,7 +72,7 @@ const Form = ({
 	}, [form.values])
 
 	// console.log('form initial Values>>>>', getFormInitialValues(fields, values));
-	// console.log('FORM VALUES>>>>', form.values);
+	console.log('FORM VALUES>>>>', form.values);
 
 	const handleError = (validationErrors: any, _values: any, _event: any) => {
 		console.log('Form Error>>>', { validationErrors, _values: _values, _event: _event });
@@ -91,6 +91,9 @@ const Form = ({
 					const { key } = field;
 					const fieldElement = clone(field.element);
 					let groupPath = (field.groupPath ? field.groupPath + SEPARATOR : '') + key;
+					console.log('groupPath>>>', groupPath);
+					// const a = ;
+					// console.log('form.values[groupPath]>>>', path(getFormItemPathByKey(groupPath), form.values));
 					return (
 						<Card
 							key={groupPath}
@@ -134,7 +137,8 @@ const Form = ({
 								inheritPadding
 								py='md'
 							>
-								{form.values[key].map((formItem: unknown, index: number, array: any[]) => {
+								{/* {form.values[groupPath].map((formItem: unknown, index: number, array: any[]) => { */}
+								{(path(getFormItemPathByKey(groupPath), form.values) as any[]).map((formItem: unknown, index: number, array: any[]) => {
 									const elementPath = groupPath + SEPARATOR + index;
 									fieldElement.groupPath = elementPath;
 									fieldElement.isArrayElement = true;
@@ -182,9 +186,9 @@ const Form = ({
 			case FieldType.OBJECT: {
 				const { key } = field;
 				let groupPath = field.groupPath ?? '';
-				if (!field.isArrayElement) {
+				// if (!field.isArrayElement) {
 					groupPath = (field.groupPath ? field.groupPath + SEPARATOR : '') + key;
-				}
+				// }
 				const fieldClone = (field.fields ?? []).map(f => {
 					const child = clone(f);
 					child.groupPath = groupPath;

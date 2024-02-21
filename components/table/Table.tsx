@@ -218,11 +218,12 @@ const Table = ({
                 <Menu shadow="md" width={200}>
                     <Menu.Target>
                         <Button
-                            leftSection={<IconAdjustments size={18}/>}
                             rightSection={<IconDots size={18}/>}
                             size='xs'
                             color='yellow'
-                        />
+                        >
+                            {t('bulkActions', { ns: 'table' })}
+                        </Button>
                     </Menu.Target>
 
                     <Menu.Dropdown>

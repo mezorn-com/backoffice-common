@@ -17,7 +17,18 @@ import {
 	Fieldset
 } from '@mantine/core';
 import { type IFormField, FieldType, UiType } from '@/backoffice-common/types/form';
-import { getFormInitialValues, getFormValueByKey, IFormValues, isFieldRequired, isFieldVisible, SEPARATOR, transformValuesAsync, validator, formatSelectValue, getFormItemPathByKey } from './helper';
+import {
+	getFormInitialValues,
+	getFormValueByKey,
+	type IFormValues,
+	isFieldRequired,
+	isFieldVisible,
+	SEPARATOR,
+	transformValuesAsync,
+	validator,
+	formatSelectValue,
+	getFormItemPathByKey
+} from './helper';
 import { randomId } from '@mantine/hooks';
 import { CascadingSelect, FetchSelect, FileUpload, FormRTE, MapAddressPicker, Location, SearchableSelect } from './components';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
@@ -90,10 +101,8 @@ const Form = ({
 				if (field.element) {
 					const { key } = field;
 					const fieldElement = clone(field.element);
+					fieldElement.isArrayElement = true;
 					let groupPath = (field.groupPath ? field.groupPath + SEPARATOR : '') + key;
-					console.log('groupPath>>>', groupPath);
-					// const a = ;
-					// console.log('form.values[groupPath]>>>', path(getFormItemPathByKey(groupPath), form.values));
 					return (
 						<Card
 							key={groupPath}
@@ -122,8 +131,10 @@ const Form = ({
 												form.insertListItem(groupPath, initialValue);
 											}
 										}}
+										size='sm'
+										radius='sm'
 									>
-										<IconPlus />
+										<IconPlus size={16} />
 									</ActionIcon>
 									<Title
 										order={6}
@@ -137,17 +148,16 @@ const Form = ({
 								inheritPadding
 								py='md'
 							>
-								{/* {form.values[groupPath].map((formItem: unknown, index: number, array: any[]) => { */}
 								{(path(getFormItemPathByKey(groupPath), form.values) as any[]).map((formItem: unknown, index: number, array: any[]) => {
 									const elementPath = groupPath + SEPARATOR + index;
 									fieldElement.groupPath = elementPath;
-									fieldElement.isArrayElement = true;
 									return (
 										<Card
 											key={elementPath}
 											shadow='xs'
 											padding='md'
 											radius='md'
+											mt='xs'
 											withBorder
 											className={classes.card}
 										>
@@ -157,15 +167,21 @@ const Form = ({
 													withBorder
 													py='xs'
 												>
-													<ActionIcon
-														color='red'
-														variant='light'
-														onClick={() => {
-															form.removeListItem(groupPath, index);
-														}}
+													<Flex
+														justify='flex-end'
 													>
-														<IconMinus />
-													</ActionIcon>
+														<ActionIcon
+															color='red'
+															variant='outline'
+															onClick={() => {
+																form.removeListItem(groupPath, index);
+															}}
+															size='sm'
+															radius='sm'
+														>
+															<IconMinus size={16} />
+														</ActionIcon>
+													</Flex>
 												</Card.Section>
 											)}
 											<Card.Section
@@ -186,9 +202,9 @@ const Form = ({
 			case FieldType.OBJECT: {
 				const { key } = field;
 				let groupPath = field.groupPath ?? '';
-				// if (!field.isArrayElement) {
+				if (!field.isArrayElement) {
 					groupPath = (field.groupPath ? field.groupPath + SEPARATOR : '') + key;
-				// }
+				}
 				const fieldClone = (field.fields ?? []).map(f => {
 					const child = clone(f);
 					child.groupPath = groupPath;

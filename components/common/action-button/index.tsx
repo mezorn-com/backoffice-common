@@ -20,7 +20,7 @@ export interface ActionButtonProps {
 	actionKey: ListActionKey | ListItemActionKey;
 	action: ItemAction;
 	onClick?: (data?: Record<string, unknown>) => void;
-	callback?:() => void;
+	callback:() => void;
 }
 
 const ICON_SIZE = 16;
@@ -53,7 +53,7 @@ const ActionButton = ({
 		let label: React.ReactNode;
 		let actionFn: undefined | ((formValues?: Record<string, unknown>) => void);
 		let confirm: (Pick<OpenConfirmModal, 'children' | 'title' | 'labels' | 'confirmProps'>) | null = null;
-		// TODO: Need to implement merging........
+		// TODO: Need to implement merging...
 
 		switch(actionKey) {
 			case 'create': {
@@ -130,10 +130,10 @@ const ActionButton = ({
 						}
 
 						const { data: responseData } = await axios.delete<IResponse<any>>(`/api${deletePath}`);
+						console.log('HHHH>>H>>H>A>H>>DSA>DS>>>', callback)
 						if (responseData.success) {
 							showMessage(t('success', { ns: 'common' }), 'green');
-							// TODO: update logic
-							// void fetchData();
+							callback?.();
 						}
 					}
 				}
@@ -168,9 +168,7 @@ const ActionButton = ({
 					if (responseData.success) {
 						showMessage(t('success', { ns: 'common' }), 'green');
 						setShowDrawer(false);
-						callback?.()
-						// TODO: update logic
-						// void fetchData();
+						action.refresh && callback?.();
 					}
 				}
 			}

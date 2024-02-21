@@ -193,7 +193,8 @@ const useListPage = ({
                         if (row) {
                             navigate(replacePathParameters(subResourceKey, row))
                         }
-                    }
+                    },
+                    callback: fetchData
                 })
             }
         }
@@ -205,6 +206,7 @@ const useListPage = ({
                     rowActionButtonList.push({
                         action,
                         actionKey: listItemActionKey,
+                        callback: fetchData
                     })
                 }
             }

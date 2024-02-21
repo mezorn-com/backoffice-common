@@ -400,6 +400,7 @@ const Form = ({
 							}
 							return false;
 						}}
+						clearable
 					/>
 				);
 			}
@@ -415,6 +416,7 @@ const Form = ({
 							props?.onChange?.(v);
 						}}
 						value={value}
+						clearable
 					/>
 				);
 			}

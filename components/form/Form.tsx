@@ -380,6 +380,8 @@ const Form = ({
 			case UiType.DATE: {
 				const format = field.format ?? 'YYYY/MM/DD';
 				const value = props.value ? new Date(props.value) : props.value;
+				const startDate = field.startDate ? dayjs(field.startDate) : undefined;
+				const endDate = field.endDate ? dayjs(field.endDate) : undefined;
 				return (
 					<DatePickerInput
 						{...props}
@@ -389,6 +391,15 @@ const Form = ({
 							props?.onChange?.(v);
 						}}
 						value={value}
+						excludeDate={(date) => {
+							if (endDate && dayjs(date).isAfter(endDate, 'day')) {
+								return true;
+							}
+							if (startDate && dayjs(date).isBefore(startDate, 'day')) {
+								return true;
+							}
+							return false;
+						}}
 					/>
 				);
 			}

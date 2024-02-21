@@ -183,6 +183,8 @@ interface CascadingSelectField extends NormalFieldCore {
 interface DateInput extends NormalFieldCore {
 	uiType: UiType.DATE;
 	format: string;
+	startDate?: string;
+	endDate?: string;
 }
 
 interface DatetimeInput extends NormalFieldCore {

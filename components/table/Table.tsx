@@ -45,7 +45,21 @@ const Table = ({
 
     const pathParameter = usePathParameter();
     const renderField = useRenderField();
-    const fixedColumns = useFixedColumns(rowActionButtons);
+
+    const handleInteraction = (value?: Partial<ITableInteraction>) => {
+        const params: ITableInteraction = {
+            state: {
+                page: externalState.page,
+                pageSize: externalState.pageSize,
+                totalPage: externalState.totalPage,
+            },
+            filter: state.filter,
+            ...(value ?? {}),
+        };
+        onInteract(params);
+    }
+
+    const fixedColumns = useFixedColumns(rowActionButtons ?? [], handleInteraction);
 
     const tableColumns = React.useMemo(() => {
         if (!externalState.docs.length) {
@@ -148,19 +162,6 @@ const Table = ({
         }
     }
 
-    const handleInteraction = (value: Partial<ITableInteraction>) => {
-        const params: ITableInteraction = {
-            state: {
-                page: externalState.page,
-                pageSize: externalState.pageSize,
-                totalPage: externalState.totalPage,
-            },
-            filter: state.filter,
-            ...value,
-        };
-        onInteract(params);
-    }
-
     const handleFilterChange = (values: IFormValues) => {
         dispatch({
             type: 'HANDLE_FILTER_ITEM_CHANGE',
@@ -218,11 +219,12 @@ const Table = ({
                 <Menu shadow="md" width={200}>
                     <Menu.Target>
                         <Button
-                            leftSection={<IconAdjustments size={18}/>}
                             rightSection={<IconDots size={18}/>}
                             size='xs'
                             color='yellow'
-                        />
+                        >
+                            {t('bulkActions', { ns: 'table' })}
+                        </Button>
                     </Menu.Target>
 
                     <Menu.Dropdown>

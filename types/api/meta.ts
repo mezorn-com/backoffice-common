@@ -38,6 +38,10 @@ interface WithLabel {
     label?: string
 }
 
+interface WithRefresh {
+    refresh?: boolean;
+}
+
 export enum Method {
     GET = 'GET',
     POST = 'POST',
@@ -57,7 +61,7 @@ export type ListItemActionKey =  'update' | 'delete' | 'get' | string;
 
 export type ListActionKey = 'create' | string;
 
-export type ItemAction = true | (WithCondition & Confirmable & Invokable & WithIcon & WithLabel);
+export type ItemAction = true | (WithCondition & Confirmable & Invokable & WithIcon & WithLabel & WithRefresh);
 
 export type BulkAction = Invokable & WithLabel & Confirmable;
 

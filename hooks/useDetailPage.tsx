@@ -38,19 +38,20 @@ const useDetailPage = ({
     const pathParameter = usePathParameter();
 
     React.useEffect(() => {
-        const fetchData = async () => {
-            void fetchDetails();
-            const data = await getMeta<IFormMetaResponse>(apiRoute, 'get', { resourceId: id });
-            setState(prev => ({
-                ...prev,
-                details: data.form.fields,
-                subResources: data.subResources,
-                title: data.form.title ?? '',
-                actions: data.actions,
-            }))
-        };
         void fetchData();
     }, []);
+
+    const fetchData = async () => {
+        void fetchDetails();
+        const data = await getMeta<IFormMetaResponse>(apiRoute, 'get', { resourceId: id });
+        setState(prev => ({
+            ...prev,
+            details: data.form.fields,
+            subResources: data.subResources,
+            title: data.form.title ?? '',
+            actions: data.actions,
+        }))
+    };
 
     const fetchDetails = async () => {
         const { data: formValuesResponse } = await axios.get<IResponse<Record<string, any>>>(`${apiRoute}/${id}`);
@@ -75,6 +76,7 @@ const useDetailPage = ({
                             navigate(replacePathParameters(subResourceKey, pathParameter))
                         }}
                         data={state.values}
+                        callback={fetchData}
                     />
                 ))
             }
@@ -90,6 +92,7 @@ const useDetailPage = ({
                             actionKey={actionKey}
                             action={action}
                             data={state.values}
+                            callback={fetchData}
                         />
                     )
                 }

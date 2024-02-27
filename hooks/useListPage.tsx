@@ -34,7 +34,7 @@ type SetListResponse = {
         page: number;
         limit: number;
         totalPage: number;
-        totalData?: number;
+        total?: number;
         listResponse?: Record<string, unknown>;
     };
 };
@@ -73,7 +73,7 @@ const initialState: IListState = {
     page: 1,
     pageSize: 20,
     totalPage: 1,
-    totalData: undefined,
+    total: undefined,
     docs: [],
     columns: [],
     subResources: undefined,
@@ -100,7 +100,7 @@ const reducer = produce(
                 draft.page = action.payload.page;
                 draft.pageSize = action.payload.limit;
                 draft.totalPage = action.payload.totalPage;
-                draft.totalData = action.payload.totalData;
+                draft.total = action.payload.total;
                 draft.listResponse = action.payload.listResponse;
                 break;
             }
@@ -169,7 +169,7 @@ const useListPage = ({
                 page: data.data.page,
                 totalPage: data.data.totalPage,
                 limit: data.data.limit,
-                totalData: data.data.total,
+                total: data.data.total,
                 listResponse: data.data
             }
         })

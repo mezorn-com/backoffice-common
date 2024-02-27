@@ -55,3 +55,13 @@
 .select {
     width: rem(70px);
 }
+
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.total {
+    font-weight: 500;
+}

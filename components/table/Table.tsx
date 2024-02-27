@@ -306,6 +306,7 @@ const Table = ({
                     onPreviousPage={table.previousPage}
                     onNextPage={table.nextPage}
                     pageSizes={pageSizes}
+                    total={externalState.total}
                 />
             </div>
         </TableContext.Provider>

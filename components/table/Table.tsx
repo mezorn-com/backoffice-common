@@ -60,7 +60,7 @@ const Table = ({
         onInteract(params);
     }
 
-    const fixedColumns = useFixedColumns(rowActionButtons ?? [], handleInteraction);
+    const fixedColumns = useFixedColumns(rowActionButtons ?? []);
 
     const tableColumns = React.useMemo(() => {
         if (!externalState.docs.length) {

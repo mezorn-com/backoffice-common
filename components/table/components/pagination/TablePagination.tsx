@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActionIcon, type ActionIconProps, NumberInput, Select } from '@mantine/core';
+import { ActionIcon, type ActionIconProps, NumberInput, Select, Text } from '@mantine/core';
 import { IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight } from '@tabler/icons-react';
 import classes from './Pagination.module.scss';
 
@@ -39,7 +39,10 @@ const TablePagination = ({
     return (
         <div className={classes.wrapper}>
             <div className={classes.total}>
-                {total}
+                Нийт:&nbsp;
+                <span>
+                    {total}
+                </span>
             </div>
             <div className={classes.pagination}>
                 <div className={classes.paginationControls}>

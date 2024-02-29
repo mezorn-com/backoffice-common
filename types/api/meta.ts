@@ -63,7 +63,7 @@ export type ListActionKey = 'create' | string;
 
 export type ItemAction = true | (WithCondition & Confirmable & Invokable & WithIcon & WithLabel & WithRefresh);
 
-export type BulkAction = Invokable & WithLabel & Confirmable;
+export type BulkAction = Invokable & WithLabel & Confirmable & WithRefresh;
 
 export interface IListMetaResponse {
     form: Form;

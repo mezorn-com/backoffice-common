@@ -212,6 +212,7 @@ const Table = ({
                                 type: 'HANDLE_ROW_SELECT_CHANGE',
                                 payload: []
                             })
+                            state.selectedBulkAction?.refresh && handleInteraction();
                             showMessage(t('success', { ns: 'common' }), 'green');
                         }
                     }}

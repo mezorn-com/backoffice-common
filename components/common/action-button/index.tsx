@@ -130,7 +130,6 @@ const ActionButton = ({
 						}
 
 						const { data: responseData } = await axios.delete<IResponse<any>>(`/api${deletePath}`);
-						console.log('HHHH>>H>>H>A>H>>DSA>DS>>>', callback)
 						if (responseData.success) {
 							showMessage(t('success', { ns: 'common' }), 'green');
 							callback?.();

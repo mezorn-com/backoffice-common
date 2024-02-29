@@ -38,15 +38,21 @@ const TablePagination = ({
 
     return (
         <div className={classes.wrapper}>
-            <div className={classes.total}>
-                Нийт:&nbsp;
-                <span>
-                    {total}
-                </span>
+            <div>
+                {
+                    total !== undefined && (
+                        <div className={classes.total}>
+                            Нийт:&nbsp;
+                            <span>
+                            {total}
+                        </span>
+                        </div>
+                    )
+                }
             </div>
             <div className={classes.pagination}>
                 <div className={classes.paginationControls}>
-                    <ActionIcon
+                <ActionIcon
                         {...actionIconProps}
                         onClick={() => onPageIndexChange(0)}
                         disabled={!canPreviousPage}

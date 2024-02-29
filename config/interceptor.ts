@@ -43,6 +43,8 @@ axios.interceptors.response.use(
     (error) => {
         if (error?.response?.data?.error?.isReadableMessage) {
             showMessage(error?.response?.data?.error?.message ?? t('messages.error', { ns: 'common' }));
+        } else {
+            showMessage(t('messages.error', { ns: 'common' }));
         }
         if (error?.response?.status === 401) {
             useStore.getState().clearStore();

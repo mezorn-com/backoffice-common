@@ -17,7 +17,7 @@ import { Button, Menu } from '@mantine/core';
 import BulkActionDrawer from './components/BulkActionDrawer';
 import axios from 'axios';
 import type { IResponse } from '@/backoffice-common/types/api';
-import { IconAdjustments, IconDots } from '@tabler/icons-react';
+import { IconDots } from '@tabler/icons-react';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
 
@@ -38,10 +38,11 @@ const Table = ({
     hideBulkActions = false,
     bulkActionUrlParser
 }: ITableProps) => {
+    const { t } = useTranslation();
     const [ state, dispatch ] = React.useReducer(reducer, initialState);
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
     const columnObserverRef = React.useRef<ResizeObserver | null>(null);
-    const { t } = useTranslation();
+    const [ rowHoverIndex, setRowHoverIndex ] = React.useState<number | null>(null);
 
     const pathParameter = usePathParameter();
     const renderField = useRenderField();
@@ -256,8 +257,15 @@ const Table = ({
         )
     }
 
+
     return (
-        <TableContext.Provider value={{ columnObserver: columnObserverRef.current }}>
+        <TableContext.Provider
+            value={{
+                columnObserver: columnObserverRef.current,
+                rowHoverIndex,
+                setRowHoverIndex
+            }}
+        >
             <div className={classes.container}>
                 <div className={classes.header}>
                     <div className={classes.filters}>

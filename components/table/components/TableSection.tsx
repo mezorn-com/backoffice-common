@@ -8,7 +8,8 @@ import ObservedCell from './ObservedCell';
 import Placeholder from './Placeholder';
 import { clsx } from 'clsx';
 import classes from './TableSection.module.scss';
-import SectionBody from '@/backoffice-common/components/table/components/SectionBody';
+import SectionBody from '../components/SectionBody';
+import { TableContext } from '../context';
 
 interface TableElementProps {
     section: TableSectionType,
@@ -46,6 +47,7 @@ const TableSection = ({
 }: TableElementProps) => {
     const flatHeaders = useSectionFlatHeaders(section, table);
     const tablesContainerRef = React.useRef<HTMLDivElement>(null);
+    const { setRowHoverIndex } = React.useContext(TableContext);
 
     const visible = section === TableSectionType.CENTER || flatHeaders.length > 0;
 
@@ -144,6 +146,9 @@ const TableSection = ({
                 [classes.right]: section === TableSectionType.RIGHT,
                 [classes.visible]: visible
             })}
+            onMouseLeave={() => {
+                setRowHoverIndex(null);
+            }}
         >
             <div
                 className={classes.wrapper}
@@ -151,10 +156,10 @@ const TableSection = ({
             >
                 <div className={classes.head}>
                     {
-                        getHeaderGroups().map(headerGroup => {
+                        getHeaderGroups().map((headerGroup, index) => {
                             const rowId = headerGroup.id.split('_')[1];
                             return (
-                                <TableRow key={headerGroup.id} rowId={rowId} rowGroup={RowGroup.HEADER}>
+                                <TableRow key={headerGroup.id} rowId={rowId} rowGroup={RowGroup.HEADER} rowIndex={index}>
                                     {renderCheckBox(headerGroup)}
                                     {
                                         headerGroup.headers.map(header => {
@@ -191,9 +196,9 @@ const TableSection = ({
                             })}
                         >
                             {
-                                table.getRowModel().rows.map(row => {
+                                table.getRowModel().rows.map((row, index) => {
                                     return (
-                                        <TableRow key={row.id} rowId={row.id} rowGroup={RowGroup.BODY}>
+                                        <TableRow key={row.id} rowId={row.id} rowGroup={RowGroup.BODY} rowIndex={index}>
                                             {renderCheckBox(row)}
                                             {
                                                 getVisibleCells(row).map(cell => {

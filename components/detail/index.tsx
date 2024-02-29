@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { path } from 'ramda';
-import { Anchor, Flex, SimpleGrid } from '@mantine/core';
+import { SimpleGrid } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, RenderType } from '@/backoffice-common/types/form';
-import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import { IDetailPageState } from '@/backoffice-common/hooks/useDetailPage';
 import { useRenderField } from '@/backoffice-common/hooks';
 import classes from './Detail.module.scss';

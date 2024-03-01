@@ -381,7 +381,7 @@ const Form = ({
 			}
 			case UiType.DATE: {
 				const format = field.format ?? 'YYYY/MM/DD';
-				const value = props.value ? new Date(props.value) : props.value;
+				const value = props.value ? new Date(props.value) : null;
 				const startDate = field.startDate ? dayjs(field.startDate) : undefined;
 				const endDate = field.endDate ? dayjs(field.endDate) : undefined;
 				return (
@@ -389,7 +389,7 @@ const Form = ({
 						{...props}
 						valueFormat={format}
 						onChange={(value: Date) => {
-							const v = dayjs(value).format(format);
+							const v = value ? dayjs(value).format(format) : undefined;
 							props?.onChange?.(v);
 						}}
 						value={value}

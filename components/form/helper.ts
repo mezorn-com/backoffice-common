@@ -150,7 +150,7 @@ export const getErrorMessage = (field: IFormField, value: any): null | string =>
 	if (field.uiType === UiType.CHECKBOX) {
 		return null;
 	}
-	if (isNil(value) || value === '') {
+	if (value === undefined || value === null || value === '') {
 		return t('validation.error.enterValue', { ns: 'form', value: field.label });
 	}
 	if (field.uiType === UiType.TEXT_INPUT) {

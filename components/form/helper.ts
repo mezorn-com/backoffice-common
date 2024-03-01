@@ -1,11 +1,10 @@
 import { clone, drop, head, isNil, path, values as objectValues } from 'ramda';
 import i18n from '@/config/i18n';
-import type { IFormField, INormalField } from '@/backoffice-common/types/form';
-import { FieldType, UiType } from '@/backoffice-common/types/form';
+import type { SelectOption } from '@/backoffice-common/types/form';
+import { FieldType, IFormField, INormalField, UiType } from '@/backoffice-common/types/form';
 import { getArrayObjectByProp } from '@/backoffice-common/utils';
 import dayjs from 'dayjs';
 import { uploadFile } from '@/backoffice-common/utils/file-upload';
-import type { SelectOption } from '@/backoffice-common/types/form';
 import type { ComboboxItem } from '@mantine/core';
 
 const { t, language } = i18n;
@@ -82,6 +81,13 @@ export const getInitialValue = (field: INormalField, initialValue?: any) => {
 		}
 		case UiType.TIME: {
 			return initialValue ?? field.value ?? undefined;
+		}
+		case UiType.DATETIME: {
+			if (initialValue === undefined) {
+				return undefined;
+			}
+			const date = dayjs(initialValue);
+			return date.isValid() ? date.format(field.format ?? 'YYYY-MM-DD HH:mm') : undefined;
 		}
 		case UiType.DATE: {
 			if (initialValue === undefined) {

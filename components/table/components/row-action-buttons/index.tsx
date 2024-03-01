@@ -8,16 +8,18 @@ import classes from './RowActionButton.module.scss';
 interface RowActionButtonsProps {
 	buttons: ActionButtonProps[];
 	row: Row<Record<string, unknown>>;
-	callback: () => void;
 }
 
 const RowActionButtons = ({
 	buttons,
 	row,
-	callback
 }: RowActionButtonsProps) => {
+
 	return (
-		<Menu shadow='md' position='bottom-end'>
+		<Menu
+			shadow='md'
+			position='bottom-end'
+		>
 			<Menu.Target>
 				<ActionIcon
 					variant='filled'

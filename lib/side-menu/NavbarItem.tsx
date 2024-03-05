@@ -45,6 +45,7 @@ const NavbarItem = ({
         // @ts-expect-error
         const Icon = icons['Icon' + icon];
         if (!Icon) {
+            console.warn(`Icon not found: ${icon}`);
             return null;
         }
         return (

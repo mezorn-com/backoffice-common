@@ -150,20 +150,20 @@ export const getErrorMessage = (field: IFormField, value: any): null | string =>
 	if (field.uiType === UiType.CHECKBOX) {
 		return null;
 	}
-	if (isNil(value) || value === '') {
+	if (value === undefined || value === null || value === '') {
 		return t('validation.error.enterValue', { ns: 'form', value: field.label });
 	}
 	if (field.uiType === UiType.TEXT_INPUT) {
-		if (field.length && ((!field.numeric && field.length !== value?.length) || (field.numeric && field.length !== value.toString().length))) {
+		if (field.length && value?.length && ((!field.numeric && field.length !== value?.length) || (field.numeric && field.length !== value.toString().length))) {
 			return t('validation.error.exactNLengthAllowed', { ns: 'form', value: field.length.toString() })
 		}
-		if (typeof field.maxLength === 'number' && field.maxLength < value?.length) {
+		if (value?.length && typeof field.maxLength === 'number' && field.maxLength < value?.length) {
 			return t('validation.error.maxNLengthAllowed', { ns: 'form', value: (field.maxLength ?? 0).toString() })
 		}
-		if (typeof field.minLength === 'number' && field.minLength > value?.length) {
+		if (value?.length && typeof field.minLength === 'number' && field.minLength > value?.length) {
 			return t('validation.error.minNLengthAllowed', { ns: 'form', value: (field.minLength ?? 0).toString() })
 		}
-		if (field.numeric && !/^\d+$/.test(value)) {
+		if (value?.length && field.numeric && !/^\d+$/.test(value)) {
 			return t('validation.error.numberOnly', { ns: 'form' });
 		}
 	}

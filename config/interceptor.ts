@@ -46,7 +46,7 @@ axios.interceptors.response.use(
         } else {
             showMessage(t('messages.error', { ns: 'common' }));
         }
-        if (error?.response?.status === 401) {
+        if (error?.response?.status === 401 && !error.config.url.endsWith('/login')) {
             useStore.getState().clearStore();
         }
         useStore.setState({ loading: false });

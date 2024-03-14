@@ -1,9 +1,5 @@
 .grid {
-    border-bottom: 1px solid var(--mantine-color-gray-1);
     margin-top: var(--mantine-spacing-sm);
-    &:last-child {
-        border-bottom: 0;
-    }
 };
 
 .label {
@@ -22,8 +18,8 @@
 .container {
     border-radius: var(--mantine-radius-lg);
     padding: 20px;
-    border: 1px solid var(--mantine-color-gray-2);
-    margin: 1rem;
+    //border: 1px solid var(--mantine-color-gray-2);
+    //margin: 1rem;
 };
 
 .group {

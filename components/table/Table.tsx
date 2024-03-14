@@ -310,7 +310,7 @@ const Table = ({
                     canPreviousPage={table.getCanPreviousPage()}
                     canNextPage={table.getCanNextPage()}
                     pageSize={externalState.pageSize.toString()}
-                    pageCount={table.getPageCount()}
+                    pageCount={externalState.totalPage || table.getPageCount()}
                     page={externalState.page}
                     onPageSizeChange={value =>  table.setPageSize(value)}
                     onPageIndexChange={value => table.setPageIndex(value)}

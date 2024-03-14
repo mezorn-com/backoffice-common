@@ -85,7 +85,7 @@ const TablePagination = ({
                         min={1}
                         size='xs'
                     />
-                    / {pageCount}
+                    / {pageCount || 1}
                 </div>
                 <Select
                     data={pageSizes.map(pageSize => {

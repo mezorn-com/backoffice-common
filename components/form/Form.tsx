@@ -343,6 +343,7 @@ const Form = ({
 					if (field.multiple) {
 						return (
 							<MultiSelect
+								clearable
 								{...props}
 								value={props.value ?? []}
 								data={formatSelectValue(field.options)}
@@ -351,6 +352,7 @@ const Form = ({
 					}
 					return (
 						<Select
+							clearable
 							{...props}
 							data={formatSelectValue(field.options)}
 						/>
@@ -379,7 +381,7 @@ const Form = ({
 			}
 			case UiType.DATE: {
 				const format = field.format ?? 'YYYY/MM/DD';
-				const value = props.value ? new Date(props.value) : props.value;
+				const value = props.value ? new Date(props.value) : null;
 				const startDate = field.startDate ? dayjs(field.startDate) : undefined;
 				const endDate = field.endDate ? dayjs(field.endDate) : undefined;
 				return (
@@ -387,7 +389,7 @@ const Form = ({
 						{...props}
 						valueFormat={format}
 						onChange={(value: Date) => {
-							const v = dayjs(value).format(format);
+							const v = value ? dayjs(value).format(format) : undefined;
 							props?.onChange?.(v);
 						}}
 						value={value}
@@ -406,13 +408,13 @@ const Form = ({
 			}
 			case UiType.DATETIME: {
 				const format = field.format ?? 'YYYY/MM/DD HH:mm';
-				const value = props.value ? new Date(props.value) : props.value;
+				const value = props.value ? new Date(props.value) : null;
 				return (
 					<DateTimePicker
 						{...props}
 						valueFormat={format}
 						onChange={(value: Date) => {
-							const v = dayjs(value).format(format);
+							const v = value ? dayjs(value).format(format) : undefined;
 							props?.onChange?.(v);
 						}}
 						value={value}
@@ -478,6 +480,7 @@ const Form = ({
 			case UiType.YEAR: {
 				return (
 					<YearPickerInput
+						clearable
 						{...props}
 					/>
 				)

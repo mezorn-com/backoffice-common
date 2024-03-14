@@ -31,7 +31,9 @@ const ProtectedRoutes = () => {
         const redirectMenuItem = sideMenu?.[0];
         if (redirectMenuItem) {
             const redirectRoute = redirectMenuItem.resource ?? redirectMenuItem.path;
-            return <Navigate to={redirectRoute} replace={true}/>;
+            if (redirectRoute) {
+                return <Navigate to={redirectRoute} replace={true}/>;
+            }
         }
     }
 

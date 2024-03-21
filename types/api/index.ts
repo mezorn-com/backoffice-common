@@ -5,8 +5,8 @@ export interface IResponse<DataType> {
     success: boolean;
 }
 
-export interface IListResponseData {
-    docs: Record<string, unknown>[];
+export interface IListResponseData<T = Record<string, unknown>> {
+    docs: T[];
     limit: number;
     page: number;
     totalPage: number;
@@ -14,8 +14,8 @@ export interface IListResponseData {
     [key: string]: unknown;
 }
 
-export interface IListResponse extends IResponse<any> {
-    data: IListResponseData;
+export interface IListResponse<T = any> extends IResponse<IListResponseData<T>> {
+
 }
 
 export interface IFormSubmitResponse extends IResponse<string> {

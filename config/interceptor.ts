@@ -4,6 +4,7 @@ import { API_URL } from "@/config";
 import i18n from '../../config/i18n';
 import type { RawAxiosRequestHeaders } from 'axios';
 import { showMessage } from '@/backoffice-common/lib/notification';
+import { getConfig } from '@/config/interceptor-config';
 
 const { t, language } = i18n;
 
@@ -32,7 +33,7 @@ axios.interceptors.request.use((config) => {
         config.url = `${API_URL}${config.url}`;
     }
 
-    return config;
+    return getConfig(config);
 });
 
 axios.interceptors.response.use(

@@ -161,29 +161,27 @@ const Form = ({
 											withBorder
 											className={classes.card}
 										>
-											{array.length > 1 && (
-												<Card.Section
-													inheritPadding
-													withBorder
-													py='xs'
+											<Card.Section
+												inheritPadding
+												withBorder
+												py='xs'
+											>
+												<Flex
+													justify='flex-end'
 												>
-													<Flex
-														justify='flex-end'
+													<ActionIcon
+														color='red'
+														variant='outline'
+														onClick={() => {
+															form.removeListItem(groupPath, index);
+														}}
+														size='sm'
+														radius='sm'
 													>
-														<ActionIcon
-															color='red'
-															variant='outline'
-															onClick={() => {
-																form.removeListItem(groupPath, index);
-															}}
-															size='sm'
-															radius='sm'
-														>
-															<IconMinus size={16} />
-														</ActionIcon>
-													</Flex>
-												</Card.Section>
-											)}
+														<IconMinus size={16} />
+													</ActionIcon>
+												</Flex>
+											</Card.Section>
 											<Card.Section
 												inheritPadding
 												py='md'

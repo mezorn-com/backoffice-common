@@ -14,18 +14,21 @@ interface IConfig {
     apiRoute: string;
     clientRoute: string;
     id: string;
+    onFetch?: (response: IResponse<Record<any, any>>) => void;
 }
 
 interface IEditPageState {
     fields: IFormField[];
     values: Record<string, any>;
     title: string;
+    ready: boolean;
 }
 
 const useEditPage = ({
     apiRoute,
     clientRoute,
-    id
+    id,
+    onFetch
 }: IConfig) => {
 
     const { t } = useTranslation();
@@ -35,7 +38,8 @@ const useEditPage = ({
     const [ state, setState ] = React.useState<IEditPageState>({
         fields: [],
         values: {},
-        title: ''
+        title: '',
+        ready: false
     })
 
     React.useEffect(() => {
@@ -45,8 +49,10 @@ const useEditPage = ({
             setState({
                 title: data?.form?.title ?? '',
                 values: formValuesResponse.data,
-                fields: data?.form?.fields ?? []
-            })
+                fields: data?.form?.fields ?? [],
+                ready: true
+            });
+            onFetch?.(formValuesResponse);
         }
         void fetchData();
     }, []);

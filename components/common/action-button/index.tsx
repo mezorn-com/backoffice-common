@@ -143,7 +143,6 @@ const ActionButton = ({
 		label = action !== true ? (action.label ?? label) : label;
 		if (action !== true && action.confirmation) {
 			confirm = {
-				title: 'Confirmation Modal',
 				children: action.confirmation.dialogText,
 				labels: {
 					confirm: action.confirmation.buttonText ?? 'Confirm',

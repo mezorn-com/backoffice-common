@@ -215,7 +215,7 @@ export interface HtmlInput extends NormalFieldCore {
 	allowedAttributes?: Record<string, string[]>;
 }
 
-export interface MapAddressPicker extends NormalFieldCore {
+export interface IMapAddressPicker extends NormalFieldCore {
 	uiType: UiType.MAP_ADDRESS_PICKER;
 	suggestApi: {
 		uri: string;
@@ -285,7 +285,7 @@ export type INormalField = TextInputField
 	| TimeInput
 	| DatetimeInput
 	| CascadingSelectField
-	| MapAddressPicker
+	| IMapAddressPicker
 	| FileUpload
 	| HtmlInput
 	| SearchSelect

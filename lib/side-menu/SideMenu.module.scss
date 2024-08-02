@@ -1,8 +1,8 @@
 .menus {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    padding: 15px 0;
+    gap: 0px;
+    padding: 15px 10px 0 0;
 };
 
 .logo {
@@ -34,5 +34,5 @@
 };
 
 .navbarHeader {
-    border-bottom: 1px solid var(--mantine-color-gray-2);
+    border-bottom: 1px solid var(--mantine-color-gray-1);
 }

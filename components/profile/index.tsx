@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ActionIcon, Avatar, Flex, Menu, Title } from '@mantine/core';
-import { IconSettings, IconUser } from '@tabler/icons-react';
+import { IconPower, IconSettings, IconUser } from '@tabler/icons-react';
 import classes from './Profile.module.scss';
 import useStore from '@/store';
 import { useTranslation } from 'react-i18next';
@@ -16,14 +16,14 @@ const Profile = () => {
 
 	return (
 		<div className={classes.container}>
-			{render()}
+			{/* {render()} */}
 			<Flex
-				justify="center"
+				justify="between"
 				align="center"
 				direction="row"
 				gap="sm"
 			>
-				<Avatar radius={'xl'}>
+				<Avatar radius={'sm'} size={50} >
 					<IconUser/>
 				</Avatar>
 				<Title order={6}>
@@ -32,7 +32,7 @@ const Profile = () => {
 			</Flex>
 			<Menu shadow="md" width={200} position='bottom-end'>
 				<Menu.Target>
-					<ActionIcon size={'lg'} variant={'light'}>
+					<ActionIcon size={'xl'} variant={'light'} >
 						<IconSettings/>
 					</ActionIcon>
 				</Menu.Target>

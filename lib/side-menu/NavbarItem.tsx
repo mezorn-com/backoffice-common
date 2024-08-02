@@ -49,12 +49,14 @@ const NavbarItem = ({
             return null;
         }
         return (
-            <Icon size="1.1rem" stroke={1.5}/>
+            <Icon size="24px" stroke={1.5} style={{ flexShrink: 0 }}/>
         )
     }, [ icon ]);
 
     return (
-        <>
+        <div style={{
+            paddingLeft: '10px',
+        }}>
             <UnstyledButton
                 onClick={handleClick}
                 className={clsx({
@@ -70,7 +72,7 @@ const NavbarItem = ({
                          })}
                     >
                         {menuIcon}
-                        <Box ml="md">{label}</Box>
+                        <Box ml="md" style={{lineHeight: '110%'}}>{label}</Box>
                     </Box>
                     {
                         hasLinks && (
@@ -84,10 +86,12 @@ const NavbarItem = ({
                     }
                 </Group>
             </UnstyledButton>
-            <div className={classes.children} >
-                {hasLinks ? <Collapse in={opened}>{children}</Collapse> : null}
-            </div>
-        </>
+            {hasLinks ? 
+                <div className={classes.children} >
+                    <Collapse in={opened}>{children}</Collapse>
+                </div>
+             : null}
+        </div>
     )
 };
 

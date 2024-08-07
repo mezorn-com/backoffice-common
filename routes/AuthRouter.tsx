@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate, matchRoutes } from 'react-router-dom';
 import authRoutes from '@/routes/AuthRoutes';
 
 const AuthRouter = () => {
@@ -8,8 +8,8 @@ const AuthRouter = () => {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        const pathArray: string[] = authRoutes.map(route => route.path);
-        if (!pathArray.includes(location.pathname)) {
+        const matchedRoutes = matchRoutes(authRoutes, location.pathname);
+        if (!matchedRoutes || matchedRoutes.length === 0) {
             navigate('/', {
                 replace: true
             });

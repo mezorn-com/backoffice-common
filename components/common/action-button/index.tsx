@@ -221,11 +221,21 @@ const ActionButton = ({
 		if(isFormAction){
 			return (
 				<Button
-					size='xs'
+					size='md'
 					variant='light'
 					leftSection={Icon ? <Icon size={ICON_SIZE} color={theme.colors[color][primaryShade]}/> : <IconList size={ICON_SIZE} color={theme.colors[color][primaryShade]}/>}
 					onClick={() => handler()}
 					color={color}
+					justify='flex-start'
+					styles={{
+						label: {
+							fontSize: 12,
+						},
+						root: {
+							background: 'white',
+							margin: '0px 5px'
+						},
+					}}
 				>
 					{label}
 				</Button>
@@ -242,7 +252,7 @@ const ActionButton = ({
 				styles={{
 					label: {
 						fontSize: '14px',
-					}
+					},
 				}}
 			>
 				{label}

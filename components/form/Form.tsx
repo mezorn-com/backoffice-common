@@ -451,7 +451,6 @@ const Form = ({
 				);
 			}
 			case UiType.CHECKBOX: {
-				console.log(props)
 				return (
 					<Checkbox
 						className={classes.checkboxContainer}

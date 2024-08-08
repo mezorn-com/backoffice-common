@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { ListActionKey, ListItemActionKey, ItemAction } from '@/backoffice-common/types/api/meta';
 import { actionColors } from '@/backoffice-common/utils/styles';
 import type { OpenConfirmModal } from '@mantine/modals/lib/context';
-import type { TablerIconsProps } from '@tabler/icons-react';
+import { IconList, type TablerIconsProps } from '@tabler/icons-react';
 import axios from 'axios';
 import type { IResponse } from '@/backoffice-common/types/api';
 import { showMessage } from '@/backoffice-common/lib/notification';
@@ -21,6 +21,7 @@ export interface ActionButtonProps {
 	action: ItemAction;
 	onClick?: (data?: Record<string, unknown>) => void;
 	callback:() => void;
+	isFormAction?: boolean
 }
 
 const ICON_SIZE = 16;
@@ -30,7 +31,8 @@ const ActionButton = ({
 	actionKey,
 	action,
 	onClick,
-	callback
+	callback,
+	isFormAction = false
 }: ActionButtonProps) => {
 
 	const theme = useMantineTheme();
@@ -216,17 +218,38 @@ const ActionButton = ({
 			)
 		}
 
+		if(isFormAction){
+			return (
+				<Button
+					size='xs'
+					variant='light'
+					leftSection={Icon ? <Icon size={ICON_SIZE} color={theme.colors[color][primaryShade]}/> : <IconList size={ICON_SIZE} color={theme.colors[color][primaryShade]}/>}
+					onClick={() => handler()}
+					color={color}
+				>
+					{label}
+				</Button>
+			)
+		}
+
 		return (
 			<Button
-				size='compact-xs'
-				variant='light'
-				leftSection={Icon ? <Icon size={ICON_SIZE} color={theme.colors[color][primaryShade]}/> : undefined}
+				size='md'
+				variant={actionKey == 'create' ? 'filled' : 'light'}
+				leftSection={Icon ? <Icon size={24} color={actionKey == 'create' ? theme.colors[color][0] : theme.colors[color][primaryShade]}/> : undefined}
 				onClick={() => handler()}
 				color={color}
+				styles={{
+					label: {
+						fontSize: '14px',
+					}
+				}}
 			>
 				{label}
 			</Button>
 		)
+
+		
 	}
 
 	if (action !== true && action.condition) {

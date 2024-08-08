@@ -15,8 +15,8 @@
 };
 
 .head {
-    background: var(--mantine-color-gray-2);
-    border-bottom: 1px solid var(--mantine-color-gray-2);
+    background: var(--mantine-color-white);
+    border-bottom: 1px solid var(--mantine-color-gray-1);
 };
 
 .visible {
@@ -34,7 +34,7 @@
 }
 
 .right {
-    box-shadow: 10px 0 20px 5px #c7c7c7;
+    box-shadow: 10px 0 20px 5px #fce6e6;
 }
 
 .left {

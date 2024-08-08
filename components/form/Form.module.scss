@@ -8,3 +8,25 @@
     word-break: keep-all;
     white-space: nowrap;
 }
+
+.checkboxContainer {
+    border: 1px solid var(--mantine-color-gray-4);
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0px 6px;
+    border-radius: var(--mantine-radius-sm);
+    font-weight: 500;
+    transition:
+        color 100ms ease,
+        background-color 100ms ease,
+        border-color 100ms ease;
+    cursor: pointer;
+
+    &[data-checked] {
+        background-color: var(--mantine-primary-color-6);
+        border-color: var(--mantine-primary-color-6);
+        color: var(--mantine-color-white);
+    }
+
+}

@@ -1,25 +1,32 @@
 .container {
     word-break: keep-all;
     white-space: nowrap;
-    border-right: 1px solid var(--mantine-color-gray-3);
-    &:last-of-type {
-        border-right-width: 0;
-    };
+    // border-right: 1px solid var(--mantine-color-gray-3);
+    // &:last-of-type {
+    //     border-right-width: 0;
+    // };
+    display: flex;
+    flex-direction: row;
+    place-items: center
 };
 
 @mixin cell {
     width: min-content;
-    padding: .3rem .5rem;
-    color: var(--mantine-color-gray-8);
+    padding: .39rem 1rem;
+    color: var(--mantine-color-gray-7);
+
 }
 
 .header {
     @include cell;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--mantine-color-gray-6);
+    text-transform: uppercase;
 }
 
 .cell {
     @include cell;
     font-size: 14px;
+    font-weight: 500;
 }

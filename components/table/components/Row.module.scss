@@ -2,10 +2,10 @@
     display: flex;
     align-items: flex-end;
     height: fit-content;
-    border-bottom: 1px solid var(--mantine-color-gray-3);
-    &:nth-child(even) {
-        background: var(--mantine-color-gray-0);
-    }
+    border-bottom: 1px solid var(--mantine-color-gray-1);
+    // &:nth-child(even) {
+    //     background: var(--mantine-color-gray-0);
+    // }
     &:last-of-type {
         border-bottom-width: 0;
     };

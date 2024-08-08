@@ -23,7 +23,7 @@ const Profile = () => {
 				direction="row"
 				gap="sm"
 			>
-				<Avatar radius={'sm'} size={50} >
+				<Avatar radius={'sm'} size={44} >
 					<IconUser/>
 				</Avatar>
 				<Title order={6}>

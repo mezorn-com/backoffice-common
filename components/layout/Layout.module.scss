@@ -1,7 +1,8 @@
 .bodyWrapper {
     overflow: auto;
     flex: 1;
-    padding: rem(15px);
+    padding: 0 rem(10px) rem(10px) rem(10px);
+    background-color: var(--mantine-color-gray-0);
 }
 
 .pageWrapper {
@@ -13,9 +14,8 @@
 .pageHeader {
     display: flex;
     justify-content: space-between;
-    padding: rem(10px) rem(20px);
+    padding: rem(10px);
     background-color: var(--mantine-color-gray-0);
-    border-bottom: 1px solid var(--mantine-color-gray-2);
     align-items: center;
 };
 

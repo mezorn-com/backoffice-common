@@ -264,6 +264,12 @@ const Form = ({
 					return (
 						<PasswordInput
 							{...props}
+							placeholder={props.label}
+							styles={{
+								label: {
+									display: 'none'
+								}
+							}}
 							autoComplete={'new-password'}
 						/>
 					);
@@ -272,6 +278,12 @@ const Form = ({
 					return (
 						<Textarea
 							{...props}
+							placeholder={props.label}
+							styles={{
+								label: {
+									display: 'none'
+								}
+							}}
 							autosize
 							minRows={2}
 							autoComplete={'off'}
@@ -282,6 +294,12 @@ const Form = ({
 					return (
 						<NumberInput
 							{...props}
+							placeholder={props.label}
+							styles={{
+								label: {
+									display: 'none'
+								}
+							}}
 							autoComplete='off'
 							precision={10}
 						/>
@@ -290,6 +308,12 @@ const Form = ({
 				return (
 					<TextInput
 						{...props}
+						placeholder={props.label}
+						styles={{
+							label: {
+								display: 'none'
+							}
+						}}
 						autoComplete='off'
 						onChange={event => {
 							if (field.numeric) {
@@ -352,6 +376,12 @@ const Form = ({
 						<Select
 							clearable
 							{...props}
+							placeholder={props.label}
+							styles={{
+								label: {
+									display: 'none'
+								}
+							}}
 							data={formatSelectValue(field.options)}
 						/>
 					);
@@ -421,14 +451,22 @@ const Form = ({
 				);
 			}
 			case UiType.CHECKBOX: {
-				return <Checkbox
-					{...omit(['withAsterisk'], props)}
-					label={(
-						<div className={classes.checkboxLabel}>
-							{props.label}
-						</div>
-					)}
-				/>;
+				console.log(props)
+				return (
+					<Checkbox
+						className={classes.checkboxContainer}
+						{...omit(['withAsterisk'], props)}
+						label={(
+							<div className={classes.checkboxLabel}>
+								{props.label}
+							</div>
+						)}
+						onChange={()=> props.onChange((value: boolean) => !value)}
+						wrapperProps={{
+							onClick: () => props.onChange((value: boolean) => !value)
+						}}
+					/>
+				);
 			}
 			case UiType.MAP_ADDRESS_PICKER: {
 				return (

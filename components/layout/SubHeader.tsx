@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Flex, rem, Title } from '@mantine/core';
+import { ActionIcon, Button, Flex, rem, Title } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { IconChevronLeft } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
@@ -42,15 +42,15 @@ const SubHeader = ({
                 direction="row"
             >
                 {
-                    backButton && (
-                        <Button
+                    backButton || title && (
+                        <ActionIcon
                             onClick={goBack}
-                            leftSection={<IconChevronLeft size={16}/>}
                             variant={'light'}
-                            size='xs'
+                            size='xl'
                         >
-                            {t('back', { ns: 'common' })}
-                        </Button>
+                            {/* {t('back', { ns: 'common' })} */}
+                            <IconChevronLeft size={16}/>
+                        </ActionIcon>
                     )
                 }
                 <Title size={'h2'}>

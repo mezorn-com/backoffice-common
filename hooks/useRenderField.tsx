@@ -4,6 +4,7 @@ import { Anchor, Stack } from '@mantine/core';
 import { IconCircleCheck, IconCircleCheckFilled, IconCircleX, IconCircleXFilled } from '@tabler/icons-react';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import ImagePreview from '@/backoffice-common/components/common/image-preview';
+import { replacePathParameters } from '@/backoffice-common/utils';
 
 export const useRenderField = () => {
     return (field: IFormField, value: unknown, data: Record<string, any>): React.ReactNode => {
@@ -33,7 +34,7 @@ export const useRenderField = () => {
                     return (
                         <Anchor
                             target={'_blank'}
-                            href={getSubResourceUrl(uri, [{ match: '{_id}', replace: data?._id ?? '' }])}
+                            href={replacePathParameters(uri, data)}
                         >
                             {value}
                         </Anchor>

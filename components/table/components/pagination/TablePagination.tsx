@@ -52,10 +52,11 @@ const TablePagination = ({
             </div>
             <div className={classes.pagination}>
                 <div className={classes.paginationControls}>
-                <ActionIcon
+                    <ActionIcon
                         {...actionIconProps}
                         onClick={() => onPageIndexChange(0)}
                         disabled={!canPreviousPage}
+                        size={'lg'}
                     >
                         <IconChevronsLeft size={16}/>
                     </ActionIcon>
@@ -63,6 +64,7 @@ const TablePagination = ({
                         {...actionIconProps}
                         onClick={onPreviousPage}
                         disabled={!canPreviousPage}
+                        size={'lg'}
                     >
                         <IconChevronLeft size={16}/>
                     </ActionIcon>
@@ -70,6 +72,7 @@ const TablePagination = ({
                         {...actionIconProps}
                         onClick={onNextPage}
                         disabled={!canNextPage}
+                        size={'lg'}
                     >
                         <IconChevronRight size={16}/>
                     </ActionIcon>
@@ -77,6 +80,7 @@ const TablePagination = ({
                         {...actionIconProps}
                         onClick={() => onPageIndexChange(pageCount - 1)}
                         disabled={!canNextPage}
+                        size={'lg'}
                     >
                         <IconChevronsRight size={16}/>
                     </ActionIcon>
@@ -86,13 +90,14 @@ const TablePagination = ({
                     <NumberInput
                         type='text'
                         value={page}
+                        hideControls
                         onChange={value => {
                             const page = value ? Number(value) : 0;
                             onPageIndexChange(page - 1);
                         }}
                         className={classes.paginationInput}
                         min={1}
-                        size='xs'
+                        size='sm'
                     />
                     / {pageCount || 1}
                 </div>
@@ -109,7 +114,7 @@ const TablePagination = ({
                         className: classes.select,
                     }}
                     value={pageSize}
-                    size='xs'
+                    size='sm'
                 />
             </div>
         </div>

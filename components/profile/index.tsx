@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { ActionIcon, Avatar, Flex, Menu, Title } from '@mantine/core';
-import { IconSettings, IconUser } from '@tabler/icons-react';
+import { ActionIcon, Avatar, Button, Flex, Menu, Title, UnstyledButton } from '@mantine/core';
+import { IconArrowDown, IconChevronCompactDown, IconChevronDown, IconPower, IconSettings, IconUser } from '@tabler/icons-react';
 import classes from './Profile.module.scss';
 import useStore from '@/store';
 import { useTranslation } from 'react-i18next';
 import { useConfigItems } from '@/lib/config-items';
 
-const Profile = () => {
+const Profile = ({compact = false}) => {
 
 	const { t } = useTranslation();
 	// @ts-ignore
@@ -16,25 +16,32 @@ const Profile = () => {
 
 	return (
 		<div className={classes.container}>
-			{render()}
-			<Flex
-				justify="center"
-				align="center"
-				direction="row"
-				gap="sm"
-			>
-				<Avatar radius={'xl'}>
-					<IconUser/>
-				</Avatar>
-				<Title order={6}>
-					{userName}
-				</Title>
-			</Flex>
+			{/* {render()} */}
+			
 			<Menu shadow="md" width={200} position='bottom-end'>
 				<Menu.Target>
-					<ActionIcon size={'lg'} variant={'light'}>
+					<Button
+						fullWidth={!compact}  
+						justify='space-between'
+						leftSection={<Avatar radius={'sm'} size={compact ? 30 : 44 } ><IconUser size={compact ? 18 : 24}/></Avatar>}
+						rightSection={<IconChevronDown size={16}/>}
+						size={compact ? 'md' : 'xl'}
+						styles={{
+							root: {
+								padding: compact ? '5px' : '10px',
+								border: '1px solid var(--mantine-color-gray-3)',
+								background: 'white',
+								color: 'black',
+							}
+						}}
+					>
+						<Title order={6}>
+							{userName}
+						</Title>
+					</Button>
+					{/* <ActionIcon size={'xl'} variant={'light'} >
 						<IconSettings/>
-					</ActionIcon>
+					</ActionIcon> */}
 				</Menu.Target>
 
 				<Menu.Dropdown>

@@ -1,7 +1,8 @@
 import { FieldType, IFormField, RenderType } from '@/backoffice-common/types/form';
 import * as React from 'react';
 import { Anchor, Stack } from '@mantine/core';
-import { IconCircleCheck, IconCircleX } from '@tabler/icons-react';
+import { IconCircleCheck, IconCircleCheckFilled, IconCircleX, IconCircleXFilled } from '@tabler/icons-react';
+import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import ImagePreview from '@/backoffice-common/components/common/image-preview';
 import { replacePathParameters } from '@/backoffice-common/utils';
 
@@ -20,16 +21,12 @@ export const useRenderField = () => {
             case RenderType.BOOLEAN: {
                 let icon: React.ReactNode = undefined;
                 if (value === true) {
-                    icon = <IconCircleCheck color='green'/>
+                    icon = <div style={{display: 'flex', alignItems: 'center', color: 'lightgreen'}}><IconCircleCheckFilled size={20}/></div>
                 }
                 if (value === false) {
-                    icon =<IconCircleX color='red'/>
+                    icon = <div style={{display: 'flex', alignItems: 'center', color: 'lightgray'}}><IconCircleXFilled size={20}/></div>
                 }
-                return (
-                    <div>
-                        {icon}
-                    </div>
-                )
+                return icon
             }
             case RenderType.LINK: {
                 if (typeof value === 'string') {

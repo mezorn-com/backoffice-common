@@ -76,18 +76,17 @@ const SideMenu = () => {
 
     return (
         <AppShell.Navbar>
-            <AppShell.Section visibleFrom='sm' className={classes.navbarHeader}>
+            <AppShell.Section visibleFrom='sm'>
                 <Profile/>
-            </AppShell.Section>
-           
-           <AppShell.Section grow component={ScrollArea}>
+           </AppShell.Section>
+           <AppShell.Section grow>
                 <div className={classes.menus}>
                     {
                         menu.map(getNavbarItem)
                     }
                 </div>
            </AppShell.Section>
-           <AppShell.Section >
+           <AppShell.Section>
                 <div className={classes.logo}>
                     <div>
                         {APP_NAME}

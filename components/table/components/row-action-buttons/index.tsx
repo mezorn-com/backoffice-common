@@ -22,7 +22,7 @@ const RowActionButtons = ({
 		>
 			<Menu.Target>
 				<ActionIcon
-					variant='filled'
+					variant='subtle'
 					size='sm'
 				>
 					<IconDots size={18}/>
@@ -34,6 +34,7 @@ const RowActionButtons = ({
 					buttons.map(button => {
 						return (
 							<ActionButton
+								isFormAction
 								key={button.actionKey}
 								data={row.original}
 								{...button}

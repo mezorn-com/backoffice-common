@@ -60,16 +60,22 @@
     display: flex;
     justify-content: space-between;
     font-size: 14px;
-    align-items: flex-end;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    background: var(--mantine-color-white);
+    border-radius: var(--mantine-radius-md);
+    border: 1px solid var(--mantine-color-gray-2)
 }
 
 .total {
-    padding: 2px 1rem;
+    padding: 5px 1rem;
     border: 1px solid var(--mantine-color-gray-4);
     border-radius: var(--mantine-radius-default);
     font-weight: 500;
     height: max-content;
     font-size: 13px;
+    height: 34px;
     > span {
         font-weight: 600;
         color: var(--mantine-primary-color-6);

@@ -17,15 +17,15 @@ const AppContainer = ({ children }: AppContainerProps) => {
 	return (
 		<AppShell
 			header={{ height: { base: 60 }, collapsed: isDesktop }}
-			navbar={{ width: 250,  breakpoint: 'sm', collapsed: { mobile: !opened } }}
+			navbar={{ width: 300,  breakpoint: 'sm', collapsed: { mobile: !opened } }}
 			classNames={{ main: classes.main }}
 		>
 			<AppShell.Header>
-				<Group h='100%' px='md'>
-					<Burger opened={opened} onClick={toggle} hiddenFrom='sm' size='sm' />
-					<Box hiddenFrom='sm' style={{ flex: 1 }}>
-						<Profile/>
+				<Group h='100%' pr={'sm'} w={'100%'} justify='space-between'>
+					<Box hiddenFrom='sm' style={{ display: 'flex'}}>
+						<Profile compact/>
 					</Box>
+					<Burger opened={opened} onClick={toggle} hiddenFrom='sm' size='sm' />
 				</Group>
 			</AppShell.Header>
 			<SideMenu/>

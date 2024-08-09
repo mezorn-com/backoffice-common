@@ -6,7 +6,7 @@
 
 .tableWrapper {
     flex: 1;
-    margin-top: var(--mantine-spacing-md);
+    margin-top: var(--mantine-spacing-xs);
     margin-bottom: var(--mantine-spacing-md);
     overflow: hidden;
     gap: 1rem;
@@ -20,7 +20,8 @@
     overflow: hidden;
     border: 1px solid;
     border-color: var(--mantine-color-gray-2);
-    border-radius: var(--mantine-radius-sm);
+    border-radius: var(--mantine-radius-md);
+    background-color: var(--mantine-color-white)
 };
 
 .header {

@@ -3,6 +3,9 @@
     padding: 2rem;
     font-size: 18px;
     font-weight: 600;
-    color: var(--mantine-primary-color-6);
-    background: var(--mantine-color-gray-0);
+    color: var(--mantine-color-gray-4);
+    background: var(--mantine-color-white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

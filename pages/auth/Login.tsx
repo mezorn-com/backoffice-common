@@ -118,12 +118,12 @@ const Login = ({
 							leftSection={<IconAt size={18} />}
 							label={t('username', { ns: 'auth' })}
 							placeholder={t('username', { ns: 'auth' })}
-							labelProps={{
-								className: classes.label,
-							}}
 							styles={{
 								input: {
 									fontSize: 15
+								},
+								label: {
+									display: 'none'
 								}
 							}}
 							mb={'sm'}
@@ -134,12 +134,13 @@ const Login = ({
 							leftSection={<IconKey size={18} />}
 							label={t('password', { ns: 'auth' })}
 							placeholder='******'
-							labelProps={{
-								className: classes.label,
-							}}
+
 							styles={{
 								input: {
 									fontSize: 15
+								},
+								label: {
+									display: 'none'
 								}
 							}}
 							{...form.getInputProps('password')}

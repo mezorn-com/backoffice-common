@@ -460,10 +460,6 @@ const Form = ({
 								{props.label}
 							</div>
 						)}
-						onChange={()=> props.onChange((value: boolean) => !value)}
-						wrapperProps={{
-							onClick: () => props.onChange((value: boolean) => !value)
-						}}
 					/>
 				);
 			}

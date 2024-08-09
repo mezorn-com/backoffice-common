@@ -1,7 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 import { useForm, hasLength } from '@mantine/form';
-import { Box, TextInput, Group, Button, Title, Text, PasswordInput } from '@mantine/core';
+import { Box, TextInput, Group, Button, Title, Text, PasswordInput, Image } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import useStore from '@/store';
 import { IconAt, IconKey, IconChevronRight } from '@tabler/icons-react';
@@ -12,6 +12,7 @@ import classes from './Login.module.scss';
 
 import type { IResponse } from '@/backoffice-common/types/api';
 import type { ILoginResponse } from '@/types';
+import { Lock } from '@/backoffice-common/components/icon/Lock';
 
 interface IRightSection {
 	children?: React.ReactNode;
@@ -77,19 +78,27 @@ const Login = ({
 		<div className={classes.container}>
 			<div className={classes.card}>
 				<Box
-					style={{ maxWidth: 500 }}
+					style={{ width: '100%' }}
 					mx='auto'
 				>
 					<form
 						onSubmit={form.onSubmit(handleSubmit)}
 						className={classes.form}
 					>
-						<div className={classes.header}>
-							<div>{APP_NAME}</div>
-							<div className={classes.divider} />
-							<div className={classes.headerText}>OFFICE</div>
-							<div className={classes.version}>v1.3.5</div>
+						<div style={{
+							width: '80px',
+							aspectRatio: 1,
+							display: 'flex',
+							justifyContent: 'center',
+							alignItems: 'center',
+							borderRadius: '100%',
+							background: '#F1F3F5',
+							placeSelf: 'center',
+							marginBottom: '20px'
+						}}>
+							<Lock color='#8E8E8F' size={40} />
 						</div>
+						
 						<Title
 							order={2}
 							size='h1'
@@ -105,22 +114,33 @@ const Login = ({
 							{t('loginDescription', { ns: 'auth' })}
 						</Text>
 						<TextInput
+							size='lg'
 							leftSection={<IconAt size={18} />}
 							label={t('username', { ns: 'auth' })}
 							placeholder={t('username', { ns: 'auth' })}
 							labelProps={{
 								className: classes.label,
 							}}
+							styles={{
+								input: {
+									fontSize: 15
+								}
+							}}
 							mb={'sm'}
 							{...form.getInputProps('identifier')}
 						/>
-
 						<PasswordInput
+							size='lg'
 							leftSection={<IconKey size={18} />}
 							label={t('password', { ns: 'auth' })}
 							placeholder='******'
 							labelProps={{
 								className: classes.label,
+							}}
+							styles={{
+								input: {
+									fontSize: 15
+								}
 							}}
 							{...form.getInputProps('password')}
 						/>
@@ -133,18 +153,29 @@ const Login = ({
 						>
 							<Button
 								type='submit'
-								variant='outline'
-								radius='xl'
-								size='md'
+								variant='filled'
+								size='lg'
 								rightSection={<IconChevronRight size={18} />}
+								styles={{
+									label: {
+										fontSize: 15
+									}
+								}}
+								fullWidth
 							>
 								{t('login', { ns: 'auth' })}
 							</Button>
 						</Group>
+						<div className={classes.header}>
+							<div>{APP_NAME}</div>
+							<div className={classes.divider} />
+							<div className={classes.headerText}>OFFICE</div>
+							<div className={classes.version}>v1.3.5</div>
+						</div>
 					</form>
 				</Box>
 			</div>
-			<div
+			{/* <div
 				style={{
 					flex: 3,
 					backgroundColor: right?.background ?? '#2ca1b9',
@@ -152,7 +183,7 @@ const Login = ({
 				className={classes.image}
 			>
 				{right?.children}
-			</div>
+			</div> */}
 			<ChangePassword
 				opened={!!loginResponse}
 				onClose={() => setLoginResponse(null)}

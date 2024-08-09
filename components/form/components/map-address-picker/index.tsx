@@ -2,7 +2,7 @@ import * as React from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { TextInput, Button, Modal, Text } from '@mantine/core';
-import { MapAddressPicker as IMapAddressPicker } from '@/backoffice-common/types/form';
+import { IMapAddressPicker } from '@/backoffice-common/types/form';
 import type { IResponse } from '@/backoffice-common/types/api';
 import { MAP_INITIAL_ZOOM, MAP_DEFAULT_STARTING_POINT, MAP_MAX_ZOOM, MAP_MIN_ZOOM } from '@/config';
 import { MapContainer, ZoomControl } from 'react-leaflet';

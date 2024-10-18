@@ -453,7 +453,7 @@ const Form = ({
 					<FormRTE
 						key={valueKey}
 						field={field}
-						value={getFormValueByKey(valueKey, form.values) as string | undefined}
+						value={(getFormValueByKey(valueKey, form.values) ?? '') as string | undefined}
 						onChange={value => form.setFieldValue(valueKey, value)}
 					/>
 				);

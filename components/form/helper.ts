@@ -117,6 +117,9 @@ export const getInitialValue = (field: INormalField, initialValue?: any) => {
 			}
 			return undefined;
 		}
+		case UiType.HTML_INPUT: {
+			return initialValue ?? undefined;
+		}
 		default: {
 			console.warn('Unknown UiType value: ', field.uiType);
 			return undefined;

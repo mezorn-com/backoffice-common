@@ -26,7 +26,8 @@ const FormRTE = ({
             <ReactQuill
                 theme={'snow'}
                 onChange={onChange}
-                value={value}
+                defaultValue={value}
+                // value={value}
                 className={classes.editor}
                 modules={{
                     toolbar: [
@@ -40,7 +41,8 @@ const FormRTE = ({
                     ],
                     clipboard: {
                         // toggle to add extra line breaks when pasting HTML:
-                        matchVisual: false,
+                        // matchVisual: false,
+
                     }
                 }}
                 formats={[

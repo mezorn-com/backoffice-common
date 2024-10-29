@@ -302,6 +302,7 @@ const Form = ({
 							}}
 							autoComplete='off'
 							precision={10}
+							thousandSeparator=","
 						/>
 					);
 				}

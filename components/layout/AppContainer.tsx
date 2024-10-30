@@ -30,7 +30,9 @@ const AppContainer = ({ children }: AppContainerProps) => {
 			</AppShell.Header>
 			<SideMenu/>
 			<AppShell.Main>
-				{children}
+				<div style={{ height: '100dvh' }}>
+					{children}
+				</div>
 			</AppShell.Main>
 		</AppShell>
 	)

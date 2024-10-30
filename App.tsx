@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { MantineProvider, LoadingOverlay } from '@mantine/core';
+import { MantineProvider, LoadingOverlay, Modal } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import useStore from '../store';
@@ -169,8 +169,12 @@ function App() {
 						defaultProps: {
 							className: classes.multiSelect
 						}
-					}
-
+					},
+					Modal: Modal.extend({
+						defaultProps: {
+							zIndex: 1001
+						}
+					})
 				},
 
 				/** Any other properties that you want to access with the theme objects */
@@ -213,6 +217,7 @@ function App() {
 			/>
 			<ModalsProvider
 				modalProps={{
+					zIndex: 1001,
 					classNames: {
 						header: classes.modalHeader
 					},

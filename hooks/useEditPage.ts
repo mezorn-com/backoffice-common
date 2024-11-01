@@ -43,23 +43,20 @@ const useEditPage = ({
     })
 
     React.useEffect(() => {
-        const fetchData = async () => {
-            const data = await getMeta<IFormMetaResponse>(apiRoute, 'update', { resourceId: id });
-            const { data: formValuesResponse } = await axios.get<IResponse<Record<string, any>>>(`${apiRoute}/${id}`);
-            setState({
-                title: data?.form?.title ?? '',
-                values: formValuesResponse.data,
-                fields: data?.form?.fields ?? [],
-                ready: true
-            });
-            onFetch?.(formValuesResponse);
-        }
         void fetchData();
     }, []);
 
-    React.useEffect(() => {
-
-    }, [])
+    const fetchData = async () => {
+        const data = await getMeta<IFormMetaResponse>(apiRoute, 'update', { resourceId: id });
+        const { data: formValuesResponse } = await axios.get<IResponse<Record<string, any>>>(`${apiRoute}/${id}`);
+        setState({
+            title: data?.form?.title ?? '',
+            values: formValuesResponse.data,
+            fields: data?.form?.fields ?? [],
+            ready: true
+        });
+        onFetch?.(formValuesResponse);
+    }
 
     const submitHandler = async (values: IFormValues) => {
         const { data } = await axios.put<IResponse<any>>(`${apiRoute}/${id}`, values);
@@ -80,6 +77,7 @@ const useEditPage = ({
     return {
         state,
         submitHandler,
+        fetchData,
     }
 }
 

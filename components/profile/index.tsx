@@ -16,7 +16,7 @@ const Profile = ({compact = false}) => {
 
 	return (
 		<div className={classes.container}>
-			{/* {render()} */}
+			{render()}
 			
 			<Menu shadow="md" width={200} position='bottom-end'>
 				<Menu.Target>

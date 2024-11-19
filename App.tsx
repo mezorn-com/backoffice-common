@@ -214,6 +214,11 @@ function App() {
 			<Notifications
 				autoClose={20_000}
 				position={'top-right'}
+				styles={{
+					root: {
+						zIndex: 10_000
+					}
+				}}
 			/>
 			<ModalsProvider
 				modalProps={{

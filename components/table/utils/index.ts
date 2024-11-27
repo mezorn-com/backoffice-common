@@ -135,14 +135,14 @@ export const resizeTable = (tableElement: HTMLElement) => {
                             const additionalWidth = ((columnSizes?.[columnIndex]?.additionalWidth ?? 0) > 0 ? columnSizes[columnIndex].additionalWidth : 0) as number;
                             const width = columnSizes[columnIndex].innerWidth;
                             if (cellContainer instanceof HTMLElement) {
-                                cellContainer.style.width = width + additionalWidth + 'px';
+                                cellContainer.style.width = `${width + additionalWidth}px`;
                             }
                         }
                         if (rowId && rowGroup && Object.values(RowGroup).includes(rowGroup as RowGroup)) {
                             const rowIndex = rowSizes[rowGroup].findIndex(row => row.rowId === rowId);
                             if (rowIndex > -1) {
                                 if (cellContainer instanceof HTMLElement) {
-                                    cellContainer.style.height = rowSizes[rowGroup][rowIndex].height + 'px';
+                                    cellContainer.style.height = `${rowSizes[rowGroup][rowIndex].height}px`;
                                 }
                             }
                         }

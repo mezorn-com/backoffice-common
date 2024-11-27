@@ -10,6 +10,7 @@ import type { ComboboxItem } from '@mantine/core';
 const { t, language } = i18n;
 
 export interface IFormValues {
+	// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
 	[key: string]: any;
 }
 

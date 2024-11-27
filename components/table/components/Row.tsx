@@ -24,11 +24,12 @@ const TableRow = ({
     const forceUpdate = useForceUpdate();
     const { setRowHoverIndex, rowHoverIndex } = React.useContext(TableContext);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Figure this out later
     React.useEffect(() => {
         if (rowRef.current) {
             forceUpdate();
         }
-    }, [rowRef.current])
+    }, [rowRef.current]);
 
     const renderCell = () => {
         if (!rowRef.current) {

@@ -124,7 +124,7 @@ const TableSection = ({
             props.checked = row.getIsSelected();
             props.onChange = () => row.toggleSelected(!row.getIsSelected());
         }
-        let rowGroup = isHeader ? RowGroup.HEADER : RowGroup.BODY;
+        const rowGroup = isHeader ? RowGroup.HEADER : RowGroup.BODY;
         return (
             // assuming checkboxes won't be rendered in footer group
             <ObservedCell rowGroup={rowGroup} rowId={rowId} columnId={CHECKBOX_COLUMN_ID}>

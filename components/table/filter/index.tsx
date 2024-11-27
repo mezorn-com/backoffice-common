@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { INormalField } from '@/backoffice-common/types/form';
+import type { INormalField } from '@/backoffice-common/types/form';
 
 interface ITableFilterProps {
     filter: INormalField[];

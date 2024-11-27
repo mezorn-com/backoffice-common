@@ -2,7 +2,7 @@ import * as React from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { TextInput, Button, Modal, Text } from '@mantine/core';
-import { IMapAddressPicker } from '@/backoffice-common/types/form';
+import type { IMapAddressPicker } from '@/backoffice-common/types/form';
 import type { IResponse } from '@/backoffice-common/types/api';
 import { MAP_INITIAL_ZOOM, MAP_DEFAULT_STARTING_POINT, MAP_MAX_ZOOM, MAP_MIN_ZOOM } from '@/config';
 import { MapContainer, ZoomControl } from 'react-leaflet';
@@ -135,7 +135,8 @@ const MapAddressPicker = ({
                             {
                                 suggestions.map(suggestion => {
                                     return (
-                                        <div
+                                        <button
+                                            type='button'
                                             key={suggestion.value}
                                             onClick={() => handleSuggestionClick(suggestion)}
                                             className={classes.address}
@@ -148,7 +149,7 @@ const MapAddressPicker = ({
                                             }
                                             &nbsp;
                                             {suggestion.address}
-                                        </div>
+                                        </button>
                                     )
                                 })
                             }

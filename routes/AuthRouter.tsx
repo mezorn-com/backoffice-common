@@ -14,7 +14,7 @@ const AuthRouter = () => {
                 replace: true
             });
         }
-    }, [location.pathname]);
+    }, [location.pathname, navigate]);
 
     return (
         <Routes>

@@ -46,7 +46,9 @@ import { useLocation } from 'react-router-dom';
 interface IFormProps {
 	fields: IFormField[];
 	onSubmit: (values: IFormValues) => void;
+	// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
 	values?: Record<string, any>;
+	// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
 	getReferences?: (code: string, parent?: string) => Promise<any[]>;
 	submitButtonProps?: ButtonProps;
 	onChange?: (value: IFormValues) => void;

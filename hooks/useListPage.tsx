@@ -9,7 +9,7 @@ import { produce } from 'immer';
 import { useNavigate } from 'react-router-dom';
 import type { ITableInteraction } from '@/backoffice-common/components/table/types';
 import type { INormalField, IVisibility } from '@/backoffice-common/types/form';
-import ActionButton, { ActionButtonProps } from '@/backoffice-common/components/common/action-button';
+import ActionButton, { type ActionButtonProps } from '@/backoffice-common/components/common/action-button';
 
 interface IConfig {
     apiRoute: string;

@@ -1,5 +1,5 @@
-import { Action } from "./action-types";
-import { IState } from "../types";
+import type { Action } from "./action-types";
+import type { IState } from "../types";
 import { produce } from "immer";
 
 export const initialState: IState = {

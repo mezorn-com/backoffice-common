@@ -1,4 +1,4 @@
-import { IStringReplacer } from '@/backoffice-common/types/utils';
+import type { IStringReplacer } from '@/backoffice-common/types/utils';
 
 export const getSubResourceUrl = (url: string, array: IStringReplacer[]): string => {
     let result = url;

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { ReactNode } from 'react';
 import classes from '@/backoffice-common/routes/Protected.module.scss';
 import { AppShell, Box, Burger, Group } from '@mantine/core';
 import Profile from '@/backoffice-common/components/profile';
@@ -6,7 +6,7 @@ import SideMenu from '@/backoffice-common/lib/side-menu';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 
 interface AppContainerProps {
-	children?: React.ReactNode;
+	children?: ReactNode;
 }
 
 const AppContainer = ({ children }: AppContainerProps) => {

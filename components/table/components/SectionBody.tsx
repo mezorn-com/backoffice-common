@@ -1,8 +1,8 @@
-import * as React from 'react';
+import type { ReactNode, UIEvent } from 'react';
 
 interface SectionBodyProps {
 	className: string;
-	children: React.ReactNode;
+	children: ReactNode;
 }
 
 const SectionBody = ({
@@ -10,7 +10,7 @@ const SectionBody = ({
 	children
 }: SectionBodyProps) => {
 
-	const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+	const handleScroll = (event: UIEvent<HTMLDivElement>) => {
 		if (event.target instanceof HTMLDivElement) {
 			const scrollTop = event.target.scrollTop;
 			const { target } = event;

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { Burger, Text, useMantineTheme, Button, Menu, AppShell } from '@mantine/core';
 import useStore from '../../../store';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,7 @@ import classes from './Header.module.scss';
 
 interface IHeaderProps {
     opened: boolean;
-    setOpened: (opened: any) => void;
+    setOpened: Dispatch<SetStateAction<boolean>>;
 }
 
 const Header = ({
@@ -26,7 +26,7 @@ const Header = ({
                 <div className={classes.burger}>
                     <Burger
                         opened={!opened}
-                        onClick={() => setOpened((o: boolean) => !o)}
+                        onClick={() => setOpened((o) => !o)}
                         size="sm"
                         color={theme.colors.gray[6]}
                         mr="xl"

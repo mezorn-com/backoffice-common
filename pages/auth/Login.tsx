@@ -60,7 +60,7 @@ const Login = ({
 		const params = {
 			newPassword
 		}
-		const { data } = await axios.post<IResponse<any>>(`/api/users/me/change-password`, params, {
+		const { data } = await axios.post<IResponse<unknown>>('/api/users/me/change-password', params, {
 			headers: {
 				'Authorization': `Bearer ${loginResponse?.token}`,
 			}

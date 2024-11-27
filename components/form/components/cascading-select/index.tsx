@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { SelectProps, Select, type ComboboxItem } from '@mantine/core';
+import { Select, type SelectProps, type ComboboxItem } from '@mantine/core';
 import { produce } from 'immer';
 import { clone } from 'ramda';
 import type { IReference } from '@/backoffice-common/types/api';
 
 export interface CascadingSelectProps extends Omit<SelectProps, 'data'> {
-    fetchReference?: (code: string, parent?: string) => Promise<any[]>;
+    fetchReference?: (code: string, parent?: string) => Promise<IReference[]>;
     refCode: string;
     onChange?: (value: string | null) => void;
     error?: React.ReactNode;
@@ -29,7 +29,7 @@ const CascadingSelect = ({
 
     const getReference = async (parent?: string) => {
         if (fetchReference) {
-            const _data: IReference[] = await fetchReference(refCode ?? '', parent);
+            const _data = await fetchReference(refCode ?? '', parent);
             setData(produce(draft => {
                 if (indexRef.current === null) {
                     draft.push(_data);

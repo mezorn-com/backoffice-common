@@ -132,6 +132,7 @@ const Table = ({
         }
     }, []);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies(dispatchExternalState): Dispatch function is stable
     React.useEffect(() => {
         const ids = table.getSelectedRowModel().rows.map(row => row.original._id) as string[];
         if (!eqValues(ids, externalState.selectedRows)) {
@@ -140,7 +141,7 @@ const Table = ({
                 payload: ids,
             })
         }
-    }, [table.getSelectedRowModel().rows]);
+    }, [table.getSelectedRowModel, externalState.selectedRows]);
 
     React.useEffect(() => {
         table.setOptions(prev => ({
@@ -151,7 +152,7 @@ const Table = ({
                 pageIndex: externalState.page - 1
             },
         }));
-    }, [externalState]);
+    }, [externalState, table.setOptions]);
 
     const handleTableStateChange = (updatedTableState: TableState) => {
         const updatedState: ITableState = {

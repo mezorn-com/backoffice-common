@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useMap } from 'react-leaflet';
 import IconMarker from '@/backoffice-common/lib/icon-marker/Marker';
-import { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
+import type { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
 
 interface IProps {
     value?: IMapAddressValue;
@@ -20,7 +20,7 @@ const Helper = ({
                 lat: value.lat
             })
         }
-    }, [value]);
+    }, [value, map.flyTo]);
 
     return (
         <div>

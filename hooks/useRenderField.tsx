@@ -1,5 +1,5 @@
-import { FieldType, IFormField, RenderType } from '@/backoffice-common/types/form';
-import * as React from 'react';
+import type { ReactNode } from 'react';
+import { FieldType, type IFormField, RenderType } from '@/backoffice-common/types/form';
 import { Anchor, Stack } from '@mantine/core';
 import { IconCircleCheck, IconCircleCheckFilled, IconCircleX, IconCircleXFilled } from '@tabler/icons-react';
 import { getSubResourceUrl } from '@/backoffice-common/utils/route';
@@ -7,7 +7,8 @@ import ImagePreview from '@/backoffice-common/components/common/image-preview';
 import { replacePathParameters } from '@/backoffice-common/utils';
 
 export const useRenderField = () => {
-    return (field: IFormField, value: unknown, data: Record<string, any>): React.ReactNode => {
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: use type
+    return (field: IFormField, value: unknown, data: Record<string, any>): ReactNode => {
         if (field.type !== FieldType.RENDER) {
             return null;
         }
@@ -19,7 +20,7 @@ export const useRenderField = () => {
                 break;
             }
             case RenderType.BOOLEAN: {
-                let icon: React.ReactNode = undefined;
+                let icon: ReactNode = undefined;
                 if (value === true) {
                     icon = <div style={{display: 'flex', alignItems: 'center', color: 'lightgreen'}}><IconCircleCheckFilled size={20}/></div>
                 }

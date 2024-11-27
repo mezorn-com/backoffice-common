@@ -12,13 +12,15 @@ interface CommonProps {
     value: SelectValue;
 }
 
-type IURIFetchSelect = Omit<ReturnType<GetInputProps<any>>, 'onChange' | 'value'> & {
+type IURIFetchSelect = Omit<ReturnType<GetInputProps<unknown>>, 'onChange' | 'value'> & {
     uri: string;
     fetchReference: undefined;
     refCode: undefined;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
 type IRefCodeFetchSelect = Omit<ReturnType<GetInputProps<any>>, 'onChange' | 'value'> & {
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
     fetchReference?: (code: string, parent?: string) => Promise<any[]>;
     refCode: string;
     uri: undefined;
@@ -73,7 +75,7 @@ const FetchSelect = ({
             }
         }
         void fetchData();
-    }, [uri]);
+    }, [uri, fetchReference, refCode]);
 
     const handleChange = (value: SelectValue) => {
         props?.onChange?.(getTransformedValue(value, multiple));

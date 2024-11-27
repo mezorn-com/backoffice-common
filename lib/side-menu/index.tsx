@@ -65,12 +65,13 @@ const SideMenu = () => {
         return (
             <NavbarItem
                 key={index}
-                children={children}
                 label={label}
                 isActive={isActive}
                 path={redirectPath}
                 icon={menuItem.icon.value}
-            />
+            >
+                {children}
+            </NavbarItem>
         )
     }
 

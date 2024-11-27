@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, TextProps } from '@mantine/core';
+import { Text, type TextProps } from '@mantine/core';
 import classes from './Label.module.scss';
 
 interface IProps extends TextProps {

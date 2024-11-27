@@ -17,7 +17,7 @@ interface IDetailProps {
 const Detail = ({ id, head, apiUrl, state: { values, details, actions } }: IDetailProps) => {
 	const renderField = useRenderField();
 
-	const getDetailValue = (field: IFormField, detailValues: Record<string, any>): React.ReactNode => {
+	const getDetailValue = (field: IFormField, detailValues: Record<string, unknown>): React.ReactNode => {
 		if (field.type !== FieldType.RENDER) {
 			return null;
 		}
@@ -26,6 +26,7 @@ const Detail = ({ id, head, apiUrl, state: { values, details, actions } }: IDeta
 		return renderField(field, value, detailValues);
 	};
 
+	// biome-ignore lint/suspicious/noExplicitAny: TODO: fix type
 	const renderDetails = (renderFields: IFormField[], renderValues: Record<string, any>) => {
 		return (
 			<div

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Overlay, Image } from "@mantine/core";
 import { IconEye } from "@tabler/icons-react";
 import classes from './ImagePreview.module.scss';
+import { buttonize } from '@/backoffice-common/utils/a11y/buttonize';
 
 interface IImagePreviewProps {
     src: string;
@@ -59,16 +60,16 @@ const ImagePreview: React.FC<IImagePreviewProps> = ({
                     onClick={toggleOverlay}
                     alt={alt || 'Зураг'}
                 />
-                <div
-                    onClick={toggleOverlay}
-                    style={{ cursor: 'pointer' }}
+                <button
+                    type='button'
                     className={classes.textContainer}
+                    onClick={toggleOverlay}
                 >
                     <IconEye size={iconSize || 20} />{" "}
                     <p style={{ ...textStyle }} className={textClassName}>
                         {description || "Үзэх"}
                     </p>
-                </div>
+                </button>
             </div>
 
         {

@@ -11,7 +11,7 @@ interface IFileUploaderConfig {
 }
 
 const getFileArraySize = (array: File[]) => {
-    return array.reduce(function (acc, obj) { return acc + obj.size; }, 0);
+    return array.reduce((acc, obj) => acc + obj.size, 0);
 }
 
 // 4_194_304 max size. 4mb

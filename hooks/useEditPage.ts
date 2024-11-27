@@ -14,11 +14,13 @@ interface IConfig {
     apiRoute: string;
     clientRoute: string;
     id: string;
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
     onFetch?: (response: IResponse<Record<any, any>>) => void;
 }
 
 interface IEditPageState {
     fields: IFormField[];
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
     values: Record<string, any>;
     title: string;
     ready: boolean;

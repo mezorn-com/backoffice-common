@@ -37,7 +37,8 @@ function App() {
 	const setLoading = useStore(state => state.setLoading);
 	const store = useStore();
 
-	React.useEffect(() => {
+	// biome-ignore lint/correctness/useExhaustiveDependencies: Designed to run on first render only
+		React.useEffect(() => {
 		if (loading) {
 			// To prevent app booting with 'loading' on.
 			setLoading(false);

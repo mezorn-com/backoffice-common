@@ -7,12 +7,10 @@ import type { MetaType } from '@/backoffice-common/types/api/meta';
 import { IStringReplacer } from '@/backoffice-common/types/utils';
 import { FieldType, IFormField, RenderField, RenderType } from '@/backoffice-common/types/form';
 
-export const getMeta = <T>(url: string, action: MetaType, queryParams?: Record<string, string>): Promise<T> => {
-    return new Promise(async (resolve) => {
-        const queryParameters = qs.stringify(queryParams);
-        const { data } = await axios.get<IResponse<T>>(`${url}/meta?action=${action}&${queryParameters}`);
-        resolve(data.data);
-    })
+export const getMeta = async <T>(url: string, action: MetaType, queryParams?: Record<string, string>): Promise<T> => {
+    const queryParameters = qs.stringify(queryParams);
+    const { data } = await axios.get<IResponse<T>>(`${url}/meta?action=${action}&${queryParameters}`);
+    return data.data
 }
 
 export const isRenderField = (field: IFormField): field is RenderField => {

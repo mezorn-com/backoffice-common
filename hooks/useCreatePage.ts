@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { IFormField } from '@/backoffice-common/types/form';
+import type { IFormField } from '@/backoffice-common/types/form';
 import { getMeta } from '@/backoffice-common/utils';
-import { IFormMetaResponse } from '@/backoffice-common/types/api/meta';
+import type { IFormMetaResponse } from '@/backoffice-common/types/api/meta';
 import { IFormValues } from '@/backoffice-common/components/form/helper';
 import axios from 'axios';
-import { IFormSubmitResponse, IResponse } from '@/backoffice-common/types/api';
+import type { IFormSubmitResponse, IResponse } from '@/backoffice-common/types/api';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
@@ -44,25 +44,19 @@ const useCreatePage = ({
         void fetchData();
     }, []);
 
-    const submitHandler = (values: IFormValues) => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const { data } = await axios.post<IResponse<IFormSubmitResponse>>(apiRoute, values);
-                if (data.success) {
-                    showMessage(t('success', { ns: 'common' }), 'green');
-                    if (pathname.endsWith('/new')) {
-                        navigate(pathname.slice(0, ('/new'.length) * -1));
-                    } else {
-                        navigate(clientRoute);
-                    }
-                } else {
-                    showMessage(t('error.title', { ns: 'common' }));
-                }
-                resolve(data);
-            } catch (err) {
-                reject(err);
+    const submitHandler = async (values: IFormValues) => {
+        const { data } = await axios.post<IResponse<IFormSubmitResponse>>(apiRoute, values);
+        if (data.success) {
+            showMessage(t('success', { ns: 'common' }), 'green');
+            if (pathname.endsWith('/new')) {
+                navigate(pathname.slice(0, ('/new'.length) * -1));
+            } else {
+                navigate(clientRoute);
             }
-        })
+        } else {
+            showMessage(t('error.title', { ns: 'common' }));
+        }
+        return data;
     }
 
     return {

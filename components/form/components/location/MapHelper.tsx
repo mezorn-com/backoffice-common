@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMapEvents, Marker } from 'react-leaflet'
-import L, { LatLngExpression, LatLngLiteral, LatLngTuple } from 'leaflet';
+import L, { type LatLngExpression, type LatLngLiteral, type LatLngTuple } from 'leaflet';
 import markerIcon2x from './marker-icon-2x.png';
 import markerShadow from './marker-shadow.png'
 

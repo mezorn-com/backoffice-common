@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { ReactNode } from 'react';
 import { ActionIcon, Button, Flex, rem, Title } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { IconChevronLeft } from '@tabler/icons-react';
@@ -9,7 +9,7 @@ import classes from './Layout.module.scss';
 interface ISubHeaderProps {
     title?: string;
     backButton?: boolean;
-    children?: React.ReactNode;
+    children?: ReactNode;
 }
 
 const SubHeader = ({
@@ -24,13 +24,6 @@ const SubHeader = ({
     const goBack = () => {
         navigate(-1);
         return;
-        const pathname = location.pathname.endsWith('/') ? location.pathname.slice(0, -1) : location.pathname;
-        const pathParts = pathname.split('/');
-        const lastPart = last(pathParts);
-        if (lastPart) {
-            const lastPartLength = ('/' + lastPart).length;
-            navigate(pathname.slice(0, -1 * lastPartLength));
-        }
     }
 
     return (

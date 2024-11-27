@@ -1,13 +1,9 @@
 import * as React from 'react';
-import { Marker as LeafletMarker, MarkerProps } from 'react-leaflet';
+import { Marker as LeafletMarker, type MarkerProps } from 'react-leaflet';
 import { Icon, Point } from 'leaflet';
 import defaultMarker from '@/assets/defaultMarker';
 
 type IconType = string | MarkerProps['icon'];
-
-const isReactSVGElement = (variable: unknown): variable is React.ReactElement<React.SVGAttributes<SVGElement>> => {
-    return React.isValidElement(variable) && (variable.type as any)?.displayName === 'svg';
-}
 
 interface ICustomMarkerProps extends Omit<MarkerProps, 'icon'> {
     icon?: IconType;

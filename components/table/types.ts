@@ -1,8 +1,7 @@
-import type { ReactNode } from 'react';
+import type { Dispatch } from 'react';
 import type { Action, IRowActionButton } from '@/backoffice-common/hooks/useListPage';
-import { IListState } from '@/backoffice-common/types/common/list';
-import { Dispatch } from 'react';
-import { ActionButtonProps } from '@/backoffice-common/components/common/action-button';
+import type { IListState } from '@/backoffice-common/types/common/list';
+import type { ActionButtonProps } from '@/backoffice-common/components/common/action-button';
 
 export interface ITableState {
     page: number;
@@ -13,6 +12,7 @@ export interface ITableState {
 
 export interface ITableInteraction {
     state: ITableState;
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: Fix later
     filter?: Record<string, any>;
     selectedRows?: string[];
 }

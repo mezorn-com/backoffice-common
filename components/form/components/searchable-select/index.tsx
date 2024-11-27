@@ -16,7 +16,7 @@ interface Option {
 
 interface CommonProps {
     uri: string;
-    parser?: (item: any, index: number) => Option;
+    parser?: (item: unknown, index: number) => Option;
     placeholder?: string;
     label?: string;
     withAsterisk?: boolean;
@@ -60,6 +60,7 @@ const SearchableSelect = ({
 
     const controllerRef = React.useRef(new AbortController());
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies(selectedValue): Make sure "selectedValue" is safe to include in dependency array.
     React.useEffect(() => {
         if (!props.value) {
             setSelectedValue(null);
@@ -75,7 +76,7 @@ const SearchableSelect = ({
                 }
             }
         }
-    }, [props.value]);
+    }, [props.value, props.multiple, props.onChange]);
 
     React.useEffect(() => {
         try {
@@ -97,6 +98,7 @@ const SearchableSelect = ({
                     if (parser) {
                         parsed = (responseData.data ?? []).map(parser);
                     } else {
+                        // biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
                         parsed = (responseData.data ?? []).map((item: any) => {
                             return {
                                 value: item.value,

@@ -16,6 +16,7 @@ interface IConfig {
 export interface IDetailPageState {
     title: string;
     details: IFormField[];
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: Fix later
     values: Record<string, any>;
     subResources?: SubResources;
     actions?: Record<MetaType | string, ItemAction>;
@@ -54,6 +55,7 @@ const useDetailPage = ({
     };
 
     const fetchDetails = async () => {
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: Use generic type
         const { data: formValuesResponse } = await axios.get<IResponse<Record<string, any>>>(`${apiRoute}/${id}`);
         setState(prev => ({
             ...prev,

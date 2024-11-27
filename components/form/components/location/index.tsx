@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FormLabel } from '@/backoffice-common/components/form/components';
 import { Button, Modal } from '@mantine/core';
 import { MapContainer } from 'react-leaflet';
-import { LatLngLiteral } from 'leaflet';
+import type { LatLngLiteral } from 'leaflet';
 import { MapHelper } from './MapHelper';
 import GoogleLayer from '@/backoffice-common/components/map/GoogleLayer';
 import { IconMapPin } from '@tabler/icons-react';

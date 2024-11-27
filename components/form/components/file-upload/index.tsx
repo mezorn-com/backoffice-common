@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { ReactNode } from 'react';
 import { FileInput, type FileInputProps, Image } from '@mantine/core';
 import classes from './FileUpload.module.scss';
 
@@ -12,7 +12,7 @@ const FileUpload = ({
     value,
     ...props
 }: FileUploadProps) => {
-    const previewFile = (): React.ReactNode => {
+    const previewFile = (): ReactNode => {
         if (!value) {
             return null;
         }

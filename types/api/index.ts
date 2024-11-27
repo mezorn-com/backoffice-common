@@ -14,6 +14,7 @@ export interface IListResponseData<T = Record<string, unknown>> {
     [key: string]: unknown;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: TODO: fix type
 export interface IListResponse<T = any> extends IResponse<IListResponseData<T>> {
 
 }
@@ -43,6 +44,7 @@ export interface IReference {
     isLeaf: boolean;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
 export interface IReferenceListResponse extends IResponse<any> {
     data: IReferenceListData;
 }

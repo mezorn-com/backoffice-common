@@ -131,7 +131,7 @@ const ActionButton = ({
 							deletePath = `${pathname}/${_id}`;
 						}
 
-						const { data: responseData } = await axios.delete<IResponse<any>>(`/api${deletePath}`);
+						const { data: responseData } = await axios.delete<IResponse<unknown>>(`/api${deletePath}`);
 						if (responseData.success) {
 							showMessage(t('success', { ns: 'common' }), 'green');
 							callback?.();
@@ -200,11 +200,11 @@ const ActionButton = ({
 	let Icon: ((props: TablerIconsProps) => JSX.Element) | undefined = undefined;
 	if (icon) {
 		// @ts-expect-error
-		if (!icons?.['Icon' + icon]) {
+		if (!icons?.[`Icon${icon}`]) {
 			console.warn(`Icon not found: ${icon}`);
 		} else {
 			// @ts-expect-error
-			Icon = icon ? icons?.['Icon' + icon] : undefined;
+			Icon = icon ? icons?.[`Icon${icon}`] : undefined;
 		}
 	}
 

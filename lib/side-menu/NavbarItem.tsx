@@ -43,7 +43,7 @@ const NavbarItem = ({
             return null;
         }
         // @ts-expect-error
-        const Icon = icons['Icon' + icon];
+        const Icon = icons[`Icon${icon}`];
         if (!Icon) {
             console.warn(`Icon not found: ${icon}`);
             return null;
@@ -80,7 +80,7 @@ const NavbarItem = ({
                                 className={classes.chevron}
                                 size="1rem"
                                 stroke={1.5}
-                                style={{ transform: opened ? `rotate(90deg)` : 'none' }}
+                                style={{ transform: opened ? 'rotate(90deg)' : 'none' }}
                             />
                         )
                     }

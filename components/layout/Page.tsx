@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { HTMLAttributes } from 'react';
 import SubHeader from './SubHeader';
 import Body from './Body';
 import classes from './Layout.module.scss';
@@ -6,7 +6,7 @@ import classes from './Layout.module.scss';
 const Page = ({
     children,
     ...props
-}: React.HTMLAttributes<HTMLDivElement>) => {
+}: HTMLAttributes<HTMLDivElement>) => {
 
     return (
         <div className={classes.pageWrapper} {...props}>

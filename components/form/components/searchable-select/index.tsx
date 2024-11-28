@@ -78,6 +78,7 @@ const SearchableSelect = ({
         }
     }, [props.value, props.multiple, props.onChange]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: check later
     React.useEffect(() => {
         try {
             if (debounced) {
@@ -170,7 +171,7 @@ const SearchableSelect = ({
                         label={label}
                         withAsterisk={withAsterisk}
                     />
-                    <div className={classes.inputWrapper} onClick={() => inputRef?.current?.focus?.()} ref={ref}>
+                    <button type='button' className={classes.inputWrapper} onClick={() => inputRef?.current?.focus?.()} ref={ref}>
                         <div className={classes.icon}>
                             {
                                 loading ? <Loader size='xs' variant='oval'/> : <IconSearch size={16}/>
@@ -201,7 +202,7 @@ const SearchableSelect = ({
                             onChange={(e) => setSearchValue(e.currentTarget.value)}
                             placeholder={placeholder}
                         />
-                    </div>
+                    </button>
                 </div>
             </Popover.Target>
 

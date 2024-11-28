@@ -78,6 +78,7 @@ const Form = ({
 		// onValuesChange: onChange
 	});
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: TODO: optimize
 	React.useEffect(() => {
 		if (onChange) {
 			onChange(form.values)
@@ -87,6 +88,7 @@ const Form = ({
 	// console.log('form initial Values>>>>', getFormInitialValues(fields, values));
 	console.log('FORM VALUES>>>>', form.values);
 
+	// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix types
 	const handleError = (validationErrors: any, _values: any, _event: any) => {
 		console.log('Form Error>>>', { validationErrors, _values: _values, _event: _event });
 	};
@@ -104,7 +106,7 @@ const Form = ({
 					const { key } = field;
 					const fieldElement = clone(field.element);
 					fieldElement.isArrayElement = true;
-					let groupPath = (field.groupPath ? field.groupPath + SEPARATOR : '') + key;
+					const groupPath = (field.groupPath ? field.groupPath + SEPARATOR : '') + key;
 					return (
 						<Card
 							key={groupPath}
@@ -150,6 +152,7 @@ const Form = ({
 								inheritPadding
 								py='md'
 							>
+								{/* biome-ignore lint/suspicious/noExplicitAny: TODO: Change */}
 								{(path(getFormItemPathByKey(groupPath), form.values) as any[]).map((formItem: unknown, index: number, array: any[]) => {
 									const elementPath = groupPath + SEPARATOR + index;
 									fieldElement.groupPath = elementPath;
@@ -218,7 +221,7 @@ const Form = ({
 				)
 			}
 			case FieldType.GROUP: {
-				let groupPath = field.groupPath ?? '';
+				const groupPath = field.groupPath ?? '';
 				const clonedField = (field.fields ?? []).map(f => {
 					const child = clone(f);
 					child.groupPath = groupPath;
@@ -250,6 +253,7 @@ const Form = ({
 
 		const valueKey = (field.groupPath ? field.groupPath + SEPARATOR : '') + field.key;
 
+		// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
 		const props: any = {
 			key: valueKey,
 			label: field.label ?? '-',
@@ -571,6 +575,7 @@ const Form = ({
 };
 
 const FormWrapper = (props: IFormProps) => {
+	// biome-ignore lint/correctness/useExhaustiveDependencies: TODO: optimize
 	const { key, fields } = React.useMemo(() => {
 		return {
 			key: randomId(),

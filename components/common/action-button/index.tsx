@@ -46,6 +46,7 @@ const ActionButton = ({
 
 	const primaryShade: number = typeof theme.primaryShade !== 'number' ? theme.primaryShade.light : theme.primaryShade;
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: TODO: optimize
 	const { icon, label, handler, color } = React.useMemo(() => {
 		const actionColor = actionColors?.[actionKey] || 'blue';
 
@@ -195,7 +196,7 @@ const ActionButton = ({
 			color,
 			handler
 		}
-	}, [ t, navigate, pathname, action, data, pathParameter, setShowDrawer, showDrawer, confirmModal, onClick ]);
+	}, [ t, navigate, pathname, action, data, pathParameter, setShowDrawer, showDrawer, confirmModal, onClick, actionKey ]);
 
 	let Icon: ((props: TablerIconsProps) => JSX.Element) | undefined = undefined;
 	if (icon) {
@@ -244,8 +245,8 @@ const ActionButton = ({
 		return (
 			<Button
 				size='md'
-				variant={actionKey == 'create' ? 'filled' : 'light'}
-				leftSection={Icon ? <Icon size={24} color={actionKey == 'create' ? theme.colors[color][0] : theme.colors[color][primaryShade]}/> : undefined}
+				variant={actionKey === 'create' ? 'filled' : 'light'}
+				leftSection={Icon ? <Icon size={24} color={actionKey === 'create' ? theme.colors[color][0] : theme.colors[color][primaryShade]}/> : undefined}
 				onClick={() => handler()}
 				color={color}
 				styles={{

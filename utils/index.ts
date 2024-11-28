@@ -4,8 +4,8 @@ import { clone, isEmpty } from 'ramda';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { IColumn, IResponse } from '@/backoffice-common/types/api';
 import type { MetaType } from '@/backoffice-common/types/api/meta';
-import { IStringReplacer } from '@/backoffice-common/types/utils';
-import { FieldType, IFormField, RenderField, RenderType } from '@/backoffice-common/types/form';
+import type { IStringReplacer } from '@/backoffice-common/types/utils';
+import { FieldType, type IFormField, type RenderField, RenderType } from '@/backoffice-common/types/form';
 
 export const getMeta = async <T>(url: string, action: MetaType, queryParams?: Record<string, string>): Promise<T> => {
     const queryParameters = qs.stringify(queryParams);
@@ -60,8 +60,9 @@ export const capitalize = (string: string) => {
     return `${string[0].toUpperCase()}${string.substring(1).toLowerCase()}`;
 };
 
+// biome-ignore lint/suspicious/noExplicitAny: TODO: Check later
 export const isNumber = (n: any): boolean => {
-    return !isNaN(parseFloat(n)) && !isNaN(n - 0);
+    return !Number.isNaN(Number.parseFloat(n)) && !Number.isNaN(n - 0);
 };
 
 export const isUserInputNumber = (value: string): boolean => {
@@ -69,11 +70,13 @@ export const isUserInputNumber = (value: string): boolean => {
     return value === "" || re.test(value);
 };
 
-export const getArrayObjectByProp = (array: Record<any, any>[], key: string, propertyKey: string = 'key'): Record<any, any> | undefined => {
+// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
+export const getArrayObjectByProp = (array: Record<any, any>[], key: string, propertyKey = 'key'): Record<any, any> | undefined => {
     const arrayClone = clone(array);
     return arrayClone.find(item => item[propertyKey] === key);
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
 export const replacePathParameters = (url: string, object: Record<string, any>) => {
     const re = /\{([^}]+)\}/g;
     const result = url.replace(re, (completeMatch, match) => {

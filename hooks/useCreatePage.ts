@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { getMeta } from '@/backoffice-common/utils';
 import type { IFormMetaResponse } from '@/backoffice-common/types/api/meta';
-import { IFormValues } from '@/backoffice-common/components/form/helper';
+import type { IFormValues } from '@/backoffice-common/components/form/helper';
 import axios from 'axios';
 import type { IFormSubmitResponse, IResponse } from '@/backoffice-common/types/api';
 import { showMessage } from '@/backoffice-common/lib/notification';
@@ -33,6 +33,7 @@ const useCreatePage = ({
         fields: []
     });
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Check later
     React.useEffect(() => {
         const fetchData = async () => {
             const data = await getMeta<IFormMetaResponse>(apiRoute, 'create');

@@ -63,6 +63,7 @@ const useDetailPage = ({
         }))
     }
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: optimize
     const actionButtons: React.ReactNode = React.useMemo(() => {
         const buttonList: React.ReactNode[] = [];
 

@@ -1,4 +1,4 @@
-import { FieldType, RenderType } from '@/backoffice-common/types/form';
+import type { FieldType, RenderType } from '@/backoffice-common/types/form';
 
 export interface IResponse<DataType> {
     data: DataType;
@@ -66,6 +66,7 @@ interface FileUploadResult {
     fileUrl: string;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
 export interface IFileUploadResponse extends IResponse<any>{
     status: string;
     result: FileUploadResult[];

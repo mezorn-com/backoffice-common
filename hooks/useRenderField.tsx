@@ -56,6 +56,7 @@ export const useRenderField = () => {
                         <tbody>
                         {(Array.isArray(value) ? value : []).map((row, index) => {
                             return (
+                                // biome-ignore lint/suspicious/noArrayIndexKey: TODO: use index
                                 <tr key={index}>
                                     {field.columns.map(column => {
                                         return <td key={`${column.key}-${index}`} style={{ fontWeight: 400 }}>{row?.[column.key] ?? '-'}</td>;
@@ -75,6 +76,7 @@ export const useRenderField = () => {
                                 value.map((src, index) => {
                                     return (
                                         <ImagePreview
+                                            // biome-ignore lint/suspicious/noArrayIndexKey: TODO: optimize later
                                             key={index}
                                             src={src}
                                             width={'200'}

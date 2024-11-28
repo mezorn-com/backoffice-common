@@ -17,19 +17,18 @@ const getFileArraySize = (array: File[]) => {
 // 4_194_304 max size. 4mb
 const MAX_UPLOAD_SIZE = 4_194_304;
 
-export const uploadFile = (payload: File | File[], config?: IFileUploaderConfig) => {
+export const uploadFile = async (payload: File | File[], config?: IFileUploaderConfig) => {
     const files = payload;
 
     if (!Array.isArray(files)) {
-        return new Promise(async (resolve) => {
-            if (files.size <= MAX_UPLOAD_SIZE) {
-                const result = await uploadFileNormally(files, config);
-                resolve(result);
-            } else {
-                const result = await uploadWithSignedURL(files, config);
-                resolve(result);
-            }
-        })
+        // return new Promise(async (resolve) => {
+        if (files.size <= MAX_UPLOAD_SIZE) {
+            return await uploadFileNormally(files, config);
+            // resolve(result);
+        }
+        return await uploadWithSignedURL(files, config);
+                // resolve(result);
+        // })
     }
     // image size aas hamaarch niiluuleed duudah
     // requests will be either (array of file or file) array
@@ -51,24 +50,27 @@ export const uploadFile = (payload: File | File[], config?: IFileUploaderConfig)
         }
     }
 
-    return new Promise(async (resolve) => {
+    // return new Promise(async (resolve) => {
         const urls = [];
         for (const request of requests) {
             if (Array.isArray(request)) {
                 const result = await uploadFileNormally(request, config);
-                urls.push(...result);
+                if (result) {
+                    urls.push(...result);
+                }
             } else {
                 // Upload with signed url
                 const result = await uploadWithSignedURL(request, config);
                 urls.push(result);
             }
         }
-        resolve(urls);
-    })
+        return urls
+        // resolve(urls);
+    // })
 }
 
-export const uploadFileNormally = (payload: File | File[], config?: IFileUploaderConfig): Promise<string | string[]> => {
-    return new Promise(async (resolve, reject) => {
+export const uploadFileNormally = async (payload: File | File[], config?: IFileUploaderConfig): Promise<string | string[] | undefined> => {
+    // return new Promise(async (resolve, reject) => {
         try {
             const formData = new FormData();
             const isArray = Array.isArray(payload);
@@ -105,21 +107,23 @@ export const uploadFileNormally = (payload: File | File[], config?: IFileUploade
             });
             if (isArray) {
                 const urls = (response.data.result ?? []).map((result) => result?.fileUrl ?? undefined);
-                resolve(urls);
-            } else {
-                resolve(response?.data?.result?.[0]?.fileUrl ?? undefined);
+                return urls
+                // resolve(urls);
             }
+            return response?.data?.result?.[0]?.fileUrl ?? undefined
+            // resolve(response?.data?.result?.[0]?.fileUrl ?? undefined);
         } catch (e) {
             if (e instanceof Error) {
                 console.log('File Upload Error: ', e.message);
-                reject();
+                throw e;
+                // reject();
             }
         }
-    })
+    // })
 }
 
-export const uploadWithSignedURL = (file: File, config?: IFileUploaderConfig) => {
-    return new Promise(async (resolve, reject) => {
+export const uploadWithSignedURL = async (file: File, config?: IFileUploaderConfig) => {
+    // return new Promise(async (resolve, reject) => {
         try {
             const bodyParams = {
                 fileName: file.name,
@@ -152,15 +156,18 @@ export const uploadWithSignedURL = (file: File, config?: IFileUploaderConfig) =>
             });
 
             if (uploadResponse.status === 200) {
-                resolve(fileUrl);
+                return fileUrl;
+                // resolve(fileUrl);
             }
-            reject();
+            throw new Error('File upload error')
+            // reject();
 
         } catch (e) {
             if (e instanceof Error) {
                 console.log('Upload with Signed URL error: ', e.message);
-                reject();
+                throw e
+                // reject();
             }
         }
-    })
+    // })
 }

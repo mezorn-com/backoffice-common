@@ -66,7 +66,7 @@ const getColumnResizes = (centerElement: HTMLElement): ColumnSize[] => {
     const horizontalScrollItem = centerElement.children[0];
     const columnSizes: ColumnSize[] = getColumnSizes(horizontalScrollItem);
 
-    let exceededWidth: number = centerSectionWrapper - columnSizes.reduce((sum, { innerWidth }) => sum + (innerWidth ?? 0), 0);
+    const exceededWidth: number = centerSectionWrapper - columnSizes.reduce((sum, { innerWidth }) => sum + (innerWidth ?? 0), 0);
     const widthPerColumn = exceededWidth / columnSizes.length;
     return columnSizes.map((col => {
         return {

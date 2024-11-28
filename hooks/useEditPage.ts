@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { IFormField } from '@/backoffice-common/types/form';
+import type { IFormField } from '@/backoffice-common/types/form';
 import { getMeta } from '@/backoffice-common/utils';
-import { IFormMetaResponse } from '@/backoffice-common/types/api/meta';
+import type { IFormMetaResponse } from '@/backoffice-common/types/api/meta';
 import axios from 'axios';
-import { IResponse } from '@/backoffice-common/types/api';
-import { IFormValues } from '@/backoffice-common/components/form/helper';
+import type { IResponse } from '@/backoffice-common/types/api';
+import type { IFormValues } from '@/backoffice-common/components/form/helper';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -50,6 +50,7 @@ const useEditPage = ({
 
     const fetchData = async () => {
         const data = await getMeta<IFormMetaResponse>(apiRoute, 'update', { resourceId: id });
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: use types
         const { data: formValuesResponse } = await axios.get<IResponse<Record<string, any>>>(`${apiRoute}/${id}`);
         setState({
             title: data?.form?.title ?? '',
@@ -61,6 +62,7 @@ const useEditPage = ({
     }
 
     const submitHandler = async (values: IFormValues) => {
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: use type
         const { data } = await axios.put<IResponse<any>>(`${apiRoute}/${id}`, values);
         if (data.success) {
             showMessage(t('success', { ns: 'common' }), 'green');

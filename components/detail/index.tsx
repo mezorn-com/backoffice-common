@@ -1,15 +1,15 @@
-import * as React from 'react';
+import type { ReactNode } from 'react';
 import { path } from 'ramda';
 import { SimpleGrid } from '@mantine/core';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, RenderType } from '@/backoffice-common/types/form';
-import { IDetailPageState } from '@/backoffice-common/hooks/useDetailPage';
+import type { IDetailPageState } from '@/backoffice-common/hooks/useDetailPage';
 import { useRenderField } from '@/backoffice-common/hooks';
 import classes from './Detail.module.scss';
 
 interface IDetailProps {
 	id: string;
-	head?: React.ReactNode;
+	head?: ReactNode;
 	state: IDetailPageState;
 	apiUrl: string;
 }
@@ -17,7 +17,7 @@ interface IDetailProps {
 const Detail = ({ id, head, apiUrl, state: { values, details, actions } }: IDetailProps) => {
 	const renderField = useRenderField();
 
-	const getDetailValue = (field: IFormField, detailValues: Record<string, unknown>): React.ReactNode => {
+	const getDetailValue = (field: IFormField, detailValues: Record<string, unknown>): ReactNode => {
 		if (field.type !== FieldType.RENDER) {
 			return null;
 		}

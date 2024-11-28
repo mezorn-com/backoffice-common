@@ -1,7 +1,7 @@
 import { clone, drop, head, isNil, path, values as objectValues } from 'ramda';
 import i18n from '@/config/i18n';
 import type { SelectOption } from '@/backoffice-common/types/form';
-import { FieldType, IFormField, INormalField, UiType } from '@/backoffice-common/types/form';
+import { FieldType, type IFormField, type INormalField, UiType } from '@/backoffice-common/types/form';
 import { getArrayObjectByProp } from '@/backoffice-common/utils';
 import dayjs from 'dayjs';
 import { uploadFile } from '@/backoffice-common/utils/file-upload';
@@ -21,9 +21,10 @@ export const getFormItemPathByKey = (key: string): string[] => {
 	return key.split(SEPARATOR);
 };
 
+// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
 export const getFormInitialValues = (fields: IFormField[], initialValues?: Record<string, any>): IFormValues => {
 	// TODO: make clone get value from there.
-	let values: IFormValues = {};
+	const values: IFormValues = {};
 	for (const field of fields) {
 		switch (field.type) {
 			case FieldType.OBJECT: {
@@ -44,6 +45,7 @@ export const getFormInitialValues = (fields: IFormField[], initialValues?: Recor
 					fieldElement.isArrayElement = true;
 					// TODO: Using loop in Array to get all values
 					const arrayInitialValues = initialValues?.[field.key] ?? [];
+					// biome-ignore lint/suspicious/noExplicitAny: TODO: Check later
 					const arrayValues = arrayInitialValues.map((arrayValue: Record<string, any>) => {
 						return getFormInitialValues([fieldElement], arrayValue);
 					});
@@ -58,7 +60,7 @@ export const getFormInitialValues = (fields: IFormField[], initialValues?: Recor
 			case FieldType.GROUP: {
 				break;
 			}
-			case FieldType.NORMAL:
+			// case FieldType.NORMAL:
 			default: {
 				const initVal = initialValues?.[field.key] ?? undefined;
 				values[field.key] = getInitialValue(field, initVal);
@@ -69,6 +71,7 @@ export const getFormInitialValues = (fields: IFormField[], initialValues?: Recor
 	return values;
 };
 
+// biome-ignore lint/suspicious/noExplicitAny: use type
 export const getInitialValue = (field: INormalField, initialValue?: any) => {
 	switch (field.uiType) {
 		case UiType.TEXT_INPUT: {
@@ -126,7 +129,7 @@ export const getInitialValue = (field: INormalField, initialValue?: any) => {
 };
 
 export const validator = (fields: IFormField[], values: IFormValues) => {
-	let errors: { [key: string]: string | null } = {};
+	const errors: { [key: string]: string | null } = {};
 	for (const field of fields) {
 		const isVisible = isFieldVisible(field, values);
 		if (!isVisible || field.type === FieldType.GROUP) {
@@ -134,6 +137,7 @@ export const validator = (fields: IFormField[], values: IFormValues) => {
 			continue;
 		}
 		const targetPath = getFormItemPathByKey(field.key);
+		// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
 		const value: any = path(targetPath, values);
 		const isRequired = isFieldRequired(field, fields, values);
 		if (isRequired) {
@@ -143,6 +147,7 @@ export const validator = (fields: IFormField[], values: IFormValues) => {
 	return errors;
 };
 
+// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
 export const getErrorMessage = (field: IFormField, value: any): null | string => {
 	// if normal
 	if (field.type !== FieldType.NORMAL) {
@@ -221,6 +226,7 @@ export const isFieldRequired = (field: IFormField, fields: IFormField[], values:
 		if (!field.groupPath) {
 		    // uuruu required bas parentgui hamgiin gadna taliin objectod hamaarah uchir true butsaana.
 		    return true;
+		// biome-ignore lint/style/noUselessElse: TODO: optimize
 		} else {
 		    // case 1
 			const parentPath = field.groupPath.split(SEPARATOR);
@@ -254,11 +260,12 @@ export const getFormValueByKey = (key: string, values: IFormValues, separator = 
 	return path(key.split(separator), values);
 };
 
-const getTransformedValue = (field: IFormField, value: unknown): Promise<unknown> => {
-	return new Promise(async resolve => {
+const getTransformedValue = async (field: IFormField, value: unknown): Promise<unknown> => {
+	// return new Promise(async resolve => {
 		if (isNil(value) || !('uiType' in field)) {
-			resolve(undefined);
-			return;
+			return undefined
+			// resolve(undefined);
+			// return;
 		}
 		switch (field.uiType) {
 			case UiType.FILE_UPLOAD: {
@@ -268,43 +275,46 @@ const getTransformedValue = (field: IFormField, value: unknown): Promise<unknown
 						prefix: field.prefix ?? '',
 						folderPath: field.folderPath ?? '',
 					});
-					resolve(url);
-					return;
+					return url
+					// resolve(url);
+					// return;
 				}
-				resolve(value || undefined);
-				return;
+				// resolve(value || undefined);
+				return value || undefined;
 			}
 			case UiType.CHECKBOX: {
-				resolve(!!value);
-				return;
+				// resolve(!!value);
+				return !!value;
 			}
 			case UiType.TEXT_INPUT: {
 				if (field.number) {
-					resolve((value === 0 || value) ? value : undefined);
-					return;
+					// resolve((value === 0 || value) ? value : undefined);
+					return (value === 0 || value) ? value : undefined;
 				}
-				resolve(value || undefined);
-				return;
+				// resolve(value || undefined);
+				return value || undefined;
 			}
 			case UiType.YEAR: {
 				if (value && value instanceof Date) {
-					resolve(dayjs(value).year())
-					return;
+					// resolve(dayjs(value).year())
+					return dayjs(value).year();
+					// return;
 				}
-				resolve(undefined);
-				return
+				return undefined
+				// resolve(undefined);
+				// return
 			}
 			default: {
-				resolve(value);
-				return;
+				// resolve(value);
+				return value;
 			}
 		}
-	});
+	// });
 };
 
-export const transformValuesAsync = (fields: IFormField[], values: IFormValues, allValues: IFormValues): Promise<IFormValues | undefined> => {
-	return new Promise(async resolve => {
-		let transformedValues: IFormValues = {};
+export const transformValuesAsync = async (fields: IFormField[], values: IFormValues, allValues: IFormValues): Promise<IFormValues | undefined> => {
+	// return new Promise(async resolve => {
+		const transformedValues: IFormValues = {};
 		for (const field of fields) {
 			const isVisible = isFieldVisible(field, allValues);
 			if (!isVisible) {
@@ -312,15 +322,15 @@ export const transformValuesAsync = (fields: IFormField[], values: IFormValues, 
 			}
 			switch (field.type) {
 				case FieldType.GROUP: {
-					resolve(undefined);
-					return;
+					// resolve(undefined);
+					return undefined;
 				}
 				case FieldType.OBJECT: {
 					if (field.fields) {
 						if (field.isArrayElement) {
 							// not sure if isArrayElement works
-							resolve(transformValuesAsync(field.fields, values[field.key], allValues));
-							return;
+							// resolve(transformValuesAsync(field.fields, values[field.key], allValues));
+							return transformValuesAsync(field.fields, values[field.key], allValues);
 						}
 						transformedValues[field.key] = await transformValuesAsync(field.fields, values[field.key], allValues);
 					}
@@ -330,6 +340,7 @@ export const transformValuesAsync = (fields: IFormField[], values: IFormValues, 
 					if (field.element) {
 						const fieldElement = clone(field.element);
 						fieldElement.isArrayElement = true;
+						// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
 						const arrayValues: any = [];
 						if ('fields' in field.element && field.element.fields) {
 							for await (const elementValue of values[field.key]) {
@@ -343,18 +354,20 @@ export const transformValuesAsync = (fields: IFormField[], values: IFormValues, 
 					}
 					break;
 				}
-				case FieldType.NORMAL:
+				// case FieldType.NORMAL:
 				default: {
 					transformedValues[field.key] = await getTransformedValue(field, values[field.key]);
 				}
 			}
 		}
 		if (objectValues(transformedValues).every(value => value === undefined)) {
-			resolve(undefined);
-			return;
+			return undefined;
+			// resolve(undefined);
+			// return;
 		}
-		resolve(transformedValues);
-	});
+		return transformedValues;
+		// resolve(transformedValues);
+	// });
 };
 
 export const formatSelectValue = (options: SelectOption[]): ComboboxItem[] => {

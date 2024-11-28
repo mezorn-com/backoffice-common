@@ -2,8 +2,8 @@ import * as React from 'react';
 import axios from 'axios';
 import { MultiSelect,Loader, MultiSelectProps, Select, type ComboboxItem } from '@mantine/core';
 import type { ISelectOption, IResponse, IReference } from '@/backoffice-common/types/api';
-import { SelectValue, getTransformedValue } from './helper';
-import { GetInputProps } from '@mantine/form/lib/types';
+import { type SelectValue, getTransformedValue } from './helper';
+import type { GetInputProps } from '@mantine/form/lib/types';
 
 
 interface CommonProps {

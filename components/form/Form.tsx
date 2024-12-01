@@ -415,6 +415,15 @@ const Form = ({
 				return (
 					<DatePickerInput
 						{...props}
+						placeholder={props.label}
+						styles={{
+							label: {
+								display: 'none'
+							},
+							root: {
+								width: 140
+							}
+						}}
 						valueFormat={format}
 						onChange={(value: Date) => {
 							const v = value ? dayjs(value).format(format) : undefined;
@@ -441,6 +450,15 @@ const Form = ({
 					<DateTimePicker
 						{...props}
 						valueFormat={format}
+						placeholder={props.label}
+						styles={{
+							label: {
+								display: 'none'
+							},
+							root: {
+								width: 140
+							}
+						}}
 						onChange={(value: Date) => {
 							const v = value ? dayjs(value).format(format) : undefined;
 							props?.onChange?.(v);

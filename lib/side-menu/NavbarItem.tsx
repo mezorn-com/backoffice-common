@@ -49,7 +49,7 @@ const NavbarItem = ({
             return null;
         }
         return (
-            <Icon size="24px" stroke={1.5} style={{ flexShrink: 0 }}/>
+            <Icon size="20px" stroke={1.5} style={{ flexShrink: 0 }}/>
         )
     }, [ icon ]);
 

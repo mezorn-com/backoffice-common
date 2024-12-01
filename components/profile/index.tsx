@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActionIcon, Avatar, Button, Flex, Menu, Title, UnstyledButton } from '@mantine/core';
+import { ActionIcon, Avatar, Button, Flex, Group, Menu, Title, UnstyledButton } from '@mantine/core';
 import { IconArrowDown, IconChevronCompactDown, IconChevronDown, IconPower, IconSettings, IconUser } from '@tabler/icons-react';
 import classes from './Profile.module.scss';
 import useStore from '@/store';
@@ -23,21 +23,29 @@ const Profile = ({compact = false}) => {
 					<Button
 						fullWidth={!compact}  
 						justify='space-between'
-						leftSection={<Avatar radius={'sm'} size={compact ? 30 : 44 } ><IconUser size={compact ? 18 : 24}/></Avatar>}
+						leftSection={(
+							<Group>
+								<Avatar radius={'sm'} size={compact ? 30 : 44 } >
+									<IconUser size={compact ? 18 : 24}/>
+								</Avatar>
+								<Title order={6}>
+									{userName}
+								</Title>
+							</Group>
+						)}
 						rightSection={<IconChevronDown size={16}/>}
 						size={compact ? 'md' : 'xl'}
 						styles={{
 							root: {
 								padding: compact ? '5px' : '10px',
-								border: '1px solid var(--mantine-color-gray-3)',
+								borderBottom: '1px solid var(--mantine-color-gray-3)',
 								background: 'white',
 								color: 'black',
+								borderRadius: 0,
+								height: '65px'
 							}
 						}}
 					>
-						<Title order={6}>
-							{userName}
-						</Title>
 					</Button>
 					{/* <ActionIcon size={'xl'} variant={'light'} >
 						<IconSettings/>

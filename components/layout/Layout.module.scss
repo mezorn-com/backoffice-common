@@ -1,7 +1,7 @@
 .bodyWrapper {
     overflow: auto;
     flex: 1;
-    padding: 0 rem(10px) rem(10px) rem(10px);
+    padding: rem(10px);
     background-color: var(--mantine-color-gray-0);
 }
 
@@ -17,6 +17,9 @@
     padding: rem(10px);
     background-color: var(--mantine-color-gray-0);
     align-items: center;
+    background-color: white;
+    min-height: 65px;
+    border-bottom: 1px solid var(--mantine-color-gray-3)
 };
 
 .pageChildren {

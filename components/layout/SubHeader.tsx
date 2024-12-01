@@ -36,7 +36,7 @@ const SubHeader = ({
     return (
         <div className={classes.pageHeader}>
             <Flex
-                gap="md"
+                gap="sm"
                 justify="flex-start"
                 align="center"
                 direction="row"
@@ -46,14 +46,14 @@ const SubHeader = ({
                         <ActionIcon
                             onClick={goBack}
                             variant={'light'}
-                            size='xl'
+                            size='md'
                         >
                             {/* {t('back', { ns: 'common' })} */}
                             <IconChevronLeft size={16}/>
                         </ActionIcon>
                     )
                 }
-                <Title size={'h2'}>
+                <Title size={'h3'}>
                     {title}
                 </Title>
             </Flex>

@@ -1,8 +1,9 @@
-import * as React from 'react';
-import { ActionIcon, Menu, rem } from '@mantine/core';
-import type { Row } from '@tanstack/react-table';
+import ActionButton, {
+	type ActionButtonProps,
+} from '@/backoffice-common/components/common/action-button';
+import { ActionIcon, Menu } from '@mantine/core';
 import { IconDots } from '@tabler/icons-react';
-import ActionButton, { type ActionButtonProps } from '@/backoffice-common/components/common/action-button';
+import type { Row } from '@tanstack/react-table';
 import classes from './RowActionButton.module.scss';
 
 interface RowActionButtonsProps {
@@ -10,41 +11,29 @@ interface RowActionButtonsProps {
 	row: Row<Record<string, unknown>>;
 }
 
-const RowActionButtons = ({
-	buttons,
-	row,
-}: RowActionButtonsProps) => {
-
+const RowActionButtons = ({ buttons, row }: RowActionButtonsProps) => {
 	return (
-		<Menu
-			shadow='md'
-			position='bottom-end'
-		>
+		<Menu shadow='md' position='bottom-end'>
 			<Menu.Target>
-				<ActionIcon
-					variant='subtle'
-					size='sm'
-				>
-					<IconDots size={18}/>
+				<ActionIcon variant='subtle' size='sm'>
+					<IconDots size={18} />
 				</ActionIcon>
 			</Menu.Target>
 
 			<Menu.Dropdown className={classes.dropdown}>
-				{
-					buttons.map(button => {
-						return (
-							<ActionButton
-								isFormAction
-								key={button.actionKey}
-								data={row.original}
-								{...button}
-							/>
-						)
-					})
-				}
+				{buttons.map(button => {
+					return (
+						<ActionButton
+							isFormAction
+							key={button.actionKey}
+							data={row.original}
+							{...button}
+						/>
+					);
+				})}
 			</Menu.Dropdown>
 		</Menu>
-	)
-}
+	);
+};
 
 export default RowActionButtons;

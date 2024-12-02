@@ -1,10 +1,10 @@
-import type { ReactNode } from 'react';
-import { path } from 'ramda';
-import { SimpleGrid } from '@mantine/core';
+import { useRenderField } from '@/backoffice-common/hooks';
+import type { IDetailPageState } from '@/backoffice-common/hooks/useDetailPage';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { FieldType, RenderType } from '@/backoffice-common/types/form';
-import type { IDetailPageState } from '@/backoffice-common/hooks/useDetailPage';
-import { useRenderField } from '@/backoffice-common/hooks';
+import { SimpleGrid } from '@mantine/core';
+import { path } from 'ramda';
+import type { ReactNode } from 'react';
 import classes from './Detail.module.scss';
 
 interface IDetailProps {
@@ -14,10 +14,21 @@ interface IDetailProps {
 	apiUrl: string;
 }
 
-const Detail = ({ id, head, apiUrl, state: { values, details, actions } }: IDetailProps) => {
+const Detail = ({
+	// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
+	id,
+	head,
+	// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
+	apiUrl,
+	// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
+	state: { values, details, actions },
+}: IDetailProps) => {
 	const renderField = useRenderField();
 
-	const getDetailValue = (field: IFormField, detailValues: Record<string, unknown>): ReactNode => {
+	const getDetailValue = (
+		field: IFormField,
+		detailValues: Record<string, unknown>,
+	): ReactNode => {
 		if (field.type !== FieldType.RENDER) {
 			return null;
 		}
@@ -26,33 +37,40 @@ const Detail = ({ id, head, apiUrl, state: { values, details, actions } }: IDeta
 		return renderField(field, value, detailValues);
 	};
 
-	// biome-ignore lint/suspicious/noExplicitAny: TODO: fix type
-	const renderDetails = (renderFields: IFormField[], renderValues: Record<string, any>) => {
+	const renderDetails = (
+		renderFields: IFormField[],
+		// biome-ignore lint/suspicious/noExplicitAny: TODO: fix type
+		renderValues: Record<string, any>,
+	) => {
 		return (
-			<div
-				className={classes.group}
-				key='group'
-			>
+			<div className={classes.group} key='group'>
 				{renderFields.map(field => {
 					if (field.type === FieldType.OBJECT) {
-						return renderDetails(field.fields ?? [], renderValues[field.key]);
+						return renderDetails(
+							field.fields ?? [],
+							renderValues[field.key],
+						);
 					}
 					if (field.type === FieldType.GROUP) {
 						return null;
 					}
 					const value = getDetailValue(field, renderValues);
-					const isTable = field.type === FieldType.RENDER && field.renderType === RenderType.TABLE;
+					const isTable =
+						field.type === FieldType.RENDER &&
+						field.renderType === RenderType.TABLE;
 					return (
 						<SimpleGrid
 							key={field.key}
 							cols={isTable ? 1 : 2}
 							spacing={50}
-							verticalSpacing={'xl'}
+							verticalSpacing='xl'
 							className={classes.grid}
 						>
 							<span
 								className={classes.label}
-								style={{ textAlign: isTable ? 'left' : 'right' }}
+								style={{
+									textAlign: isTable ? 'left' : 'right',
+								}}
 							>
 								{field.label}
 							</span>

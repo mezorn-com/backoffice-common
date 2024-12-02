@@ -1,44 +1,43 @@
-import * as React from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import type { IStringReplacer } from '@/backoffice-common/types/utils';
+import { getSubResourceUrl } from '@/backoffice-common/utils/route';
+import * as React from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 
 interface IConfig {
-    apiRoute: string;
+	apiRoute: string;
 }
 
-const useRoute = ({
-    apiRoute
-}: IConfig) => {
-    const { pathname } = useLocation();
-    const navigate = useNavigate();
-    const params = useParams();
+const useRoute = ({ apiRoute }: IConfig) => {
+	const { pathname } = useLocation();
 
-    const API_URL = React.useMemo(() => {
-        const array: IStringReplacer[] = [];
-        for (const key of Object.keys(params)) {
-            const paramValue = params[key];
-            if (paramValue) {
-                if (key !== '*') {
-                    array.push({
-                        match: `:${key}`,
-                        replace: paramValue
-                    })
-                }
-            }
-        }
-        return getSubResourceUrl(apiRoute, array);
-    }, [params, apiRoute]);
+	// const navigate = useNavigate();
+	const params = useParams();
 
-    const routes = {
-        new: `${pathname}${pathname.endsWith('/') ? '' : '/'}new`
-    }
+	const API_URL = React.useMemo(() => {
+		const array: IStringReplacer[] = [];
+		for (const key of Object.keys(params)) {
+			const paramValue = params[key];
+			if (paramValue) {
+				if (key !== '*') {
+					array.push({
+						match: `:${key}`,
+						replace: paramValue,
+					});
+				}
+			}
+		}
+		return getSubResourceUrl(apiRoute, array);
+	}, [params, apiRoute]);
 
-    return {
-        API_URL,
-        routes,
-        params
-    }
+	const routes = {
+		new: `${pathname}${pathname.endsWith('/') ? '' : '/'}new`,
+	};
+
+	return {
+		API_URL,
+		routes,
+		params,
+	};
 };
 
 export default useRoute;

@@ -1,45 +1,62 @@
-import * as React from 'react';
-import { useForm } from '@mantine/form';
+import type { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
+import {
+	FieldType,
+	type IFormField,
+	UiType,
+} from '@/backoffice-common/types/form';
+import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
 import {
 	ActionIcon,
 	Button,
+	type ButtonProps,
 	Card,
 	Checkbox,
+	Fieldset,
 	Flex,
+	MultiSelect,
 	NumberInput,
 	PasswordInput,
 	Select,
-	Textarea,
 	TextInput,
+	Textarea,
 	Title,
-	type ButtonProps,
-	MultiSelect, 
-	Fieldset
 } from '@mantine/core';
-import { type IFormField, FieldType, UiType } from '@/backoffice-common/types/form';
 import {
-	getFormInitialValues,
-	getFormValueByKey,
+	DatePickerInput,
+	DateTimePicker,
+	TimeInput,
+	YearPickerInput,
+} from '@mantine/dates';
+import { useForm } from '@mantine/form';
+import { randomId } from '@mantine/hooks';
+import { IconMinus, IconPlus } from '@tabler/icons-react';
+import dayjs from 'dayjs';
+import { path, clone, mergeDeepLeft, omit } from 'ramda';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
+import classes from './Form.module.scss';
+import {
+	CascadingSelect,
+	FetchSelect,
+	FileUpload,
+	FormRTE,
+	Location,
+	MapAddressPicker,
+	SearchableSelect,
+} from './components';
+import {
 	type IFormValues,
+	SEPARATOR,
+	formatSelectValue,
+	getFormInitialValues,
+	getFormItemPathByKey,
+	getFormValueByKey,
 	isFieldRequired,
 	isFieldVisible,
-	SEPARATOR,
 	transformValuesAsync,
 	validator,
-	formatSelectValue,
-	getFormItemPathByKey
 } from './helper';
-import { randomId } from '@mantine/hooks';
-import { CascadingSelect, FetchSelect, FileUpload, FormRTE, MapAddressPicker, Location, SearchableSelect } from './components';
-import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
-import { DatePickerInput, TimeInput, DateTimePicker, YearPickerInput } from '@mantine/dates';
-import { IconMinus, IconPlus } from '@tabler/icons-react';
-import { clone, mergeDeepLeft, omit, path } from 'ramda';
-import dayjs from 'dayjs';
-import classes from './Form.module.scss';
-import { useTranslation } from 'react-i18next';
-import type { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
-import { useLocation } from 'react-router-dom';
 
 // TODO: code splitting
 
@@ -53,7 +70,9 @@ interface IFormProps {
 	submitButtonProps?: ButtonProps;
 	onChange?: (value: IFormValues) => void;
 	direction?: React.CSSProperties['flexDirection'];
-	getFetchParams?: (currentParams: Record<string, unknown>) => Record<string, unknown>;
+	getFetchParams?: (
+		currentParams: Record<string, unknown>,
+	) => Record<string, unknown>;
 }
 
 const Form = ({
@@ -64,7 +83,7 @@ const Form = ({
 	submitButtonProps,
 	onChange,
 	direction = 'column',
-	getFetchParams
+	getFetchParams,
 }: IFormProps) => {
 	const { t } = useTranslation();
 	const { pathname } = useLocation();
@@ -81,16 +100,20 @@ const Form = ({
 	// biome-ignore lint/correctness/useExhaustiveDependencies: TODO: optimize
 	React.useEffect(() => {
 		if (onChange) {
-			onChange(form.values)
+			onChange(form.values);
 		}
-	}, [form.values])
+	}, [form.values]);
 
 	// console.log('form initial Values>>>>', getFormInitialValues(fields, values));
 	console.log('FORM VALUES>>>>', form.values);
 
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix types
 	const handleError = (validationErrors: any, _values: any, _event: any) => {
-		console.log('Form Error>>>', { validationErrors, _values: _values, _event: _event });
+		console.log('Form Error>>>', {
+			validationErrors,
+			_values: _values,
+			_event: _event,
+		});
 	};
 
 	const getFormField = (field: IFormField): React.ReactNode => {
@@ -106,7 +129,9 @@ const Form = ({
 					const { key } = field;
 					const fieldElement = clone(field.element);
 					fieldElement.isArrayElement = true;
-					const groupPath = (field.groupPath ? field.groupPath + SEPARATOR : '') + key;
+					const groupPath =
+						(field.groupPath ? field.groupPath + SEPARATOR : '') +
+						key;
 					return (
 						<Card
 							key={groupPath}
@@ -117,22 +142,22 @@ const Form = ({
 							mt='xs'
 							className={classes.card}
 						>
-							<Card.Section
-								inheritPadding
-								withBorder
-								py='xs'
-							>
-								<Flex
-									align='center'
-									gap={5}
-								>
+							<Card.Section inheritPadding withBorder py='xs'>
+								<Flex align='center' gap={5}>
 									<ActionIcon
 										color='primary'
 										variant='light'
 										onClick={() => {
 											if (field.element) {
-												const initialValue = getFormInitialValues([fieldElement], values);
-												form.insertListItem(groupPath, initialValue);
+												const initialValue =
+													getFormInitialValues(
+														[fieldElement],
+														values,
+													);
+												form.insertListItem(
+													groupPath,
+													initialValue,
+												);
 											}
 										}}
 										size='sm'
@@ -148,54 +173,69 @@ const Form = ({
 									</Title>
 								</Flex>
 							</Card.Section>
-							<Card.Section
-								inheritPadding
-								py='md'
-							>
-								{/* biome-ignore lint/suspicious/noExplicitAny: TODO: Change */}
-								{(path(getFormItemPathByKey(groupPath), form.values) as any[]).map((formItem: unknown, index: number, array: any[]) => {
-									const elementPath = groupPath + SEPARATOR + index;
-									fieldElement.groupPath = elementPath;
-									return (
-										<Card
-											key={elementPath}
-											shadow='xs'
-											padding='md'
-											radius='md'
-											mt='xs'
-											withBorder
-											className={classes.card}
-										>
-											<Card.Section
-												inheritPadding
+							<Card.Section inheritPadding py='md'>
+								{(
+									path(
+										getFormItemPathByKey(groupPath),
+										form.values,
+										// biome-ignore lint/suspicious/noExplicitAny: TODO: Change
+									) as any[]
+								).map(
+									(
+										// biome-ignore lint/correctness/noUnusedVariables: TODO: remove
+										formItem: unknown,
+										index: number,
+										// biome-ignore lint/suspicious/noExplicitAny: TODO: Change
+										// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
+										array: any[],
+									) => {
+										const elementPath =
+											groupPath + SEPARATOR + index;
+										fieldElement.groupPath = elementPath;
+										return (
+											<Card
+												key={elementPath}
+												shadow='xs'
+												padding='md'
+												radius='md'
+												mt='xs'
 												withBorder
-												py='xs'
+												className={classes.card}
 											>
-												<Flex
-													justify='flex-end'
+												<Card.Section
+													inheritPadding
+													withBorder
+													py='xs'
 												>
-													<ActionIcon
-														color='red'
-														variant='outline'
-														onClick={() => {
-															form.removeListItem(groupPath, index);
-														}}
-														size='sm'
-														radius='sm'
-													>
-														<IconMinus size={16} />
-													</ActionIcon>
-												</Flex>
-											</Card.Section>
-											<Card.Section
-												inheritPadding
-												py='md'
-											>
-												{getFormField(fieldElement)}
-											</Card.Section>
-										</Card>
-									);
-								})}
+													<Flex justify='flex-end'>
+														<ActionIcon
+															color='red'
+															variant='outline'
+															onClick={() => {
+																form.removeListItem(
+																	groupPath,
+																	index,
+																);
+															}}
+															size='sm'
+															radius='sm'
+														>
+															<IconMinus
+																size={16}
+															/>
+														</ActionIcon>
+													</Flex>
+												</Card.Section>
+												<Card.Section
+													inheritPadding
+													py='md'
+												>
+													{getFormField(fieldElement)}
+												</Card.Section>
+											</Card>
+										);
+									},
+								)}
 							</Card.Section>
 						</Card>
 					);
@@ -206,7 +246,9 @@ const Form = ({
 				const { key } = field;
 				let groupPath = field.groupPath ?? '';
 				if (!field.isArrayElement) {
-					groupPath = (field.groupPath ? field.groupPath + SEPARATOR : '') + key;
+					groupPath =
+						(field.groupPath ? field.groupPath + SEPARATOR : '') +
+						key;
 				}
 				const fieldClone = (field.fields ?? []).map(f => {
 					const child = clone(f);
@@ -215,10 +257,10 @@ const Form = ({
 				});
 
 				return (
-					<Fieldset key={groupPath} legend={field.label} >
+					<Fieldset key={groupPath} legend={field.label}>
 						{fieldClone.map(getFormField)}
 					</Fieldset>
-				)
+				);
 			}
 			case FieldType.GROUP: {
 				const groupPath = field.groupPath ?? '';
@@ -237,10 +279,7 @@ const Form = ({
 						mt='xs'
 						className={classes.card}
 					>
-						<Card.Section
-							inheritPadding
-							py='md'
-						>
+						<Card.Section inheritPadding py='md'>
 							{clonedField.map(getFormField)}
 						</Card.Section>
 					</Card>
@@ -249,9 +288,13 @@ const Form = ({
 			case FieldType.RENDER: {
 				return null;
 			}
+			default: {
+				break;
+			}
 		}
 
-		const valueKey = (field.groupPath ? field.groupPath + SEPARATOR : '') + field.key;
+		const valueKey =
+			(field.groupPath ? field.groupPath + SEPARATOR : '') + field.key;
 
 		// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
 		const props: any = {
@@ -273,10 +316,10 @@ const Form = ({
 							placeholder={props.label}
 							styles={{
 								label: {
-									display: 'none'
-								}
+									display: 'none',
+								},
 							}}
-							autoComplete={'new-password'}
+							autoComplete='new-password'
 						/>
 					);
 				}
@@ -287,12 +330,12 @@ const Form = ({
 							placeholder={props.label}
 							styles={{
 								label: {
-									display: 'none'
-								}
+									display: 'none',
+								},
 							}}
 							autosize
 							minRows={2}
-							autoComplete={'off'}
+							autoComplete='off'
 						/>
 					);
 				}
@@ -303,12 +346,12 @@ const Form = ({
 							placeholder={props.label}
 							styles={{
 								label: {
-									display: 'none'
-								}
+									display: 'none',
+								},
 							}}
 							autoComplete='off'
 							precision={10}
-							thousandSeparator=","
+							thousandSeparator=','
 						/>
 					);
 				}
@@ -318,13 +361,14 @@ const Form = ({
 						placeholder={props.label}
 						styles={{
 							label: {
-								display: 'none'
-							}
+								display: 'none',
+							},
 						}}
 						autoComplete='off'
 						onChange={event => {
 							if (field.numeric) {
-								isUserInputNumber(event.currentTarget.value) && props.onChange(event);
+								isUserInputNumber(event.currentTarget.value) &&
+									props.onChange(event);
 							} else {
 								props.onChange(event);
 							}
@@ -337,8 +381,12 @@ const Form = ({
 					// if (field.optionsApi?.uri) {
 					const params: Record<string, unknown> = {};
 
-					for (const queryParamKey of field.optionsApi.queryParams ?? []) {
-						params[queryParamKey] = getFormValueByKey(queryParamKey, form.values);
+					for (const queryParamKey of field.optionsApi.queryParams ??
+						[]) {
+						params[queryParamKey] = getFormValueByKey(
+							queryParamKey,
+							form.values,
+						);
 					}
 
 					if (field.optionsApi.queryParams?.includes('parentId')) {
@@ -348,7 +396,9 @@ const Form = ({
 
 					const uri = combineURL(
 						field.optionsApi?.uri,
-						getFetchParams ? mergeDeepLeft(params, getFetchParams(params)) : params
+						getFetchParams
+							? mergeDeepLeft(params, getFetchParams(params))
+							: params,
 					);
 					return (
 						<FetchSelect
@@ -386,8 +436,8 @@ const Form = ({
 							placeholder={props.label}
 							styles={{
 								label: {
-									display: 'none'
-								}
+									display: 'none',
+								},
 							}}
 							data={formatSelectValue(field.options)}
 						/>
@@ -417,22 +467,34 @@ const Form = ({
 			case UiType.DATE: {
 				const format = field.format ?? 'YYYY/MM/DD';
 				const value = props.value ? new Date(props.value) : null;
-				const startDate = field.startDate ? dayjs(field.startDate) : undefined;
-				const endDate = field.endDate ? dayjs(field.endDate) : undefined;
+				const startDate = field.startDate
+					? dayjs(field.startDate)
+					: undefined;
+				const endDate = field.endDate
+					? dayjs(field.endDate)
+					: undefined;
 				return (
 					<DatePickerInput
 						{...props}
 						valueFormat={format}
 						onChange={(value: Date) => {
-							const v = value ? dayjs(value).format(format) : undefined;
+							const v = value
+								? dayjs(value).format(format)
+								: undefined;
 							props?.onChange?.(v);
 						}}
 						value={value}
-						excludeDate={(date) => {
-							if (endDate && dayjs(date).isAfter(endDate, 'day')) {
+						excludeDate={date => {
+							if (
+								endDate &&
+								dayjs(date).isAfter(endDate, 'day')
+							) {
 								return true;
 							}
-							if (startDate && dayjs(date).isBefore(startDate, 'day')) {
+							if (
+								startDate &&
+								dayjs(date).isBefore(startDate, 'day')
+							) {
 								return true;
 							}
 							return false;
@@ -449,7 +511,9 @@ const Form = ({
 						{...props}
 						valueFormat={format}
 						onChange={(value: Date) => {
-							const v = value ? dayjs(value).format(format) : undefined;
+							const v = value
+								? dayjs(value).format(format)
+								: undefined;
 							props?.onChange?.(v);
 						}}
 						value={value}
@@ -462,11 +526,11 @@ const Form = ({
 					<Checkbox
 						className={classes.checkboxContainer}
 						{...omit(['withAsterisk'], props)}
-						label={(
+						label={
 							<div className={classes.checkboxLabel}>
 								{props.label}
 							</div>
-						)}
+						}
 					/>
 				);
 			}
@@ -476,24 +540,27 @@ const Form = ({
 						key={valueKey}
 						field={field}
 						onChange={value => form.setFieldValue(valueKey, value)}
-						value={getFormValueByKey(valueKey, form.values) as IMapAddressValue | undefined}
+						value={
+							getFormValueByKey(valueKey, form.values) as
+								| IMapAddressValue
+								| undefined
+						}
 					/>
 				);
 			}
 			case UiType.FILE_UPLOAD: {
-				return (
-					<FileUpload
-						{...props}
-						accept={field.mimeType}
-					/>
-				);
+				return <FileUpload {...props} accept={field.mimeType} />;
 			}
 			case UiType.HTML_INPUT: {
 				return (
 					<FormRTE
 						key={valueKey}
 						field={field}
-						value={getFormValueByKey(valueKey, form.values) as string | undefined}
+						value={
+							getFormValueByKey(valueKey, form.values) as
+								| string
+								| undefined
+						}
 						onChange={value => form.setFieldValue(valueKey, value)}
 					/>
 				);
@@ -505,23 +572,13 @@ const Form = ({
 						uri={field.optionsApi.uri}
 						multiple={field.multiple}
 					/>
-				)
+				);
 			}
 			case UiType.LOCATION: {
-				return (
-					<Location
-						{...props}
-						onSave={props.onChange}
-					/>
-				)
+				return <Location {...props} onSave={props.onChange} />;
 			}
 			case UiType.YEAR: {
-				return (
-					<YearPickerInput
-						clearable
-						{...props}
-					/>
-				)
+				return <YearPickerInput clearable {...props} />;
 			}
 			default: {
 				return null;
@@ -555,17 +612,15 @@ const Form = ({
 				onSubmit={form.onSubmit(handleSubmit, handleError)}
 				onReset={form.onReset}
 			>
-				<Flex direction={direction} gap='xs' wrap={direction === 'row' ? 'wrap' : undefined}>{renderFormFields()}</Flex>
 				<Flex
-					justify='flex-end'
-					align='center'
-					wrap='wrap'
+					direction={direction}
+					gap='xs'
+					wrap={direction === 'row' ? 'wrap' : undefined}
 				>
-					<Button
-						type='submit'
-						mt={'sm'}
-						{...submitButtonProps}
-					>
+					{renderFormFields()}
+				</Flex>
+				<Flex justify='flex-end' align='center' wrap='wrap'>
+					<Button type='submit' mt='sm' {...submitButtonProps}>
 						{t('action.submit', { ns: 'common' })}
 					</Button>
 				</Flex>
@@ -582,15 +637,9 @@ const FormWrapper = (props: IFormProps) => {
 			fields: props.fields,
 			// fields: refactorFields(props.fields)
 		};
-	}, [ props.fields, props.values ]);
+	}, [props.fields, props.values]);
 
-	return (
-		<Form
-			key={key}
-			{...props}
-			fields={fields}
-		/>
-	);
+	return <Form key={key} {...props} fields={fields} />;
 };
 
 export default FormWrapper;

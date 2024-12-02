@@ -1,18 +1,26 @@
-import * as React from 'react';
-import axios from 'axios';
-import { useForm, hasLength } from '@mantine/form';
-import { Box, TextInput, Group, Button, Title, Text, PasswordInput, Image } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
-import useStore from '@/store';
-import { IconAt, IconKey, IconChevronRight } from '@tabler/icons-react';
-import { APP_NAME } from '@/config';
-import ChangePassword from '@/backoffice-common/pages/auth/ChangePassword';
 import { showMessage } from '@/backoffice-common/lib/notification';
+import ChangePassword from '@/backoffice-common/pages/auth/ChangePassword';
+import { APP_NAME } from '@/config';
+import useStore from '@/store';
+import {
+	Box,
+	Button,
+	Group,
+	PasswordInput,
+	Text,
+	TextInput,
+	Title,
+} from '@mantine/core';
+import { hasLength, useForm } from '@mantine/form';
+import { IconAt, IconChevronRight, IconKey } from '@tabler/icons-react';
+import axios from 'axios';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import classes from './Login.module.scss';
 
+import { Lock } from '@/backoffice-common/components/icon/Lock';
 import type { IResponse } from '@/backoffice-common/types/api';
 import type { ILoginResponse } from '@/types';
-import { Lock } from '@/backoffice-common/components/icon/Lock';
 
 interface IRightSection {
 	children?: React.ReactNode;
@@ -24,13 +32,12 @@ interface ILoginProps {
 	forgotPasswordButton?: React.ReactNode;
 }
 
-const Login = ({
-	right,
-	forgotPasswordButton
-}: ILoginProps) => {
+// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
+const Login = ({ right, forgotPasswordButton }: ILoginProps) => {
 	const { t } = useTranslation();
 	const setLoginInfo = useStore(store => store.setAuth);
-	const [ loginResponse, setLoginResponse ] = React.useState<ILoginResponse | null>(null);
+	const [loginResponse, setLoginResponse] =
+		React.useState<ILoginResponse | null>(null);
 
 	const form = useForm({
 		initialValues: {
@@ -39,13 +46,22 @@ const Login = ({
 		},
 		clearInputErrorOnChange: true,
 		validate: {
-			identifier: hasLength({ min: 6 }, 'Username must be 6 characters min'),
-			password: hasLength({ min: 6 }, 'Password must be 6 characters min'),
+			identifier: hasLength(
+				{ min: 6 },
+				'Username must be 6 characters min',
+			),
+			password: hasLength(
+				{ min: 6 },
+				'Password must be 6 characters min',
+			),
 		},
 	});
 
 	const handleSubmit = async (values: typeof form.values) => {
-		const { data } = await axios.post<IResponse<ILoginResponse>>('/login', values);
+		const { data } = await axios.post<IResponse<ILoginResponse>>(
+			'/login',
+			values,
+		);
 
 		const { requirePasswordChange } = data.data;
 
@@ -58,13 +74,17 @@ const Login = ({
 
 	const changePassword = async (newPassword: string) => {
 		const params = {
-			newPassword
-		}
-		const { data } = await axios.post<IResponse<unknown>>('/api/users/me/change-password', params, {
-			headers: {
-				'Authorization': `Bearer ${loginResponse?.token}`,
-			}
-		});
+			newPassword,
+		};
+		const { data } = await axios.post<IResponse<unknown>>(
+			'/api/users/me/change-password',
+			params,
+			{
+				headers: {
+					Authorization: `Bearer ${loginResponse?.token}`,
+				},
+			},
+		);
 		if (data.success) {
 			showMessage(t('success', { ns: 'common' }), 'green');
 
@@ -72,45 +92,36 @@ const Login = ({
 				setLoginInfo(loginResponse);
 			}
 		}
-	}
+	};
 
 	return (
 		<div className={classes.container}>
 			<div className={classes.card}>
-				<Box
-					style={{ width: '100%' }}
-					mx='auto'
-				>
+				<Box style={{ width: '100%' }} mx='auto'>
 					<form
 						onSubmit={form.onSubmit(handleSubmit)}
 						className={classes.form}
 					>
-						<div style={{
-							width: '80px',
-							aspectRatio: 1,
-							display: 'flex',
-							justifyContent: 'center',
-							alignItems: 'center',
-							borderRadius: '100%',
-							background: '#F1F3F5',
-							placeSelf: 'center',
-							marginBottom: '20px'
-						}}>
+						<div
+							style={{
+								width: '80px',
+								aspectRatio: 1,
+								display: 'flex',
+								justifyContent: 'center',
+								alignItems: 'center',
+								borderRadius: '100%',
+								background: '#F1F3F5',
+								placeSelf: 'center',
+								marginBottom: '20px',
+							}}
+						>
 							<Lock color='#8E8E8F' size={40} />
 						</div>
-						
-						<Title
-							order={2}
-							size='h1'
-						>
+
+						<Title order={2} size='h1'>
 							{t('welcome', { ns: 'auth' })}!
 						</Title>
-						<Text
-							c='dimmed'
-							fz='sm'
-							fw={500}
-							mb={'lg'}
-						>
+						<Text c='dimmed' fz='sm' fw={500} mb='lg'>
 							{t('loginDescription', { ns: 'auth' })}
 						</Text>
 						<TextInput
@@ -120,13 +131,13 @@ const Login = ({
 							placeholder={t('username', { ns: 'auth' })}
 							styles={{
 								input: {
-									fontSize: 15
+									fontSize: 15,
 								},
 								label: {
-									display: 'none'
-								}
+									display: 'none',
+								},
 							}}
-							mb={'sm'}
+							mb='sm'
 							{...form.getInputProps('identifier')}
 						/>
 						<PasswordInput
@@ -134,24 +145,20 @@ const Login = ({
 							leftSection={<IconKey size={18} />}
 							label={t('password', { ns: 'auth' })}
 							placeholder='******'
-
 							styles={{
 								input: {
-									fontSize: 15
+									fontSize: 15,
 								},
 								label: {
-									display: 'none'
-								}
+									display: 'none',
+								},
 							}}
 							{...form.getInputProps('password')}
 						/>
 
 						{forgotPasswordButton}
 
-						<Group
-							justify='flex-end'
-							mt='md'
-						>
+						<Group justify='flex-end' mt='md'>
 							<Button
 								type='submit'
 								variant='filled'
@@ -159,8 +166,8 @@ const Login = ({
 								rightSection={<IconChevronRight size={18} />}
 								styles={{
 									label: {
-										fontSize: 15
-									}
+										fontSize: 15,
+									},
 								}}
 								fullWidth
 							>

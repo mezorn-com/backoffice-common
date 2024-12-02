@@ -11,4 +11,4 @@ export const buttonize = (handler: Function) => {
 			}
 		},
 	} as const;
-}
+};

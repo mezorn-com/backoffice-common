@@ -1,27 +1,31 @@
-import * as React from 'react';
-import type { ListActionKey, ListItemActionKey, ItemAction } from '@/backoffice-common/types/api/meta';
+import Form from '@/backoffice-common/components/form/Form';
+import { useConfirmModal, usePathParameter } from '@/backoffice-common/hooks';
+import { showMessage } from '@/backoffice-common/lib/notification';
+import type { IResponse } from '@/backoffice-common/types/api';
+import type {
+	ItemAction,
+	ListActionKey,
+	ListItemActionKey,
+} from '@/backoffice-common/types/api/meta';
+import { replacePathParameters } from '@/backoffice-common/utils';
 import { actionColors } from '@/backoffice-common/utils/styles';
+import * as icons from '@/lib/icons/common';
+import { ActionIcon, Button, Drawer, useMantineTheme } from '@mantine/core';
 import type { OpenConfirmModal } from '@mantine/modals/lib/context';
 import { IconList, type TablerIconsProps } from '@tabler/icons-react';
 import axios from 'axios';
-import type { IResponse } from '@/backoffice-common/types/api';
-import { showMessage } from '@/backoffice-common/lib/notification';
-import Form from '@/backoffice-common/components/form/Form';
-import { ActionIcon, Button, Drawer, useMantineTheme } from '@mantine/core';
+import { last } from 'ramda';
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import * as icons from '@/lib/icons/common';
-import { replacePathParameters } from '@/backoffice-common/utils';
-import { useConfirmModal, usePathParameter } from '@/backoffice-common/hooks';
-import { last } from 'ramda';
 
 export interface ActionButtonProps {
 	data?: Record<string, unknown>;
 	actionKey: ListActionKey | ListItemActionKey;
 	action: ItemAction;
 	onClick?: (data?: Record<string, unknown>) => void;
-	callback:() => void;
-	isFormAction?: boolean
+	callback: () => void;
+	isFormAction?: boolean;
 }
 
 const ICON_SIZE = 16;
@@ -32,9 +36,8 @@ const ActionButton = ({
 	action,
 	onClick,
 	callback,
-	isFormAction = false
+	isFormAction = false,
 }: ActionButtonProps) => {
-
 	const theme = useMantineTheme();
 	const { t } = useTranslation();
 	const navigate = useNavigate();
@@ -42,9 +45,12 @@ const ActionButton = ({
 	const pathParameter = usePathParameter();
 	const confirmModal = useConfirmModal();
 
-	const [ showDrawer, setShowDrawer ] = React.useState(false);
+	const [showDrawer, setShowDrawer] = React.useState(false);
 
-	const primaryShade: number = typeof theme.primaryShade !== 'number' ? theme.primaryShade.light : theme.primaryShade;
+	const primaryShade: number =
+		typeof theme.primaryShade !== 'number'
+			? theme.primaryShade.light
+			: theme.primaryShade;
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: TODO: optimize
 	const { icon, label, handler, color } = React.useMemo(() => {
@@ -54,17 +60,22 @@ const ActionButton = ({
 		const color = actionColor;
 		let icon: React.ReactNode;
 		let label: React.ReactNode;
-		let actionFn: undefined | ((formValues?: Record<string, unknown>) => void);
-		let confirm: (Pick<OpenConfirmModal, 'children' | 'title' | 'labels' | 'confirmProps'>) | null = null;
+		let actionFn:
+			| undefined
+			| ((formValues?: Record<string, unknown>) => void);
+		let confirm: Pick<
+			OpenConfirmModal,
+			'children' | 'title' | 'labels' | 'confirmProps'
+		> | null = null;
 		// TODO: Need to implement merging...
 
-		switch(actionKey) {
+		switch (actionKey) {
 			case 'create': {
 				icon = 'FilePlus';
 				label = t('create', { ns: 'common' });
 				actionFn = () => {
 					navigate(`${pathname}/new`);
-				}
+				};
 				break;
 			}
 			case 'get': {
@@ -75,13 +86,13 @@ const ActionButton = ({
 						let detailPath: string;
 						const { _id } = data;
 						if (pathname.endsWith('/')) {
-							detailPath = `${pathname}${_id}`
+							detailPath = `${pathname}${_id}`;
 						} else {
-							detailPath = `${pathname}/${_id}`
+							detailPath = `${pathname}/${_id}`;
 						}
 						navigate(detailPath);
 					}
-				}
+				};
 				break;
 			}
 			case 'update': {
@@ -92,7 +103,9 @@ const ActionButton = ({
 					if (data) {
 						let editPath: string;
 						const { _id } = data;
-						const currentPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+						const currentPath = pathname.endsWith('/')
+							? pathname.slice(0, -1)
+							: pathname;
 						const currentPathParts = currentPath.split('/');
 						if (_id && last(currentPathParts) === _id) {
 							editPath = `${pathname}/edit`;
@@ -101,7 +114,7 @@ const ActionButton = ({
 						}
 						navigate(editPath);
 					}
-				}
+				};
 				break;
 			}
 			case 'delete': {
@@ -113,18 +126,20 @@ const ActionButton = ({
 					children: t('delete.description', { ns: 'common' }),
 					labels: {
 						confirm: t('delete.title', { ns: 'common' }),
-						cancel: t('cancel', { ns: 'common' })
+						cancel: t('cancel', { ns: 'common' }),
 					},
 					confirmProps: {
-						color: 'red'
-					}
-				}
+						color: 'red',
+					},
+				};
 
 				actionFn = async () => {
 					if (data) {
 						let deletePath: string;
 						const { _id } = data;
-						const currentPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+						const currentPath = pathname.endsWith('/')
+							? pathname.slice(0, -1)
+							: pathname;
 						const currentPathParts = currentPath.split('/');
 						if (_id && last(currentPathParts) === _id) {
 							deletePath = `${pathname}`;
@@ -132,13 +147,21 @@ const ActionButton = ({
 							deletePath = `${pathname}/${_id}`;
 						}
 
-						const { data: responseData } = await axios.delete<IResponse<unknown>>(`/api${deletePath}`);
+						const { data: responseData } = await axios.delete<
+							IResponse<unknown>
+						>(`/api${deletePath}`);
 						if (responseData.success) {
-							showMessage(t('success', { ns: 'common' }), 'green');
+							showMessage(
+								t('success', { ns: 'common' }),
+								'green',
+							);
 							callback?.();
 						}
 					}
-				}
+				};
+				break;
+			}
+			default: {
 				break;
 			}
 		}
@@ -149,22 +172,27 @@ const ActionButton = ({
 				children: action.confirmation.dialogText,
 				labels: {
 					confirm: action.confirmation.buttonText ?? 'Confirm',
-					cancel: t('cancel', { ns: 'common' })
+					cancel: t('cancel', { ns: 'common' }),
 				},
 				confirmProps: {
-					color: actionKey === 'delete' ? 'red' : 'blue'
-				}
-			}
+					color: actionKey === 'delete' ? 'red' : 'blue',
+				},
+			};
 		}
 		if (action !== true && action.api) {
-			actionFn = async (formValues) => {
+			actionFn = async formValues => {
 				if (action.api?.form && !showDrawer) {
 					setShowDrawer(true);
 				} else {
-					const { data: responseData } = await axios<IResponse<unknown>>({
-						url: replacePathParameters(action.api?.uri ?? '', { ...pathParameter, ...data }),
+					const { data: responseData } = await axios<
+						IResponse<unknown>
+					>({
+						url: replacePathParameters(action.api?.uri ?? '', {
+							...pathParameter,
+							...data,
+						}),
 						method: action.api?.method,
-						data: formValues
+						data: formValues,
 					});
 					if (responseData.success) {
 						showMessage(t('success', { ns: 'common' }), 'green');
@@ -172,40 +200,53 @@ const ActionButton = ({
 						action.refresh && callback?.();
 					}
 				}
-			}
+			};
 		}
 		const handler = onClick
-		?	() => {
-			onClick(data);
-		}
-		: (formValues?: Record<string, unknown>) => {
-			if (confirm) {
-				confirmModal({
-					...confirm,
-					onConfirm() {
-						actionFn?.(formValues)
+			? () => {
+					onClick(data);
+				}
+			: (formValues?: Record<string, unknown>) => {
+					if (confirm) {
+						confirmModal({
+							...confirm,
+							onConfirm() {
+								actionFn?.(formValues);
+							},
+						});
+					} else {
+						actionFn?.(formValues);
 					}
-				})
-			} else {
-				actionFn?.(formValues);
-			}
-		}
+				};
 		return {
 			icon,
 			label,
 			color,
-			handler
-		}
-	}, [ t, navigate, pathname, action, data, pathParameter, setShowDrawer, showDrawer, confirmModal, onClick, actionKey ]);
+			handler,
+		};
+	}, [
+		t,
+		navigate,
+		pathname,
+		action,
+		data,
+		pathParameter,
+		setShowDrawer,
+		showDrawer,
+		confirmModal,
+		onClick,
+		actionKey,
+	]);
 
-	let Icon: ((props: TablerIconsProps) => JSX.Element) | undefined = undefined;
+	let Icon: ((props: TablerIconsProps) => JSX.Element) | undefined =
+		undefined;
 	if (icon) {
 		// @ts-expect-error
-		if (!icons?.[`Icon${icon}`]) {
-			console.warn(`Icon not found: ${icon}`);
-		} else {
+		if (icons?.[`Icon${icon}`]) {
 			// @ts-expect-error
 			Icon = icon ? icons?.[`Icon${icon}`] : undefined;
+		} else {
+			console.warn(`Icon not found: ${icon}`);
 		}
 	}
 
@@ -213,17 +254,29 @@ const ActionButton = ({
 		if (Icon && !label) {
 			return (
 				<ActionIcon onClick={() => handler()} color={color}>
-					<Icon size={ICON_SIZE}/>
+					<Icon size={ICON_SIZE} />
 				</ActionIcon>
-			)
+			);
 		}
 
-		if(isFormAction){
+		if (isFormAction) {
 			return (
 				<Button
 					size='md'
 					variant='light'
-					leftSection={Icon ? <Icon size={ICON_SIZE} color={theme.colors[color][primaryShade]}/> : <IconList size={ICON_SIZE} color={theme.colors[color][primaryShade]}/>}
+					leftSection={
+						Icon ? (
+							<Icon
+								size={ICON_SIZE}
+								color={theme.colors[color][primaryShade]}
+							/>
+						) : (
+							<IconList
+								size={ICON_SIZE}
+								color={theme.colors[color][primaryShade]}
+							/>
+						)
+					}
 					onClick={() => handler()}
 					color={color}
 					justify='flex-start'
@@ -233,20 +286,31 @@ const ActionButton = ({
 						},
 						root: {
 							background: 'white',
-							margin: '0px 5px'
+							margin: '0px 5px',
 						},
 					}}
 				>
 					{label}
 				</Button>
-			)
+			);
 		}
 
 		return (
 			<Button
 				size='md'
 				variant={actionKey === 'create' ? 'filled' : 'light'}
-				leftSection={Icon ? <Icon size={24} color={actionKey === 'create' ? theme.colors[color][0] : theme.colors[color][primaryShade]}/> : undefined}
+				leftSection={
+					Icon ? (
+						<Icon
+							size={24}
+							color={
+								actionKey === 'create'
+									? theme.colors[color][0]
+									: theme.colors[color][primaryShade]
+							}
+						/>
+					) : undefined
+				}
 				onClick={() => handler()}
 				color={color}
 				styles={{
@@ -257,10 +321,8 @@ const ActionButton = ({
 			>
 				{label}
 			</Button>
-		)
-
-		
-	}
+		);
+	};
 
 	if (action !== true && action.condition) {
 		if ('hasValue' in action.condition) {
@@ -274,7 +336,9 @@ const ActionButton = ({
 			}
 		}
 		if ('valueNotEquals' in action.condition) {
-			if (data?.[action.condition.key] === action.condition.valueNotEquals) {
+			if (
+				data?.[action.condition.key] === action.condition.valueNotEquals
+			) {
 				return null;
 			}
 		}
@@ -289,19 +353,20 @@ const ActionButton = ({
 					onClose={() => setShowDrawer(false)}
 					position='right'
 				>
-					{
-						showDrawer && (
-							<Form
-								fields={action === true ? [] : (action.api?.form?.fields ?? [])}
-								onSubmit={handler}
-							/>
-						)
-					}
+					{showDrawer && (
+						<Form
+							fields={
+								action === true
+									? []
+									: (action.api?.form?.fields ?? [])
+							}
+							onSubmit={handler}
+						/>
+					)}
 				</Drawer>
 			}
 		</>
-	)
-
+	);
 };
 
 export default ActionButton;

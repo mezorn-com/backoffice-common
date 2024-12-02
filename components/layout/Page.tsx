@@ -1,18 +1,14 @@
 import type { HTMLAttributes } from 'react';
-import SubHeader from './SubHeader';
 import Body from './Body';
 import classes from './Layout.module.scss';
+import SubHeader from './SubHeader';
 
-const Page = ({
-    children,
-    ...props
-}: HTMLAttributes<HTMLDivElement>) => {
-
-    return (
-        <div className={classes.pageWrapper} {...props}>
-            {children}
-        </div>
-    )
+const Page = ({ children, ...props }: HTMLAttributes<HTMLDivElement>) => {
+	return (
+		<div className={classes.pageWrapper} {...props}>
+			{children}
+		</div>
+	);
 };
 
 Page.Header = SubHeader;

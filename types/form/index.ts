@@ -10,7 +10,10 @@ export interface WithGrid {
 
 export type WithOptionalGrid = Partial<WithGrid>;
 
-export interface FieldCore extends WithVisibility, WithOptionalLabel, WithOptionalGrid {
+export interface FieldCore
+	extends WithVisibility,
+		WithOptionalLabel,
+		WithOptionalGrid {
 	key: string;
 	type: FieldType;
 	required?: boolean;
@@ -30,7 +33,7 @@ export enum UiType {
 	TIME = 'time',
 	SEARCH_SELECT = 'search-select',
 	LOCATION = 'location',
-	YEAR = 'year'
+	YEAR = 'year',
 }
 
 export enum Locale {
@@ -76,10 +79,11 @@ interface TextInputField extends NormalFieldCore {
 	secret?: boolean;
 }
 
-type SearchSelect = NormalFieldCore & WithOptionsApi & {
-	uiType: UiType.SEARCH_SELECT;
-	multiple?: boolean;
-}
+type SearchSelect = NormalFieldCore &
+	WithOptionsApi & {
+		uiType: UiType.SEARCH_SELECT;
+		multiple?: boolean;
+	};
 
 interface LocationField extends NormalFieldCore {
 	uiType: UiType.LOCATION;
@@ -93,12 +97,12 @@ interface YearField extends NormalFieldCore {
 	uiType: UiType.YEAR;
 }
 
-type WithOptionsApi =  {
+type WithOptionsApi = {
 	optionsApi: {
 		uri: string;
 		queryParams?: string[];
-	}
-}
+	};
+};
 
 type SelectField = {
 	uiType: UiType.SELECT;
@@ -111,7 +115,8 @@ type SelectField = {
 	| {
 			refCode: string;
 	  }
-) & NormalFieldCore;
+) &
+	NormalFieldCore;
 
 export interface WithLabel {
 	label: string;
@@ -196,6 +201,7 @@ interface TimeInput extends NormalFieldCore {
 	format: string;
 }
 
+// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
 interface ImageInput extends NormalFieldCore {
 	uiType: UiType.IMAGE;
 	multiple?: boolean;
@@ -234,12 +240,12 @@ export interface IMapAddressPicker extends NormalFieldCore {
 //     localizedLabels?: Array<Partial<Record<Locale, string>>>
 // })
 
-interface IUploadForm {
-	mimeType?: string;
-	useFileName?: boolean;
-	folderPath?: string;
-	prefix?: string;
-}
+// interface IUploadForm {
+// 	mimeType?: string;
+// 	useFileName?: boolean;
+// 	folderPath?: string;
+// 	prefix?: string;
+// }
 
 export interface IFormOption {
 	label: string;
@@ -261,13 +267,16 @@ export interface WithLabel {
 	localizedLabel?: Partial<Record<Locale, string>>;
 }
 
-type VisibilityType = { value: unknown } | { hasValue: boolean } | { valueNotEquals: unknown };
+type VisibilityType =
+	| { value: unknown }
+	| { hasValue: boolean }
+	| { valueNotEquals: unknown };
 
 export type IVisibility = VisibilityType & { key: string };
 
 export enum FormType {
 	NORMAL = 'normal',
-	TABBED = 'tabbed'
+	TABBED = 'tabbed',
 }
 
 export enum FieldType {
@@ -278,7 +287,8 @@ export enum FieldType {
 	GROUP = 'group',
 }
 
-export type INormalField = TextInputField
+export type INormalField =
+	| TextInputField
 	| CheckboxField
 	| SelectField
 	| DateInput
@@ -290,10 +300,15 @@ export type INormalField = TextInputField
 	| HtmlInput
 	| SearchSelect
 	| LocationField
-	| YearField
-	;
+	| YearField;
 
-export type IFormField = (RenderField | INormalField | ArrayField | ObjectField | FieldGroup) & {
+export type IFormField = (
+	| RenderField
+	| INormalField
+	| ArrayField
+	| ObjectField
+	| FieldGroup
+) & {
 	// TODO: try to remove these
 	isArrayElement?: boolean;
 	groupPath?: string;
@@ -340,7 +355,12 @@ interface TableRender extends RenderFieldCore {
 	columns: { key: string; label: string }[];
 }
 
-export type RenderField = TextRender | BooleanRender | ImageRender | LinkRender | TableRender;
+export type RenderField =
+	| TextRender
+	| BooleanRender
+	| ImageRender
+	| LinkRender
+	| TableRender;
 
 export interface ArrayField extends FieldCore {
 	type: FieldType.ARRAY;

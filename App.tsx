@@ -1,44 +1,42 @@
-import * as React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { MantineProvider, LoadingOverlay, Modal } from '@mantine/core';
+import { LoadingOverlay, MantineProvider, Modal } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
+import * as React from 'react';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import useStore from '../store';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/dates/styles.css';
+import ErrorPage from '@/backoffice-common/components/common/Error';
 import AuthRouter from './routes/AuthRouter';
 import ProtectedRoutes from './routes/Protected';
-import ErrorPage from '@/backoffice-common/components/common/Error';
 import 'dayjs/locale/mn';
 import classes from './App.module.scss';
 
 const authRoutes = createBrowserRouter([
-		{
-			path: '*',
-			element: <AuthRouter/>,
-			errorElement: <ErrorPage/>
-		}
-	]
-);
+	{
+		path: '*',
+		element: <AuthRouter />,
+		errorElement: <ErrorPage />,
+	},
+]);
 
 const protectedRoutes = createBrowserRouter([
-		{
-			path: '*',
-			element: <ProtectedRoutes/>,
-			errorElement: <ErrorPage/>,
-		}
-	]
-);
+	{
+		path: '*',
+		element: <ProtectedRoutes />,
+		errorElement: <ErrorPage />,
+	},
+]);
 
 function App() {
 	const token = useStore(state => state.auth.token);
 	const loading = useStore(state => state.loading);
 	const setLoading = useStore(state => state.setLoading);
-	const store = useStore();
+	// const store = useStore();
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: Designed to run on first render only
-		React.useEffect(() => {
+	React.useEffect(() => {
 		if (loading) {
 			// To prevent app booting with 'loading' on.
 			setLoading(false);
@@ -168,26 +166,18 @@ function App() {
 				components: {
 					MultiSelect: {
 						defaultProps: {
-							className: classes.multiSelect
-						}
+							className: classes.multiSelect,
+						},
 					},
 					Modal: Modal.extend({
 						defaultProps: {
-							zIndex: 1001
-						}
-					})
+							zIndex: 1001,
+						},
+					}),
 				},
 
 				/** Any other properties that you want to access with the theme objects */
 				// other: MantineThemeOther;
-
-
-
-
-
-
-
-
 
 				// focusRing: 'auto',
 				// activeStyles: {
@@ -214,29 +204,29 @@ function App() {
 		>
 			<Notifications
 				autoClose={20_000}
-				position={'top-right'}
+				position='top-right'
 				styles={{
 					root: {
-						zIndex: 10_000
-					}
+						zIndex: 10_000,
+					},
 				}}
 			/>
 			<ModalsProvider
 				modalProps={{
 					zIndex: 1001,
 					classNames: {
-						header: classes.modalHeader
+						header: classes.modalHeader,
 					},
 					styles: {
 						title: {
-							fontWeight: 600
-						}
-					}
+							fontWeight: 600,
+						},
+					},
 				}}
 			>
 				<RouterProvider router={token ? protectedRoutes : authRoutes} />
 			</ModalsProvider>
-			<LoadingOverlay visible={loading}/>
+			<LoadingOverlay visible={loading} />
 		</MantineProvider>
 	);
 }

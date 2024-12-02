@@ -1,94 +1,99 @@
-import type { FormType, IFormField, INormalField, IVisibility, WithVisibility } from '../form';
-import { IColumn } from './index';
+import type { FormType, IFormField, INormalField } from '../form';
 
 export type IMetaType = 'normal';
 
 export type SubResources = Record<string, WithCondition & WithIcon & WithLabel>;
 
 type Conditional = {
-    key: string
-} & ({
-    value: unknown
-} | {
-    hasValue: boolean
-} | {
-    valueNotEquals: unknown
-})
+	key: string;
+} & (
+	| {
+			value: unknown;
+	  }
+	| {
+			hasValue: boolean;
+	  }
+	| {
+			valueNotEquals: unknown;
+	  }
+);
 
 interface WithCondition {
-    condition?: Conditional
+	condition?: Conditional;
 }
 
 interface Confirmable {
-    confirmation?: {
-        dialogText?: string
-        buttonText?: string
-    }
+	confirmation?: {
+		dialogText?: string;
+		buttonText?: string;
+	};
 }
 
 interface WithIcon {
-    icon?: {
-        type: string
-        value: string
-        color?: string
-    }
+	icon?: {
+		type: string;
+		value: string;
+		color?: string;
+	};
 }
 
 interface WithLabel {
-    label?: string
+	label?: string;
 }
 
 interface WithRefresh {
-    refresh?: boolean;
+	refresh?: boolean;
 }
 
 export enum Method {
-    GET = 'GET',
-    POST = 'POST',
-    PUT = 'PUT',
-    DELETE = 'DELETE'
+	GET = 'GET',
+	POST = 'POST',
+	PUT = 'PUT',
+	DELETE = 'DELETE',
 }
 
 interface Invokable {
-    api?: {
-        uri: string
-        method: Method;
-        form?: Form;
-    }
+	api?: {
+		uri: string;
+		method: Method;
+		form?: Form;
+	};
 }
 
-export type ListItemActionKey =  'update' | 'delete' | 'get' | string;
+export type ListItemActionKey = 'update' | 'delete' | 'get' | string;
 
 export type ListActionKey = 'create' | string;
 
-export type ItemAction = true | (WithCondition & Confirmable & Invokable & WithIcon & WithLabel & WithRefresh);
+export type ItemAction =
+	| true
+	| (WithCondition &
+			Confirmable &
+			Invokable &
+			WithIcon &
+			WithLabel &
+			WithRefresh);
 
 export type BulkAction = Invokable & WithLabel & Confirmable & WithRefresh;
 
 export interface IListMetaResponse {
-    form: Form;
-    subResources: SubResources;
-    listActions: Partial<Record<ListActionKey, ItemAction>>;
-    listItemActions: Partial<Record<ListItemActionKey, ItemAction>>;
-    filter?: INormalField[];
-    bulkItemActions: Record<string, BulkAction>;
+	form: Form;
+	subResources: SubResources;
+	listActions: Partial<Record<ListActionKey, ItemAction>>;
+	listItemActions: Partial<Record<ListItemActionKey, ItemAction>>;
+	filter?: INormalField[];
+	bulkItemActions: Record<string, BulkAction>;
 }
 
 export interface Form {
-    type: FormType;
-    title?: string;
-    fields: IFormField[];
+	type: FormType;
+	title?: string;
+	fields: IFormField[];
 }
 
 export interface IFormMetaResponse {
-    form: Form;
-    subResources?: SubResources;
-    actions?: Record<MetaType | string, ItemAction>;
+	form: Form;
+	subResources?: SubResources;
+	actions?: Record<MetaType | string, ItemAction>;
 }
 
-export type MetaType =
-    'create' |
-    'update' |
-    'delete' |
-    'list' |
-    'get';
+export type MetaType = 'create' | 'update' | 'delete' | 'list' | 'get';

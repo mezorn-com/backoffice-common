@@ -1,6 +1,6 @@
 export interface IMapAddressValue {
-    address: string;
-    lat: number;
-    lon: number;
-    value?: string;
+	address: string;
+	lat: number;
+	lon: number;
+	value?: string;
 }

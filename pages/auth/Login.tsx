@@ -81,7 +81,7 @@ const Login = ({ right, forgotPasswordButton }: ILoginProps) => {
 			params,
 			{
 				headers: {
-					Authorization: `Bearer ${loginResponse?.token}`,
+					authorization: `Bearer ${loginResponse?.token}`,
 				},
 			},
 		);

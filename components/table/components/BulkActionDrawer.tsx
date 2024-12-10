@@ -30,7 +30,7 @@ const BulkActionDrawer = ({
 					confirm: bulkAction.confirmation.buttonText ?? 'confirm',
 					cancel: t('cancel', { ns: 'common' }),
 				},
-				async onConfirm() {
+				onConfirm() {
 					onSubmit(values);
 				},
 			});

@@ -1,4 +1,4 @@
-import defaultMarker from '@/assets/defaultMarker';
+import defaultMarker from '@/assets/default-marker';
 import { Icon, Point } from 'leaflet';
 import * as React from 'react';
 import { Marker as LeafletMarker, type MarkerProps } from 'react-leaflet';

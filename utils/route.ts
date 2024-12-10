@@ -13,5 +13,3 @@ export const getSubResourceUrl = (
 	}
 	return result;
 };
-
-export const q = () => {};

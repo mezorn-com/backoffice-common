@@ -13,7 +13,7 @@ const useRoute = ({ apiRoute }: IConfig) => {
 	// const navigate = useNavigate();
 	const params = useParams();
 
-	const API_URL = React.useMemo(() => {
+	const apiUrl = React.useMemo(() => {
 		const array: IStringReplacer[] = [];
 		for (const key of Object.keys(params)) {
 			const paramValue = params[key];
@@ -34,7 +34,8 @@ const useRoute = ({ apiRoute }: IConfig) => {
 	};
 
 	return {
-		API_URL,
+		// biome-ignore lint/style/useNamingConvention: const
+		API_URL: apiUrl,
 		routes,
 		params,
 	};

@@ -164,11 +164,13 @@ function App() {
 				/** Allows adding `classNames`, `styles` and `defaultProps` to any component */
 				// components: MantineThemeComponents;
 				components: {
+					// biome-ignore lint/style/useNamingConvention: Mantine library format
 					MultiSelect: {
 						defaultProps: {
 							className: classes.multiSelect,
 						},
 					},
+					// biome-ignore lint/style/useNamingConvention: Mantine library format
 					Modal: Modal.extend({
 						defaultProps: {
 							zIndex: 1001,

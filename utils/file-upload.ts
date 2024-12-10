@@ -39,7 +39,7 @@ export const uploadFile = async (
 	// if request is file that means file is larger than max size and need to be uploaded separately.
 	const requests: (File | File[])[] = [];
 
-	let tempArray = [];
+	let tempArray: File[] = [];
 	for (const file of files) {
 		const fileSize = file.size;
 		if (fileSize > MAX_UPLOAD_SIZE) {
@@ -54,7 +54,7 @@ export const uploadFile = async (
 	}
 
 	// return new Promise(async (resolve) => {
-	const urls = [];
+	const urls: string[] = [];
 	for (const request of requests) {
 		if (Array.isArray(request)) {
 			const result = await uploadFileNormally(request, config);
@@ -106,8 +106,8 @@ export const uploadFileNormally = async (
 			url: `${API_UPLOAD_URL}/upload?${queryParams}`,
 			method: 'POST',
 			headers: {
-				Accept: '*/*',
-				Authorization: `Bearer ${state.auth.token}`,
+				accept: '*/*',
+				authorization: `Bearer ${state.auth.token}`,
 			},
 			data: formData,
 		});
@@ -150,7 +150,7 @@ export const uploadWithSignedURL = async (
 			url: `${API_UPLOAD_URL}/geturl`,
 			data: bodyParams,
 			headers: {
-				Authorization: `Bearer ${state.auth.token}`,
+				authorization: `Bearer ${state.auth.token}`,
 			},
 		});
 		const signedURL = signedUrlResponse?.data?.result?.uploadUrl ?? '';

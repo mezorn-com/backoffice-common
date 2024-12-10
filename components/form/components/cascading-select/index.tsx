@@ -1,14 +1,15 @@
-import type { IReference } from '@/backoffice-common/types/api';
 import { type ComboboxItem, Select, type SelectProps } from '@mantine/core';
 import { produce } from 'immer';
 import { clone } from 'ramda';
-import * as React from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
+
+import type { IReference } from '@/backoffice-common/types/api';
 
 export interface CascadingSelectProps extends Omit<SelectProps, 'data'> {
 	fetchReference?: (code: string, parent?: string) => Promise<IReference[]>;
 	refCode: string;
 	onChange?: (value: string | null) => void;
-	error?: React.ReactNode;
+	error?: ReactNode;
 }
 
 const CascadingSelect = ({
@@ -18,11 +19,11 @@ const CascadingSelect = ({
 	error,
 	...props
 }: CascadingSelectProps) => {
-	const indexRef = React.useRef<number | null>(null);
-	const [data, setData] = React.useState<IReference[][]>([]);
-	const [values, setValues] = React.useState<(string | null)[]>([]);
+	const indexRef = useRef<number | null>(null);
+	const [data, setData] = useState<IReference[][]>([]);
+	const [values, setValues] = useState<(string | null)[]>([]);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		void getReference();
 	}, []);
 
@@ -80,8 +81,8 @@ const CascadingSelect = ({
 		});
 	};
 
-	const renderSelect = (): React.ReactNode => {
-		const selects = [];
+	const renderSelect = (): ReactNode => {
+		const selects: ReactNode[] = [];
 		for (const [index, datum] of data.entries()) {
 			const key = `${refCode}-${index}`;
 			selects.push(

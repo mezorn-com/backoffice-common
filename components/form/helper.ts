@@ -260,6 +260,7 @@ const getPathFields = (
 	fullPath: string[],
 	fields: IFormField[],
 ): IFormField[] => {
+	// biome-ignore lint/suspicious/noEvolvingTypes: TODO: Fix
 	const result = [];
 	const selfPath = head(fullPath);
 	const rest = drop(1, fullPath);

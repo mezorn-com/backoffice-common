@@ -13,20 +13,20 @@ interface IBaseLayer {
 const baseLayers: IBaseLayer[] = [
 	{
 		name: 'Roadmap',
-		type: 'roadmap',
+		type: 'roadmap'
 	},
 	{
 		name: 'Satellite',
-		type: 'satellite',
+		type: 'satellite'
 	},
 	{
 		name: 'Hybrid',
-		type: 'hybrid',
+		type: 'hybrid'
 	},
 	{
 		name: 'Terrain',
-		type: 'terrain',
-	},
+		type: 'terrain'
+	}
 ];
 
 const GoogleLayer = () => {

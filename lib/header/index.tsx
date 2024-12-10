@@ -5,7 +5,7 @@ import {
 	Button,
 	Menu,
 	Text,
-	useMantineTheme,
+	useMantineTheme
 } from '@mantine/core';
 import type { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +29,7 @@ const Header = ({ opened, setOpened }: IHeaderProps) => {
 				style={{
 					display: 'flex',
 					alignItems: 'center',
-					height: '100%',
+					height: '100%'
 				}}
 			>
 				<div className={classes.burger}>

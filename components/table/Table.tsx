@@ -6,7 +6,7 @@ import { showMessage } from '@/backoffice-common/lib/notification';
 import type { IResponse } from '@/backoffice-common/types/api';
 import {
 	isRenderField,
-	replacePathParameters,
+	replacePathParameters
 } from '@/backoffice-common/utils';
 import { Button, Menu } from '@mantine/core';
 import { IconDots } from '@tabler/icons-react';
@@ -14,7 +14,7 @@ import {
 	type TableState,
 	getCoreRowModel,
 	getPaginationRowModel,
-	useReactTable,
+	useReactTable
 } from '@tanstack/react-table';
 import axios from 'axios';
 import { allPass, eqProps, equals } from 'ramda';
@@ -30,7 +30,7 @@ import {
 	type ITableInteraction,
 	type ITableProps,
 	type ITableState,
-	TableSectionType,
+	TableSectionType
 } from './types';
 import { getCellObserver, resizeTable } from './utils';
 
@@ -47,14 +47,14 @@ const Table = ({
 	pageSizes = [10, 20, 50],
 	dispatch: dispatchExternalState,
 	hideBulkActions = false,
-	bulkActionUrlParser,
+	bulkActionUrlParser
 }: ITableProps) => {
 	const { t } = useTranslation();
 	const [state, dispatch] = React.useReducer(reducer, initialState);
 	const tablesContainerRef = React.useRef<HTMLDivElement>(null);
 	const columnObserverRef = React.useRef<ResizeObserver | null>(null);
 	const [rowHoverIndex, setRowHoverIndex] = React.useState<number | null>(
-		null,
+		null
 	);
 
 	const pathParameter = usePathParameter();
@@ -65,10 +65,10 @@ const Table = ({
 			state: {
 				page: externalState.page,
 				pageSize: externalState.pageSize,
-				totalPage: externalState.totalPage,
+				totalPage: externalState.totalPage
 			},
 			filter: state.filter,
-			...(value ?? {}),
+			...(value ?? {})
 		};
 		onInteract(params);
 	};
@@ -92,8 +92,8 @@ const Table = ({
 		},
 		initialState: {
 			columnPinning: {
-				right: ['table-actions-column'],
-			},
+				right: ['table-actions-column']
+			}
 		},
 		defaultColumn: {
 			enableResizing: true,
@@ -106,17 +106,17 @@ const Table = ({
 					return renderField(
 						meta.field,
 						props.getValue(),
-						props.row.original,
+						props.row.original
 					);
 				}
 				return props.renderValue();
-			},
+			}
 		},
 		state: {
 			pagination: {
 				pageIndex: externalState.page - 1,
-				pageSize: externalState.pageSize,
-			},
+				pageSize: externalState.pageSize
+			}
 		},
 		manualPagination: true,
 		onStateChange: updater => {
@@ -129,7 +129,7 @@ const Table = ({
 		enablePinning: true,
 		enableColumnResizing: true,
 		enableRowSelection: true,
-		enableColumnPinning: true,
+		enableColumnPinning: true
 	});
 
 	React.useEffect(() => {
@@ -154,7 +154,7 @@ const Table = ({
 		if (!eqValues(ids, externalState.selectedRows)) {
 			dispatchExternalState?.({
 				type: 'HANDLE_ROW_SELECT_CHANGE',
-				payload: ids,
+				payload: ids
 			});
 		}
 	}, [table.getSelectedRowModel, externalState.selectedRows]);
@@ -165,15 +165,15 @@ const Table = ({
 			pageCount: externalState.totalPage,
 			pagination: {
 				pageSize: externalState.pageSize,
-				pageIndex: externalState.page - 1,
-			},
+				pageIndex: externalState.page - 1
+			}
 		}));
 	}, [externalState, table.setOptions]);
 
 	const handleTableStateChange = (updatedTableState: TableState) => {
 		const updatedState: ITableState = {
 			page: updatedTableState.pagination.pageIndex + 1,
-			pageSize: updatedTableState.pagination.pageSize,
+			pageSize: updatedTableState.pagination.pageSize
 		};
 		if (!check(externalState, updatedState)) {
 			handleInteraction({ state: updatedState });
@@ -183,15 +183,15 @@ const Table = ({
 	const handleFilterChange = (values: IFormValues) => {
 		dispatch({
 			type: 'HANDLE_FILTER_ITEM_CHANGE',
-			payload: values,
+			payload: values
 		});
 		handleInteraction({
 			filter: values,
 			state: {
 				page: 1,
 				pageSize: externalState.pageSize,
-				totalPage: externalState.totalPage,
-			},
+				totalPage: externalState.totalPage
+			}
 		});
 	};
 
@@ -211,14 +211,14 @@ const Table = ({
 					onClose={() => {
 						dispatch({
 							type: 'UPDATE_BULK_ACTION',
-							payload: undefined,
+							payload: undefined
 						});
 					}}
 					bulkAction={state.selectedBulkAction}
 					onSubmit={async values => {
 						const url = replacePathParameters(
 							state?.selectedBulkAction?.api?.uri ?? '',
-							pathParameter,
+							pathParameter
 						);
 						const response = await axios<IResponse<unknown>>({
 							url: bulkActionUrlParser
@@ -227,23 +227,23 @@ const Table = ({
 							method: state?.selectedBulkAction?.api?.method,
 							data: {
 								...values,
-								ids: externalState.selectedRows,
-							},
+								ids: externalState.selectedRows
+							}
 						});
 						if (response.data.success) {
 							dispatch({
 								type: 'UPDATE_BULK_ACTION',
-								payload: undefined,
+								payload: undefined
 							});
 							dispatchExternalState?.({
 								type: 'HANDLE_ROW_SELECT_CHANGE',
-								payload: [],
+								payload: []
 							});
 							state.selectedBulkAction?.refresh &&
 								handleInteraction();
 							showMessage(
 								t('success', { ns: 'common' }),
-								'green',
+								'green'
 							);
 						}
 					}}
@@ -272,7 +272,7 @@ const Table = ({
 									onClick={() => {
 										dispatch({
 											type: 'UPDATE_BULK_ACTION',
-											payload: bulkAction,
+											payload: bulkAction
 										});
 									}}
 								>
@@ -291,7 +291,7 @@ const Table = ({
 			value={{
 				columnObserver: columnObserverRef.current,
 				rowHoverIndex,
-				setRowHoverIndex,
+				setRowHoverIndex
 			}}
 		>
 			<div className={classes.container}>
@@ -302,8 +302,8 @@ const Table = ({
 								fields={externalState.filter ?? []}
 								submitButtonProps={{
 									style: {
-										display: 'none',
-									},
+										display: 'none'
+									}
 								}}
 								direction='row'
 								onSubmit={() => undefined}

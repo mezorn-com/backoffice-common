@@ -33,7 +33,7 @@ export enum UiType {
 	TIME = 'time',
 	SEARCH_SELECT = 'search-select',
 	LOCATION = 'location',
-	YEAR = 'year',
+	YEAR = 'year'
 }
 
 export enum Locale {
@@ -47,7 +47,7 @@ export enum Locale {
 	JAPANESE = 'ja',
 	KOREAN = 'ko',
 	RUSSIAN = 'ru',
-	PORTUGUESE = 'pt',
+	PORTUGUESE = 'pt'
 }
 
 interface IFieldCore {
@@ -276,7 +276,7 @@ export type IVisibility = VisibilityType & { key: string };
 
 export enum FormType {
 	NORMAL = 'normal',
-	TABBED = 'tabbed',
+	TABBED = 'tabbed'
 }
 
 export enum FieldType {
@@ -284,7 +284,7 @@ export enum FieldType {
 	RENDER = 'render',
 	ARRAY = 'array',
 	OBJECT = 'object',
-	GROUP = 'group',
+	GROUP = 'group'
 }
 
 export type INormalField =
@@ -319,7 +319,7 @@ export enum RenderType {
 	IMAGE = 'image',
 	BOOLEAN = 'boolean',
 	LINK = 'link',
-	TABLE = 'table',
+	TABLE = 'table'
 }
 
 interface RenderFieldCore extends WithOptionalLabel {

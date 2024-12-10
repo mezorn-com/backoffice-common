@@ -14,15 +14,15 @@ const ChangePassword = ({ onClose, opened, onSubmit }: IProps) => {
 	const form = useForm({
 		initialValues: {
 			password: '',
-			confirmPassword: '',
+			confirmPassword: ''
 		},
 		validate: {
 			confirmPassword: (value, values) =>
 				value !== values.password
 					? t('passwordDidNotMatch', { ns: 'auth' })
-					: null,
+					: null
 		},
-		validateInputOnChange: true,
+		validateInputOnChange: true
 	});
 
 	const handleSubmit = (values: typeof form.values) => {

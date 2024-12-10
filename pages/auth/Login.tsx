@@ -9,7 +9,7 @@ import {
 	PasswordInput,
 	Text,
 	TextInput,
-	Title,
+	Title
 } from '@mantine/core';
 import { hasLength, useForm } from '@mantine/form';
 import { IconAt, IconChevronRight, IconKey } from '@tabler/icons-react';
@@ -42,25 +42,22 @@ const Login = ({ right, forgotPasswordButton }: ILoginProps) => {
 	const form = useForm({
 		initialValues: {
 			identifier: '',
-			password: '',
+			password: ''
 		},
 		clearInputErrorOnChange: true,
 		validate: {
 			identifier: hasLength(
 				{ min: 6 },
-				'Username must be 6 characters min',
+				'Username must be 6 characters min'
 			),
-			password: hasLength(
-				{ min: 6 },
-				'Password must be 6 characters min',
-			),
-		},
+			password: hasLength({ min: 6 }, 'Password must be 6 characters min')
+		}
 	});
 
 	const handleSubmit = async (values: typeof form.values) => {
 		const { data } = await axios.post<IResponse<ILoginResponse>>(
 			'/login',
-			values,
+			values
 		);
 
 		const { requirePasswordChange } = data.data;
@@ -74,16 +71,16 @@ const Login = ({ right, forgotPasswordButton }: ILoginProps) => {
 
 	const changePassword = async (newPassword: string) => {
 		const params = {
-			newPassword,
+			newPassword
 		};
 		const { data } = await axios.post<IResponse<unknown>>(
 			'/api/users/me/change-password',
 			params,
 			{
 				headers: {
-					authorization: `Bearer ${loginResponse?.token}`,
-				},
-			},
+					authorization: `Bearer ${loginResponse?.token}`
+				}
+			}
 		);
 		if (data.success) {
 			showMessage(t('success', { ns: 'common' }), 'green');
@@ -112,7 +109,7 @@ const Login = ({ right, forgotPasswordButton }: ILoginProps) => {
 								borderRadius: '100%',
 								background: '#F1F3F5',
 								placeSelf: 'center',
-								marginBottom: '20px',
+								marginBottom: '20px'
 							}}
 						>
 							<Lock color='#8E8E8F' size={40} />
@@ -131,11 +128,11 @@ const Login = ({ right, forgotPasswordButton }: ILoginProps) => {
 							placeholder={t('username', { ns: 'auth' })}
 							styles={{
 								input: {
-									fontSize: 15,
+									fontSize: 15
 								},
 								label: {
-									display: 'none',
-								},
+									display: 'none'
+								}
 							}}
 							mb='sm'
 							{...form.getInputProps('identifier')}
@@ -147,11 +144,11 @@ const Login = ({ right, forgotPasswordButton }: ILoginProps) => {
 							placeholder='******'
 							styles={{
 								input: {
-									fontSize: 15,
+									fontSize: 15
 								},
 								label: {
-									display: 'none',
-								},
+									display: 'none'
+								}
 							}}
 							{...form.getInputProps('password')}
 						/>
@@ -166,8 +163,8 @@ const Login = ({ right, forgotPasswordButton }: ILoginProps) => {
 								rightSection={<IconChevronRight size={18} />}
 								styles={{
 									label: {
-										fontSize: 15,
-									},
+										fontSize: 15
+									}
 								}}
 								fullWidth
 							>

@@ -21,7 +21,7 @@ const useRoute = ({ apiRoute }: IConfig) => {
 				if (key !== '*') {
 					array.push({
 						match: `:${key}`,
-						replace: paramValue,
+						replace: paramValue
 					});
 				}
 			}
@@ -30,14 +30,14 @@ const useRoute = ({ apiRoute }: IConfig) => {
 	}, [params, apiRoute]);
 
 	const routes = {
-		new: `${pathname}${pathname.endsWith('/') ? '' : '/'}new`,
+		new: `${pathname}${pathname.endsWith('/') ? '' : '/'}new`
 	};
 
 	return {
 		// biome-ignore lint/style/useNamingConvention: const
 		API_URL: apiUrl,
 		routes,
-		params,
+		params
 	};
 };
 

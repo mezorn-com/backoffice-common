@@ -2,7 +2,7 @@ import type { IFormValues } from '@/backoffice-common/components/form/helper';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import type {
 	IFormSubmitResponse,
-	IResponse,
+	IResponse
 } from '@/backoffice-common/types/api';
 import type { IFormMetaResponse } from '@/backoffice-common/types/api/meta';
 import type { IFormField } from '@/backoffice-common/types/form';
@@ -30,7 +30,7 @@ const useCreatePage = ({ apiRoute, clientRoute }: IConfig) => {
 	const navigate = useNavigate();
 	const [state, setState] = useState<ICreatePageState>({
 		title: '',
-		fields: [],
+		fields: []
 	});
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Check later
@@ -39,7 +39,7 @@ const useCreatePage = ({ apiRoute, clientRoute }: IConfig) => {
 			const data = await getMeta<IFormMetaResponse>(apiRoute, 'create');
 			setState({
 				fields: data?.form?.fields ?? [],
-				title: data?.form?.title ?? '',
+				title: data?.form?.title ?? ''
 			});
 		};
 		void fetchData();
@@ -48,7 +48,7 @@ const useCreatePage = ({ apiRoute, clientRoute }: IConfig) => {
 	const submitHandler = async (values: IFormValues) => {
 		const { data } = await axios.post<IResponse<IFormSubmitResponse>>(
 			apiRoute,
-			values,
+			values
 		);
 		if (data.success) {
 			showMessage(t('success', { ns: 'common' }), 'green');
@@ -66,7 +66,7 @@ const useCreatePage = ({ apiRoute, clientRoute }: IConfig) => {
 	return {
 		state,
 		submitHandler,
-		fetchReference,
+		fetchReference
 	};
 };
 

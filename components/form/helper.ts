@@ -3,7 +3,7 @@ import {
 	FieldType,
 	type IFormField,
 	type INormalField,
-	UiType,
+	UiType
 } from '@/backoffice-common/types/form';
 import { getArrayObjectByProp } from '@/backoffice-common/utils';
 import { uploadFile } from '@/backoffice-common/utils/file-upload';
@@ -31,7 +31,7 @@ export const getFormItemPathByKey = (key: string): string[] => {
 export const getFormInitialValues = (
 	fields: IFormField[],
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
-	initialValues?: Record<string, any>,
+	initialValues?: Record<string, any>
 ): IFormValues => {
 	// TODO: make clone get value from there.
 	const values: IFormValues = {};
@@ -43,14 +43,14 @@ export const getFormInitialValues = (
 						// TODO: Getting object values
 						return getFormInitialValues(
 							field.fields,
-							initialValues ?? {},
+							initialValues ?? {}
 						);
 						// Old code below
 						// return getFormInitialValues(field.fields, initialValues?.[field.key] ?? {});
 					}
 					values[field.key] = getFormInitialValues(
 						field.fields,
-						initialValues?.[field.key] ?? {},
+						initialValues?.[field.key] ?? {}
 					);
 				}
 				break;
@@ -66,9 +66,9 @@ export const getFormInitialValues = (
 						(arrayValue: Record<string, any>) => {
 							return getFormInitialValues(
 								[fieldElement],
-								arrayValue,
+								arrayValue
 							);
-						},
+						}
 					);
 					values[field.key] = arrayValues;
 					// Old code below
@@ -141,7 +141,7 @@ export const getInitialValue = (field: INormalField, initialValue?: any) => {
 			if (initialValue?.latitude && initialValue?.longitude) {
 				return {
 					lat: initialValue.latitude,
-					lng: initialValue.longitude,
+					lng: initialValue.longitude
 				};
 			}
 			return undefined;
@@ -175,7 +175,7 @@ export const validator = (fields: IFormField[], values: IFormValues) => {
 export const getErrorMessage = (
 	field: IFormField,
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
-	value: any,
+	value: any
 ): null | string => {
 	// if normal
 	if (field.type !== FieldType.NORMAL) {
@@ -187,7 +187,7 @@ export const getErrorMessage = (
 	if (value === undefined || value === null || value === '') {
 		return t('validation.error.enterValue', {
 			ns: 'form',
-			value: field.label,
+			value: field.label
 		});
 	}
 	if (field.uiType === UiType.TEXT_INPUT) {
@@ -199,7 +199,7 @@ export const getErrorMessage = (
 		) {
 			return t('validation.error.exactNLengthAllowed', {
 				ns: 'form',
-				value: field.length.toString(),
+				value: field.length.toString()
 			});
 		}
 		if (
@@ -209,7 +209,7 @@ export const getErrorMessage = (
 		) {
 			return t('validation.error.maxNLengthAllowed', {
 				ns: 'form',
-				value: (field.maxLength ?? 0).toString(),
+				value: (field.maxLength ?? 0).toString()
 			});
 		}
 		if (
@@ -219,7 +219,7 @@ export const getErrorMessage = (
 		) {
 			return t('validation.error.minNLengthAllowed', {
 				ns: 'form',
-				value: (field.minLength ?? 0).toString(),
+				value: (field.minLength ?? 0).toString()
 			});
 		}
 		if (value?.length && field.numeric && !REGEX_NUMERIC.test(value)) {
@@ -231,7 +231,7 @@ export const getErrorMessage = (
 
 export const isFieldVisible = (
 	field: IFormField,
-	values: IFormValues,
+	values: IFormValues
 ): boolean => {
 	if (!('visibility' in field)) {
 		return true;
@@ -258,7 +258,7 @@ export const isFieldVisible = (
 
 const getPathFields = (
 	fullPath: string[],
-	fields: IFormField[],
+	fields: IFormField[]
 ): IFormField[] => {
 	// biome-ignore lint/suspicious/noEvolvingTypes: TODO: Fix
 	const result = [];
@@ -284,7 +284,7 @@ const getPathFields = (
 export const isFieldRequired = (
 	field: IFormField,
 	fields: IFormField[],
-	values: IFormValues,
+	values: IFormValues
 ): boolean => {
 	// case 1. buh parentuud ni required bas uuruu required uyed required bnaa.
 	// case 2. parentuudiin required hamaaralguigeer sibling ni value avsan uyed uuruu required bol required bnaa.
@@ -327,14 +327,14 @@ export const isFieldRequired = (
 export const getFormValueByKey = (
 	key: string,
 	values: IFormValues,
-	separator = SEPARATOR,
+	separator = SEPARATOR
 ) => {
 	return path(key.split(separator), values);
 };
 
 const getTransformedValue = async (
 	field: IFormField,
-	value: unknown,
+	value: unknown
 ): Promise<unknown> => {
 	// return new Promise(async resolve => {
 	if (isNil(value) || !('uiType' in field)) {
@@ -348,7 +348,7 @@ const getTransformedValue = async (
 				const url = await uploadFile(value, {
 					useFileName: field.useFileName,
 					prefix: field.prefix ?? '',
-					folderPath: field.folderPath ?? '',
+					folderPath: field.folderPath ?? ''
 				});
 				return url;
 				// resolve(url);
@@ -390,7 +390,7 @@ const getTransformedValue = async (
 export const transformValuesAsync = async (
 	fields: IFormField[],
 	values: IFormValues,
-	allValues: IFormValues,
+	allValues: IFormValues
 ): Promise<IFormValues | undefined> => {
 	// return new Promise(async resolve => {
 	const transformedValues: IFormValues = {};
@@ -412,13 +412,13 @@ export const transformValuesAsync = async (
 						return transformValuesAsync(
 							field.fields,
 							values[field.key],
-							allValues,
+							allValues
 						);
 					}
 					transformedValues[field.key] = await transformValuesAsync(
 						field.fields,
 						values[field.key],
-						allValues,
+						allValues
 					);
 				}
 				break;
@@ -435,7 +435,7 @@ export const transformValuesAsync = async (
 								await transformValuesAsync(
 									field.element.fields,
 									elementValue,
-									allValues,
+									allValues
 								);
 							if (transformedElementValue) {
 								arrayValues.push(transformedElementValue);
@@ -450,7 +450,7 @@ export const transformValuesAsync = async (
 			default: {
 				transformedValues[field.key] = await getTransformedValue(
 					field,
-					values[field.key],
+					values[field.key]
 				);
 			}
 		}
@@ -468,7 +468,7 @@ export const transformValuesAsync = async (
 export const formatSelectValue = (options: SelectOption[]): ComboboxItem[] => {
 	return options.map(option => ({
 		value: option.value.toString(),
-		label: option.label,
+		label: option.label
 	}));
 };
 

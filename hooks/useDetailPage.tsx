@@ -5,7 +5,7 @@ import type {
 	IFormMetaResponse,
 	ItemAction,
 	MetaType,
-	SubResources,
+	SubResources
 } from '@/backoffice-common/types/api/meta';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { getMeta, replacePathParameters } from '@/backoffice-common/utils';
@@ -33,7 +33,7 @@ const useDetailPage = ({ apiRoute, id }: IConfig) => {
 		details: [],
 		subResources: undefined,
 		values: {},
-		actions: undefined,
+		actions: undefined
 	});
 
 	const navigate = useNavigate();
@@ -46,14 +46,14 @@ const useDetailPage = ({ apiRoute, id }: IConfig) => {
 	const fetchData = async () => {
 		void fetchDetails();
 		const data = await getMeta<IFormMetaResponse>(apiRoute, 'get', {
-			resourceId: id,
+			resourceId: id
 		});
 		setState(prev => ({
 			...prev,
 			details: data.form.fields,
 			subResources: data.subResources,
 			title: data.form.title ?? '',
-			actions: data.actions,
+			actions: data.actions
 		}));
 	};
 
@@ -64,7 +64,7 @@ const useDetailPage = ({ apiRoute, id }: IConfig) => {
 		>(`${apiRoute}/${id}`);
 		setState(prev => ({
 			...prev,
-			values: formValuesResponse.data,
+			values: formValuesResponse.data
 		}));
 	};
 
@@ -84,13 +84,13 @@ const useDetailPage = ({ apiRoute, id }: IConfig) => {
 							navigate(
 								replacePathParameters(
 									subResourceKey,
-									pathParameter,
-								),
+									pathParameter
+								)
 							);
 						}}
 						data={state.values}
 						callback={fetchData}
-					/>,
+					/>
 				);
 			}
 		}
@@ -106,7 +106,7 @@ const useDetailPage = ({ apiRoute, id }: IConfig) => {
 							action={action}
 							data={state.values}
 							callback={fetchData}
-						/>,
+						/>
 					);
 				}
 			}
@@ -118,13 +118,13 @@ const useDetailPage = ({ apiRoute, id }: IConfig) => {
 		state.subResources,
 		navigate,
 		pathParameter,
-		state.values,
+		state.values
 	]);
 
 	return {
 		state,
 		fetchDetails,
-		actionButtons,
+		actionButtons
 	};
 };
 

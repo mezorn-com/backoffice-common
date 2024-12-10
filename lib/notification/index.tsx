@@ -5,6 +5,6 @@ export const showMessage = (message: string, color: MantineColor = 'red') => {
 	showNotification({
 		title: message,
 		message: null,
-		color,
+		color
 	});
 };

@@ -2,7 +2,7 @@ export type SelectValue = string | string[] | null;
 
 export const getTransformedValue = (
 	value: SelectValue,
-	multiple: boolean,
+	multiple: boolean
 ): SelectValue => {
 	if (!value) {
 		return null;

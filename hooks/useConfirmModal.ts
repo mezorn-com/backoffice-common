@@ -10,10 +10,10 @@ export const useConfirmModal = () => {
 			children: t('delete.description', { ns: 'common' }),
 			labels: {
 				confirm: t('delete.title', { ns: 'common' }),
-				cancel: t('cancel', { ns: 'common' }),
+				cancel: t('cancel', { ns: 'common' })
 			},
 			confirmProps: {
-				color: 'red',
+				color: 'red'
 			},
 			async onConfirm() {
 				// onConfirm()
@@ -24,7 +24,7 @@ export const useConfirmModal = () => {
 				//     // void fetchData();
 				// }
 			},
-			...config,
+			...config
 		});
 	};
 };

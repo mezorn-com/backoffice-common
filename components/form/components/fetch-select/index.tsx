@@ -1,7 +1,7 @@
 import type {
 	IReference,
 	IResponse,
-	ISelectOption,
+	ISelectOption
 } from '@/backoffice-common/types/api';
 import { type ComboboxItem, Loader, MultiSelect, Select } from '@mantine/core';
 import type { GetInputProps } from '@mantine/form/lib/types';
@@ -63,7 +63,7 @@ const FetchSelect = ({
 						const { data } = await axios.get<
 							IResponse<ISelectOption[]>
 						>(uri, {
-							silent: true,
+							silent: true
 						});
 						setOptions(data.data ?? []);
 					} catch (e) {
@@ -79,12 +79,12 @@ const FetchSelect = ({
 					setIsLoading(true);
 					const _data: IReference[] = await fetchReference(
 						refCode ?? '',
-						refCode,
+						refCode
 					);
 					const _options = _data.map(item => {
 						return {
 							value: item.code,
-							label: item.name,
+							label: item.name
 						};
 					});
 					setOptions(_options);

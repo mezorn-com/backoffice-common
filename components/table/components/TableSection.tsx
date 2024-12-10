@@ -5,7 +5,7 @@ import {
 	type HeaderGroup,
 	type Row,
 	type Table,
-	flexRender,
+	flexRender
 } from '@tanstack/react-table';
 import { clsx } from 'clsx';
 import * as React from 'react';
@@ -24,7 +24,7 @@ interface TableElementProps {
 }
 
 const isHeaderGroup = (
-	row: Row<ListDoc> | HeaderGroup<ListDoc>,
+	row: Row<ListDoc> | HeaderGroup<ListDoc>
 ): row is HeaderGroup<ListDoc> => {
 	return 'headers' in row;
 };
@@ -33,7 +33,7 @@ const CHECKBOX_COLUMN_ID = 'table-bulk-action-checkbox';
 
 const useSectionFlatHeaders = (
 	section: TableSectionType,
-	table: Table<ListDoc>,
+	table: Table<ListDoc>
 ) => {
 	switch (section) {
 		case TableSectionType.LEFT: {
@@ -111,7 +111,7 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 	};
 
 	const renderCheckBox = (
-		row: Row<ListDoc> | HeaderGroup<ListDoc>,
+		row: Row<ListDoc> | HeaderGroup<ListDoc>
 	): React.ReactNode => {
 		if (section !== TableSectionType.CENTER || !rowSelect) {
 			return null;
@@ -123,7 +123,7 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 
 		const props: CheckboxProps = {
 			size: 'xs',
-			indeterminate: isHeader && table.getIsSomeRowsSelected(),
+			indeterminate: isHeader && table.getIsSomeRowsSelected()
 		};
 
 		if (isHeader) {
@@ -131,7 +131,7 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 			props.checked = table.getIsAllPageRowsSelected();
 			props.onChange = () =>
 				table.toggleAllPageRowsSelected(
-					!table.getIsAllPageRowsSelected(),
+					!table.getIsAllPageRowsSelected()
 				);
 		} else {
 			props.checked = row.getIsSelected();
@@ -159,7 +159,7 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 				[classes.center]: section === TableSectionType.CENTER,
 				[classes.left]: section === TableSectionType.LEFT,
 				[classes.right]: section === TableSectionType.RIGHT,
-				[classes.visible]: visible,
+				[classes.visible]: visible
 			})}
 			onMouseLeave={() => {
 				setRowHoverIndex(null);
@@ -197,7 +197,7 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 												: flexRender(
 														header.column.columnDef
 															.header,
-														header.getContext(),
+														header.getContext()
 													)}
 										</ObservedCell>
 									);
@@ -211,7 +211,7 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 						className={clsx({
 							[classes.body]: true,
 							[classes.scrollHidden]:
-								section === TableSectionType.CENTER,
+								section === TableSectionType.CENTER
 						})}
 					>
 						{table.getRowModel().rows.map((row, index) => {
@@ -233,7 +233,7 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 											>
 												{flexRender(
 													cell.column.columnDef.cell,
-													cell.getContext(),
+													cell.getContext()
 												)}
 											</ObservedCell>
 										);
@@ -258,7 +258,7 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 												: flexRender(
 														header.column.columnDef
 															.footer,
-														header.getContext(),
+														header.getContext()
 													)}
 										</div>
 									);

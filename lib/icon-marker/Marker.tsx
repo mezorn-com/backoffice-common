@@ -16,7 +16,7 @@ const IconMarker = ({ icon, ...props }: ICustomMarkerProps) => {
 				iconUrl: defaultMarker,
 				iconSize: [25, 41],
 				iconAnchor: [12, 40],
-				className: 'svg-icon',
+				className: 'svg-icon'
 			});
 		}
 		if (typeof icon === 'string') {
@@ -28,7 +28,7 @@ const IconMarker = ({ icon, ...props }: ICustomMarkerProps) => {
 				shadowUrl: undefined,
 				shadowSize: undefined,
 				shadowAnchor: undefined,
-				iconSize: new Point(30, 40),
+				iconSize: new Point(30, 40)
 			});
 		}
 		return icon;

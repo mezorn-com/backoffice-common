@@ -6,7 +6,7 @@ const Welcome = () => {
 				display: 'grid',
 				placeItems: 'center',
 				fontSize: 60,
-				fontWeight: 500,
+				fontWeight: 500
 			}}
 		>
 			Welcome

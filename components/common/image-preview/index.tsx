@@ -38,7 +38,7 @@ const ImagePreview: React.FC<IImagePreviewProps> = ({
 	textClassName,
 	iconSize,
 	radius,
-	previewRadius,
+	previewRadius
 }) => {
 	const [visible, setVisible] = React.useState(false);
 

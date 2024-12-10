@@ -16,7 +16,7 @@ const ObservedCell = ({
 	children,
 	columnId,
 	rowId,
-	rowGroup,
+	rowGroup
 }: ObservedCellProps) => {
 	const { columnObserver } = React.useContext(TableContext);
 	const ref = React.useRef<HTMLDivElement>(null);
@@ -31,7 +31,7 @@ const ObservedCell = ({
 		return {
 			[COLUMN_UID_ATTR]: columnId,
 			[ROW_UID_ATTR]: rowId,
-			[ROW_GROUP_UID_ATTR]: rowGroup,
+			[ROW_GROUP_UID_ATTR]: rowGroup
 		};
 	}, [columnId, rowId, rowGroup]);
 
@@ -42,7 +42,7 @@ const ObservedCell = ({
 				ref={ref}
 				className={clsx({
 					[classes.cell]: rowGroup !== RowGroup.HEADER,
-					[classes.header]: rowGroup === RowGroup.HEADER,
+					[classes.header]: rowGroup === RowGroup.HEADER
 				})}
 			>
 				{children}

@@ -5,7 +5,7 @@ import {
 	Routes,
 	matchRoutes,
 	useLocation,
-	useNavigate,
+	useNavigate
 } from 'react-router-dom';
 
 const AuthRouter = () => {
@@ -16,7 +16,7 @@ const AuthRouter = () => {
 		const matchedRoutes = matchRoutes(authRoutes, location.pathname);
 		if (!matchedRoutes || matchedRoutes.length === 0) {
 			navigate('/', {
-				replace: true,
+				replace: true
 			});
 		}
 	}, [location.pathname, navigate]);

@@ -21,13 +21,13 @@ const Detail = ({
 	// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
 	apiUrl,
 	// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
-	state: { values, details, actions },
+	state: { values, details, actions }
 }: IDetailProps) => {
 	const renderField = useRenderField();
 
 	const getDetailValue = (
 		field: IFormField,
-		detailValues: Record<string, unknown>,
+		detailValues: Record<string, unknown>
 	): ReactNode => {
 		if (field.type !== FieldType.RENDER) {
 			return null;
@@ -40,7 +40,7 @@ const Detail = ({
 	const renderDetails = (
 		renderFields: IFormField[],
 		// biome-ignore lint/suspicious/noExplicitAny: TODO: fix type
-		renderValues: Record<string, any>,
+		renderValues: Record<string, any>
 	) => {
 		return (
 			<div className={classes.group} key='group'>
@@ -48,7 +48,7 @@ const Detail = ({
 					if (field.type === FieldType.OBJECT) {
 						return renderDetails(
 							field.fields ?? [],
-							renderValues[field.key],
+							renderValues[field.key]
 						);
 					}
 					if (field.type === FieldType.GROUP) {
@@ -69,7 +69,7 @@ const Detail = ({
 							<span
 								className={classes.label}
 								style={{
-									textAlign: isTable ? 'left' : 'right',
+									textAlign: isTable ? 'left' : 'right'
 								}}
 							>
 								{field.label}

@@ -33,7 +33,7 @@ const TableRow = ({ children, rowId, rowGroup, rowIndex }: TableRowProps) => {
 	};
 
 	const customAttrs = {
-		[ROW_UID_ATTR]: rowId,
+		[ROW_UID_ATTR]: rowId
 	};
 
 	return (
@@ -41,7 +41,7 @@ const TableRow = ({ children, rowId, rowGroup, rowIndex }: TableRowProps) => {
 			{...customAttrs}
 			className={clsx(classes.container, {
 				[classes.hover]:
-					rowGroup === RowGroup.BODY && rowIndex === rowHoverIndex,
+					rowGroup === RowGroup.BODY && rowIndex === rowHoverIndex
 			})}
 			ref={rowRef}
 			onMouseEnter={() => {

@@ -2,13 +2,13 @@ import {
 	ActionIcon,
 	type ActionIconProps,
 	NumberInput,
-	Select,
+	Select
 } from '@mantine/core';
 import {
 	IconChevronLeft,
 	IconChevronRight,
 	IconChevronsLeft,
-	IconChevronsRight,
+	IconChevronsRight
 } from '@tabler/icons-react';
 import classes from './Pagination.module.scss';
 
@@ -28,7 +28,7 @@ interface TablePaginationProps {
 
 const actionIconProps: ActionIconProps = {
 	variant: 'filled',
-	color: 'var(--mantine-primary-color-6)',
+	color: 'var(--mantine-primary-color-6)'
 };
 
 const TablePagination = ({
@@ -42,7 +42,7 @@ const TablePagination = ({
 	onNextPage,
 	onPreviousPage,
 	pageSizes,
-	total,
+	total
 }: TablePaginationProps) => {
 	return (
 		<div className={classes.wrapper}>
@@ -115,7 +115,7 @@ const TablePagination = ({
 						}
 					}}
 					wrapperProps={{
-						className: classes.select,
+						className: classes.select
 					}}
 					value={pageSize}
 					size='sm'

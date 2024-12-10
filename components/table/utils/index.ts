@@ -18,7 +18,7 @@ export const COLUMN_UID_ATTR = 'table-column-id';
 export const ROW_GROUP_UID_ATTR = 'table-row-group';
 
 export const getDOMRectObserver = (
-	key: keyof Omit<DOMRectReadOnly, 'toJSON' | 'x' | 'y'>,
+	key: keyof Omit<DOMRectReadOnly, 'toJSON' | 'x' | 'y'>
 ) => {
 	return new ResizeObserver(entries => {
 		let value = 0;
@@ -47,7 +47,7 @@ const getColumnSizes = (horizontalScrollItem: Element) => {
 					const innerWidth =
 						cell.children[0].getBoundingClientRect().width;
 					const sizeIndex = columnSizes.findIndex(
-						col => col.colId === colId,
+						col => col.colId === colId
 					);
 					if (sizeIndex > -1) {
 						if (innerWidth > columnSizes[sizeIndex].innerWidth) {
@@ -57,7 +57,7 @@ const getColumnSizes = (horizontalScrollItem: Element) => {
 					} else {
 						columnSizes.push({
 							innerWidth,
-							colId,
+							colId
 						});
 					}
 				}
@@ -79,7 +79,7 @@ const getColumnResizes = (centerElement: HTMLElement): ColumnSize[] => {
 	return columnSizes.map(col => {
 		return {
 			...col,
-			additionalWidth: widthPerColumn,
+			additionalWidth: widthPerColumn
 		};
 	});
 };
@@ -88,7 +88,7 @@ const getRowSizes = (table: Element): RowSizes => {
 	const object: RowSizes = {
 		header: [],
 		body: [],
-		footer: [],
+		footer: []
 	};
 
 	for (const section of table.children) {
@@ -97,7 +97,7 @@ const getRowSizes = (table: Element): RowSizes => {
 			for (const row of rowGroup.children) {
 				for (const cell of row.children) {
 					const rowGroup = cell.getAttribute(
-						ROW_GROUP_UID_ATTR,
+						ROW_GROUP_UID_ATTR
 					) as RowGroup | null;
 					const rowId = cell.getAttribute(ROW_UID_ATTR);
 					const cellHeight = cell.getBoundingClientRect().height;
@@ -107,7 +107,7 @@ const getRowSizes = (table: Element): RowSizes => {
 						Object.values(RowGroup).includes(rowGroup)
 					) {
 						const index = object[rowGroup].findIndex(
-							row => row.rowId === rowId,
+							row => row.rowId === rowId
 						);
 						if (index > -1) {
 							if (cellHeight > object[rowGroup][index].height) {
@@ -116,7 +116,7 @@ const getRowSizes = (table: Element): RowSizes => {
 						} else {
 							object[rowGroup].push({
 								rowId,
-								height: cellHeight,
+								height: cellHeight
 							});
 						}
 					}
@@ -146,10 +146,10 @@ export const resizeTable = (tableElement: HTMLElement) => {
 							cellContainer.getAttribute(COLUMN_UID_ATTR);
 						const rowId = cellContainer.getAttribute(ROW_UID_ATTR);
 						const columnIndex = columnSizes.findIndex(
-							col => col.colId === columnId,
+							col => col.colId === columnId
 						);
 						const rowGroup = cellContainer.getAttribute(
-							ROW_GROUP_UID_ATTR,
+							ROW_GROUP_UID_ATTR
 						) as RowGroup | null;
 
 						if (columnId && columnIndex > -1) {
@@ -168,11 +168,11 @@ export const resizeTable = (tableElement: HTMLElement) => {
 							rowId &&
 							rowGroup &&
 							Object.values(RowGroup).includes(
-								rowGroup as RowGroup,
+								rowGroup as RowGroup
 							)
 						) {
 							const rowIndex = rowSizes[rowGroup].findIndex(
-								row => row.rowId === rowId,
+								row => row.rowId === rowId
 							);
 							if (rowIndex > -1) {
 								if (cellContainer instanceof HTMLElement) {

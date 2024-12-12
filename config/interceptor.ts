@@ -25,8 +25,8 @@ axios.interceptors.request.use(config => {
 		...(config.headers as RawAxiosRequestHeaders) // <<<< this here
 	};
 
-	if (!config.noAuthorization && !config.headers.Authorization) {
-		config.headers.Authorization = state?.auth?.token
+	if (!config.noAuthorization && !config.headers.authorization) {
+		config.headers.authorization = state?.auth?.token
 			? `Bearer ${state?.auth?.token}`
 			: undefined;
 	}

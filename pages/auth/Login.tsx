@@ -11,7 +11,7 @@ import {
 	TextInput,
 	Title
 } from '@mantine/core';
-import { hasLength, useForm } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import { IconAt, IconChevronRight, IconKey } from '@tabler/icons-react';
 import axios from 'axios';
 import * as React from 'react';
@@ -46,11 +46,18 @@ const Login = ({ right, forgotPasswordButton }: ILoginProps) => {
 		},
 		clearInputErrorOnChange: true,
 		validate: {
-			identifier: hasLength(
-				{ min: 6 },
-				'Username must be 6 characters min'
-			),
-			password: hasLength({ min: 6 }, 'Password must be 6 characters min')
+			identifier: value => {
+				if (value.length < 6) {
+					return 'Username must be 6 characters min';
+				}
+				return null;
+			},
+			password: value => {
+				if (value.length < 6) {
+					return 'Password must be 6 characters min';
+				}
+				return null;
+			}
 		}
 	});
 

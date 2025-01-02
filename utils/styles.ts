@@ -4,5 +4,5 @@ import type { MantineColor } from '@mantine/core';
 export const actionColors: Record<ListItemActionKey, MantineColor> = {
 	update: 'yellow',
 	get: 'blue',
-	delete: 'red',
+	delete: 'red'
 };

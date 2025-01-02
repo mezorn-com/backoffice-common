@@ -7,7 +7,7 @@ import RowActionButtons from '../components/row-action-buttons';
 const columnHelper = createColumnHelper<ListDoc>();
 
 export const useFixedColumns = (
-	rowActionButtons: ActionButtonProps[],
+	rowActionButtons: ActionButtonProps[]
 ): ColumnDef<ListDoc>[] => {
 	return useMemo(() => {
 		if (rowActionButtons) {
@@ -21,8 +21,8 @@ export const useFixedColumns = (
 								row={props.row}
 							/>
 						);
-					},
-				}),
+					}
+				})
 			];
 		}
 

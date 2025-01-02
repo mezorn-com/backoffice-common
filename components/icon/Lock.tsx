@@ -1,6 +1,6 @@
 export const Lock = ({
 	color = '#000',
-	size = 25,
+	size = 25
 }: { color?: string; size?: number }) => {
 	return (
 		<svg

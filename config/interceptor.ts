@@ -22,7 +22,7 @@ axios.interceptors.request.use(config => {
 	config.headers = {
 		'Content-Type': 'application/json',
 		'Accept-Language': language,
-		...(config.headers as RawAxiosRequestHeaders), // <<<< this here
+		...(config.headers as RawAxiosRequestHeaders) // <<<< this here
 	};
 
 	if (!config.noAuthorization && !config.headers.Authorization) {
@@ -46,7 +46,7 @@ axios.interceptors.response.use(
 	error => {
 		showMessage(
 			error?.response?.data?.error?.message ??
-				t('messages.error', { ns: 'common' }),
+				t('messages.error', { ns: 'common' })
 		);
 		if (
 			error?.response?.status === 401 &&
@@ -56,5 +56,5 @@ axios.interceptors.response.use(
 		}
 		useStore.setState({ loading: false });
 		return Promise.reject(error);
-	},
+	}
 );

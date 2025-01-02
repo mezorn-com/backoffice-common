@@ -42,7 +42,7 @@ const CascadingSelect = ({
 							draft.splice(-1 * removeLength);
 						}
 					}
-				}),
+				})
 			);
 		} else {
 			console.error('Please Provide `fetchReference` Function');
@@ -58,7 +58,7 @@ const CascadingSelect = ({
 				if (removeLength) {
 					draft.splice(-1 * removeLength);
 				}
-			}),
+			})
 		);
 		if (object?.isLeaf === false) {
 			indexRef.current = index;
@@ -76,7 +76,7 @@ const CascadingSelect = ({
 		return dataClone.map(item => {
 			return {
 				value: item.code,
-				label: item.name,
+				label: item.name
 			};
 		});
 	};
@@ -93,7 +93,7 @@ const CascadingSelect = ({
 					onChange={value => handleChange(value, index)}
 					value={values[index] ?? null}
 					error={data.length - 1 === index ? error : !!error}
-				/>,
+				/>
 			);
 		}
 		return selects;

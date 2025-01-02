@@ -3,7 +3,7 @@ import type { IState } from '../types';
 import type { Action } from './action-types';
 
 export const initialState: IState = {
-	visibleKeys: [],
+	visibleKeys: []
 };
 
 // biome-ignore lint/correctness/noUnusedVariables: TODO: remove

@@ -19,7 +19,7 @@ const getRoutes = () => {
 					key={route.path}
 					path={route.path}
 					element={<route.element />}
-				/>,
+				/>
 			);
 		}
 	}

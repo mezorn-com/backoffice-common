@@ -9,5 +9,5 @@ interface TableContextData {
 export const TableContext = createContext<TableContextData>({
 	columnObserver: null,
 	rowHoverIndex: null,
-	setRowHoverIndex: () => undefined,
+	setRowHoverIndex: () => undefined
 });

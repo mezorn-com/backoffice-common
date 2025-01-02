@@ -35,7 +35,7 @@ const useEditPage = ({ apiRoute, clientRoute, id, onFetch }: IConfig) => {
 		fields: [],
 		values: {},
 		title: '',
-		ready: false,
+		ready: false
 	});
 
 	React.useEffect(() => {
@@ -44,7 +44,7 @@ const useEditPage = ({ apiRoute, clientRoute, id, onFetch }: IConfig) => {
 
 	const fetchData = async () => {
 		const data = await getMeta<IFormMetaResponse>(apiRoute, 'update', {
-			resourceId: id,
+			resourceId: id
 		});
 		const { data: formValuesResponse } = await axios.get<
 			// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
@@ -54,7 +54,7 @@ const useEditPage = ({ apiRoute, clientRoute, id, onFetch }: IConfig) => {
 			title: data?.form?.title ?? '',
 			values: formValuesResponse.data,
 			fields: data?.form?.fields ?? [],
-			ready: true,
+			ready: true
 		});
 		onFetch?.(formValuesResponse);
 	};
@@ -63,7 +63,7 @@ const useEditPage = ({ apiRoute, clientRoute, id, onFetch }: IConfig) => {
 		// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
 		const { data } = await axios.put<IResponse<any>>(
 			`${apiRoute}/${id}`,
-			values,
+			values
 		);
 		if (data.success) {
 			showMessage(t('success', { ns: 'common' }), 'green');
@@ -82,7 +82,7 @@ const useEditPage = ({ apiRoute, clientRoute, id, onFetch }: IConfig) => {
 	return {
 		state,
 		submitHandler,
-		fetchData,
+		fetchData
 	};
 };
 

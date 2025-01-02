@@ -17,16 +17,16 @@ const authRoutes = createBrowserRouter([
 	{
 		path: '*',
 		element: <AuthRouter />,
-		errorElement: <ErrorPage />,
-	},
+		errorElement: <ErrorPage />
+	}
 ]);
 
 const protectedRoutes = createBrowserRouter([
 	{
 		path: '*',
 		element: <ProtectedRoutes />,
-		errorElement: <ErrorPage />,
-	},
+		errorElement: <ErrorPage />
+	}
 ]);
 
 function App() {
@@ -106,7 +106,7 @@ function App() {
 
 				/** Controls various styles of h1-h6 elements, used in TypographyStylesProvider and Title components */
 				headings: {
-					fontFamily: 'GIP',
+					fontFamily: 'GIP'
 					// fontWeight: string;
 					// sizes: {
 					// 	h1: HeadingStyle;
@@ -167,16 +167,16 @@ function App() {
 					// biome-ignore lint/style/useNamingConvention: Mantine library format
 					MultiSelect: {
 						defaultProps: {
-							className: classes.multiSelect,
-						},
+							className: classes.multiSelect
+						}
 					},
 					// biome-ignore lint/style/useNamingConvention: Mantine library format
 					Modal: Modal.extend({
 						defaultProps: {
-							zIndex: 1001,
-						},
-					}),
-				},
+							zIndex: 1001
+						}
+					})
+				}
 
 				/** Any other properties that you want to access with the theme objects */
 				// other: MantineThemeOther;
@@ -209,21 +209,21 @@ function App() {
 				position='top-right'
 				styles={{
 					root: {
-						zIndex: 10_000,
-					},
+						zIndex: 10_000
+					}
 				}}
 			/>
 			<ModalsProvider
 				modalProps={{
 					zIndex: 1001,
 					classNames: {
-						header: classes.modalHeader,
+						header: classes.modalHeader
 					},
 					styles: {
 						title: {
-							fontWeight: 600,
-						},
-					},
+							fontWeight: 600
+						}
+					}
 				}}
 			>
 				<RouterProvider router={token ? protectedRoutes : authRoutes} />

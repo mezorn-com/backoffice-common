@@ -8,7 +8,7 @@ import {
 	MAP_DEFAULT_STARTING_POINT,
 	MAP_INITIAL_ZOOM,
 	MAP_MAX_ZOOM,
-	MAP_MIN_ZOOM,
+	MAP_MIN_ZOOM
 } from '@/config';
 import { Button, Modal, Text, TextInput } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
@@ -52,10 +52,10 @@ const MapAddressPicker = ({ field, onChange, value }: IProps) => {
 	const handleSearch = async () => {
 		if (field.suggestApi) {
 			const params = {
-				[field.suggestApi.searchKey]: searchValue,
+				[field.suggestApi.searchKey]: searchValue
 			};
 			const { data } = await axios.get<IResponse<ISuggestResponse>>(
-				`${field.suggestApi.uri}?${qs.stringify(params)}`,
+				`${field.suggestApi.uri}?${qs.stringify(params)}`
 			);
 			setSuggestions(data.data.suggestions ?? []);
 		}
@@ -64,18 +64,18 @@ const MapAddressPicker = ({ field, onChange, value }: IProps) => {
 	const handleSuggestionClick = async (suggestion: ISuggestion) => {
 		if (field.retrieveApi) {
 			const params = {
-				addressId: suggestion.value,
+				addressId: suggestion.value
 			};
 			const { data } = await axios.post<IResponse<[IDetailResponseData]>>(
 				field.retrieveApi.uri,
-				params,
+				params
 			);
 			const [address] = data.data;
 			onChange?.({
 				address: address.address,
 				lat: address.coordinates.latitude,
 				lon: address.coordinates.longitude,
-				value: suggestion.value,
+				value: suggestion.value
 			});
 		}
 	};
@@ -139,7 +139,7 @@ const MapAddressPicker = ({ field, onChange, value }: IProps) => {
 									style={{
 										fontWeight: isSelected(suggestion)
 											? 600
-											: 400,
+											: 400
 									}}
 								>
 									{suggestion.label}

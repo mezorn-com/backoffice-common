@@ -14,7 +14,7 @@ const Helper = ({ value }: IProps) => {
 		if (value) {
 			map.flyTo({
 				lng: value.lon,
-				lat: value.lat,
+				lat: value.lat
 			});
 		}
 	}, [value, map.flyTo]);
@@ -25,7 +25,7 @@ const Helper = ({ value }: IProps) => {
 				<IconMarker
 					position={{
 						lat: value.lat,
-						lng: value.lon,
+						lng: value.lon
 					}}
 				/>
 			)}

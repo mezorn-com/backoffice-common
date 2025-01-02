@@ -5,7 +5,7 @@ import type { IResponse } from '@/backoffice-common/types/api';
 import type {
 	ItemAction,
 	ListActionKey,
-	ListItemActionKey,
+	ListItemActionKey
 } from '@/backoffice-common/types/api/meta';
 import { replacePathParameters } from '@/backoffice-common/utils';
 import { actionColors } from '@/backoffice-common/utils/styles';
@@ -36,7 +36,7 @@ const ActionButton = ({
 	action,
 	onClick,
 	callback,
-	isFormAction = false,
+	isFormAction = false
 }: ActionButtonProps) => {
 	const theme = useMantineTheme();
 	const { t } = useTranslation();
@@ -126,11 +126,11 @@ const ActionButton = ({
 					children: t('delete.description', { ns: 'common' }),
 					labels: {
 						confirm: t('delete.title', { ns: 'common' }),
-						cancel: t('cancel', { ns: 'common' }),
+						cancel: t('cancel', { ns: 'common' })
 					},
 					confirmProps: {
-						color: 'red',
-					},
+						color: 'red'
+					}
 				};
 
 				actionFn = async () => {
@@ -153,7 +153,7 @@ const ActionButton = ({
 						if (responseData.success) {
 							showMessage(
 								t('success', { ns: 'common' }),
-								'green',
+								'green'
 							);
 							callback?.();
 						}
@@ -172,11 +172,11 @@ const ActionButton = ({
 				children: action.confirmation.dialogText,
 				labels: {
 					confirm: action.confirmation.buttonText ?? 'Confirm',
-					cancel: t('cancel', { ns: 'common' }),
+					cancel: t('cancel', { ns: 'common' })
 				},
 				confirmProps: {
-					color: actionKey === 'delete' ? 'red' : 'blue',
-				},
+					color: actionKey === 'delete' ? 'red' : 'blue'
+				}
 			};
 		}
 		if (action !== true && action.api) {
@@ -189,10 +189,10 @@ const ActionButton = ({
 					>({
 						url: replacePathParameters(action.api?.uri ?? '', {
 							...pathParameter,
-							...data,
+							...data
 						}),
 						method: action.api?.method,
-						data: formValues,
+						data: formValues
 					});
 					if (responseData.success) {
 						showMessage(t('success', { ns: 'common' }), 'green');
@@ -212,7 +212,7 @@ const ActionButton = ({
 							...confirm,
 							onConfirm() {
 								actionFn?.(formValues);
-							},
+							}
 						});
 					} else {
 						actionFn?.(formValues);
@@ -222,7 +222,7 @@ const ActionButton = ({
 			icon,
 			label,
 			color,
-			handler,
+			handler
 		};
 	}, [
 		t,
@@ -235,7 +235,7 @@ const ActionButton = ({
 		showDrawer,
 		confirmModal,
 		onClick,
-		actionKey,
+		actionKey
 	]);
 
 	let Icon: ((props: TablerIconsProps) => JSX.Element) | undefined =
@@ -282,12 +282,12 @@ const ActionButton = ({
 					justify='flex-start'
 					styles={{
 						label: {
-							fontSize: 12,
+							fontSize: 12
 						},
 						root: {
 							background: 'white',
-							margin: '0px 5px',
-						},
+							margin: '0px 5px'
+						}
 					}}
 				>
 					{label}
@@ -315,8 +315,8 @@ const ActionButton = ({
 				color={color}
 				styles={{
 					label: {
-						fontSize: '14px',
-					},
+						fontSize: '14px'
+					}
 				}}
 			>
 				{label}

@@ -21,19 +21,19 @@ export const usePathParameter = (): PathParameters => {
                      /page/6493dc489c8ff670f045a20azd3/edit
                      ***/
 					return {
-						_id: urlParts[1],
+						_id: urlParts[1]
 					};
 				}
 				return {
 					parentId: urlParts[1],
-					_id: urlParts?.[3],
+					_id: urlParts?.[3]
 				};
 			}
 			/***
              /page/6493dc489c8ff670f045a20azd3
              ***/
 			return {
-				_id: urlParts[1],
+				_id: urlParts[1]
 			};
 		}
 

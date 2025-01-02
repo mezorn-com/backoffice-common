@@ -2,7 +2,7 @@ import ImagePreview from '@/backoffice-common/components/common/image-preview';
 import {
 	FieldType,
 	type IFormField,
-	RenderType,
+	RenderType
 } from '@/backoffice-common/types/form';
 import { replacePathParameters } from '@/backoffice-common/utils';
 import { Anchor, Stack } from '@mantine/core';
@@ -14,7 +14,7 @@ export const useRenderField = () => {
 		field: IFormField,
 		value: unknown,
 		// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
-		data: Record<string, any>,
+		data: Record<string, any>
 	): ReactNode => {
 		if (field.type !== FieldType.RENDER) {
 			return null;
@@ -34,7 +34,7 @@ export const useRenderField = () => {
 							style={{
 								display: 'flex',
 								alignItems: 'center',
-								color: 'lightgreen',
+								color: 'lightgreen'
 							}}
 						>
 							<IconCircleCheckFilled size={20} />
@@ -47,7 +47,7 @@ export const useRenderField = () => {
 							style={{
 								display: 'flex',
 								alignItems: 'center',
-								color: 'lightgray',
+								color: 'lightgray'
 							}}
 						>
 							<IconCircleXFilled size={20} />
@@ -93,7 +93,7 @@ export const useRenderField = () => {
 													<td
 														key={`${column.key}-${index}`}
 														style={{
-															fontWeight: 400,
+															fontWeight: 400
 														}}
 													>
 														{row?.[column.key] ??
@@ -103,7 +103,7 @@ export const useRenderField = () => {
 											})}
 										</tr>
 									);
-								},
+								}
 							)}
 						</tbody>
 					</table>

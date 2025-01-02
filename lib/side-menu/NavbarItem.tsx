@@ -47,21 +47,21 @@ const NavbarItem = ({ children, label, path, icon, isActive }: IProps) => {
 	return (
 		<div
 			style={{
-				paddingLeft: '10px',
+				paddingLeft: '10px'
 			}}
 		>
 			<UnstyledButton
 				onClick={handleClick}
 				className={clsx({
 					[classes.control]: true,
-					[classes.active]: isActive,
+					[classes.active]: isActive
 				})}
 			>
 				<Group justify='space-between' style={{ flexWrap: 'nowrap' }}>
 					<Box
 						className={clsx({
 							[classes.label]: true,
-							[classes.active]: isActive,
+							[classes.active]: isActive
 						})}
 					>
 						{menuIcon}
@@ -75,7 +75,7 @@ const NavbarItem = ({ children, label, path, icon, isActive }: IProps) => {
 							size='1rem'
 							stroke={1.5}
 							style={{
-								transform: opened ? 'rotate(90deg)' : 'none',
+								transform: opened ? 'rotate(90deg)' : 'none'
 							}}
 						/>
 					)}

@@ -1,5 +1,5 @@
 import ActionButton, {
-	type ActionButtonProps,
+	type ActionButtonProps
 } from '@/backoffice-common/components/common/action-button';
 import { ActionIcon, Menu } from '@mantine/core';
 import { IconDots } from '@tabler/icons-react';

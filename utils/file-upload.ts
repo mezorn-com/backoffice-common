@@ -19,7 +19,7 @@ const MAX_UPLOAD_SIZE = 4_194_304;
 
 export const uploadFile = async (
 	payload: File | File[],
-	config?: IFileUploaderConfig,
+	config?: IFileUploaderConfig
 ) => {
 	const files = payload;
 
@@ -74,7 +74,7 @@ export const uploadFile = async (
 
 export const uploadFileNormally = async (
 	payload: File | File[],
-	config?: IFileUploaderConfig,
+	config?: IFileUploaderConfig
 ): Promise<string | string[] | undefined> => {
 	// return new Promise(async (resolve, reject) => {
 	try {
@@ -93,7 +93,7 @@ export const uploadFileNormally = async (
 		const params: Record<string, unknown> = {
 			useFileName: config?.useFileName ?? false,
 			folderPath: config?.folderPath ?? undefined,
-			prefix: config?.prefix ?? undefined,
+			prefix: config?.prefix ?? undefined
 		};
 		if (config?.folderPath) {
 			params.folderPath = config.folderPath;
@@ -107,13 +107,13 @@ export const uploadFileNormally = async (
 			method: 'POST',
 			headers: {
 				accept: '*/*',
-				authorization: `Bearer ${state.auth.token}`,
+				authorization: `Bearer ${state.auth.token}`
 			},
-			data: formData,
+			data: formData
 		});
 		if (isArray) {
 			const urls = (response.data.result ?? []).map(
-				result => result?.fileUrl ?? undefined,
+				result => result?.fileUrl ?? undefined
 			);
 			return urls;
 			// resolve(urls);
@@ -132,7 +132,7 @@ export const uploadFileNormally = async (
 
 export const uploadWithSignedURL = async (
 	file: File,
-	config?: IFileUploaderConfig,
+	config?: IFileUploaderConfig
 ) => {
 	// return new Promise(async (resolve, reject) => {
 	try {
@@ -140,7 +140,7 @@ export const uploadWithSignedURL = async (
 			fileName: file.name,
 			prefix: config?.prefix ?? config?.folderPath ?? undefined,
 			useFileName: config?.useFileName || false,
-			folderPath: config?.folderPath ?? undefined,
+			folderPath: config?.folderPath ?? undefined
 		};
 
 		const state = useStore.getState();
@@ -150,8 +150,8 @@ export const uploadWithSignedURL = async (
 			url: `${API_UPLOAD_URL}/geturl`,
 			data: bodyParams,
 			headers: {
-				authorization: `Bearer ${state.auth.token}`,
-			},
+				authorization: `Bearer ${state.auth.token}`
+			}
 		});
 		const signedURL = signedUrlResponse?.data?.result?.uploadUrl ?? '';
 		const fileUrl = signedUrlResponse?.data?.result?.fileUrl ?? undefined;
@@ -160,10 +160,10 @@ export const uploadWithSignedURL = async (
 			url: signedURL,
 			method: 'PUT',
 			headers: {
-				'Content-Type': file?.type,
+				'Content-Type': file?.type
 			},
 			noAuthorization: true,
-			data: file,
+			data: file
 		});
 
 		if (uploadResponse.status === 200) {

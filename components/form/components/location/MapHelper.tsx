@@ -1,7 +1,7 @@
 import L, {
 	type LatLngExpression,
 	type LatLngLiteral,
-	type LatLngTuple,
+	type LatLngTuple
 } from 'leaflet';
 import * as React from 'react';
 import { Marker, useMapEvents } from 'react-leaflet';
@@ -12,7 +12,7 @@ const icon = L.icon({
 	iconUrl: markerIcon2x,
 	shadowUrl: markerShadow,
 	iconSize: [25, 41],
-	iconAnchor: [12, 41],
+	iconAnchor: [12, 41]
 });
 
 interface LocationMapHelperProps {
@@ -23,7 +23,7 @@ interface LocationMapHelperProps {
 const tupleToLiteral = (value: LatLngTuple): LatLngLiteral => {
 	return {
 		lat: value[0],
-		lng: value[1],
+		lng: value[1]
 	};
 };
 
@@ -36,7 +36,7 @@ export const MapHelper = ({ location, onDrag }: LocationMapHelperProps) => {
 			} else {
 				onDrag(tupleToLiteral(center));
 			}
-		},
+		}
 	});
 
 	React.useEffect(() => {

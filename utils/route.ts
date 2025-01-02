@@ -2,7 +2,7 @@ import type { IStringReplacer } from '@/backoffice-common/types/utils';
 
 export const getSubResourceUrl = (
 	url: string,
-	array: IStringReplacer[],
+	array: IStringReplacer[]
 ): string => {
 	let result = url;
 	for (const item of array) {

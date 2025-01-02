@@ -33,8 +33,8 @@ const Profile = ({ compact = false }) => {
 								padding: compact ? '5px' : '10px',
 								border: '1px solid var(--mantine-color-gray-3)',
 								background: 'white',
-								color: 'black',
-							},
+								color: 'black'
+							}
 						}}
 					>
 						<Title order={6}>{userName}</Title>

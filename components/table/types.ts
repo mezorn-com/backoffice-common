@@ -30,11 +30,11 @@ export interface ITableProps {
 export enum TableSectionType {
 	LEFT = 'left',
 	CENTER = 'center',
-	RIGHT = 'right',
+	RIGHT = 'right'
 }
 
 export enum RowGroup {
 	HEADER = 'header',
 	BODY = 'body',
-	FOOTER = 'footer',
+	FOOTER = 'footer'
 }

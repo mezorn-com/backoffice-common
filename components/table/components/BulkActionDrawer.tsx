@@ -15,7 +15,7 @@ const BulkActionDrawer = ({
 	onClose,
 	bulkAction,
 	onSubmit,
-	filterValues = {},
+	filterValues = {}
 }: BulkActionModalProps) => {
 	const { t } = useTranslation();
 
@@ -28,11 +28,11 @@ const BulkActionDrawer = ({
 				children: bulkAction.confirmation.dialogText,
 				labels: {
 					confirm: bulkAction.confirmation.buttonText ?? 'confirm',
-					cancel: t('cancel', { ns: 'common' }),
+					cancel: t('cancel', { ns: 'common' })
 				},
 				onConfirm() {
 					onSubmit(values);
-				},
+				}
 			});
 		} else {
 			onSubmit(values);

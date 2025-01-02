@@ -19,14 +19,14 @@ type UpdateBulkAction = {
 export type Action = FilterItemChange | UpdateBulkAction;
 
 export const initialState: ITableState = {
-	filter: {},
+	filter: {}
 };
 
 export const reducer = produce((draft: ITableState, action: Action) => {
 	switch (action.type) {
 		case 'HANDLE_FILTER_ITEM_CHANGE': {
 			draft.filter = {
-				...action.payload,
+				...action.payload
 			};
 			break;
 		}

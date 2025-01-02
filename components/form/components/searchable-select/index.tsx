@@ -56,7 +56,7 @@ const SearchableSelect = ({
 	const [data, setData] = React.useState<Option[]>([]);
 	const [loading, setLoading] = React.useState(false);
 	const [selectedValue, setSelectedValue] = React.useState<null | Option[]>(
-		null,
+		null
 	);
 
 	const controllerRef = React.useRef(new AbortController());
@@ -84,14 +84,14 @@ const SearchableSelect = ({
 				const fetchData = async () => {
 					setLoading(true);
 					const params = {
-						search: debounced,
+						search: debounced
 					};
 					const queryParams = qs.stringify(params);
 					const { data: responseData } = await axios.get<
 						IResponse<unknown[]>
 					>(`${uri}?${queryParams}`, {
 						silent: true,
-						signal: controllerRef.current.signal,
+						signal: controllerRef.current.signal
 					});
 					let parsed: Option[];
 					if (parser) {
@@ -101,7 +101,7 @@ const SearchableSelect = ({
 						parsed = (responseData.data ?? []).map((item: any) => {
 							return {
 								value: item.value,
-								label: item.label,
+								label: item.label
 							};
 						});
 					}
@@ -225,7 +225,7 @@ const SearchableSelect = ({
 			<Popover.Dropdown className={classes.dropdown}>
 				{data.map(item => {
 					const isSelected = !!(selectedValue ?? []).find(
-						v => v.value === item.value,
+						v => v.value === item.value
 					);
 					return (
 						<Button
@@ -235,10 +235,10 @@ const SearchableSelect = ({
 							onClick={() => handleSelect(item)}
 							fullWidth
 							classNames={{
-								inner: classes.buttonInner,
+								inner: classes.buttonInner
 							}}
 							style={{
-								background: isSelected ? '#e7e7e7' : undefined,
+								background: isSelected ? '#e7e7e7' : undefined
 							}}
 						>
 							{item.label}

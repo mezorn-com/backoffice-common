@@ -1,18 +1,18 @@
 import ActionButton, {
-	type ActionButtonProps,
+	type ActionButtonProps
 } from '@/backoffice-common/components/common/action-button';
 import type { ITableInteraction } from '@/backoffice-common/components/table/types';
 import type { IListResponse } from '@/backoffice-common/types/api';
 import type {
 	BulkAction,
-	IListMetaResponse,
+	IListMetaResponse
 } from '@/backoffice-common/types/api/meta';
 import type { IListState } from '@/backoffice-common/types/common/list';
 import type { INormalField, IVisibility } from '@/backoffice-common/types/form';
 import {
 	formatColumns,
 	getMeta,
-	replacePathParameters,
+	replacePathParameters
 } from '@/backoffice-common/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import axios from 'axios';
@@ -91,7 +91,7 @@ const initialState: IListState = {
 	filter: undefined,
 	listResponse: undefined,
 	bulkItemActions: undefined,
-	selectedRows: [],
+	selectedRows: []
 };
 
 interface IBaseListParams {
@@ -155,8 +155,8 @@ const useListPage = ({ apiRoute }: IConfig) => {
 					listItemActions: response.listItemActions,
 					subResources: response.subResources ?? [],
 					filter: response.filter,
-					bulkItemActions: response.bulkItemActions,
-				},
+					bulkItemActions: response.bulkItemActions
+				}
 			});
 		};
 		void fetchColumns();
@@ -166,7 +166,7 @@ const useListPage = ({ apiRoute }: IConfig) => {
 	const fetchData = async (params?: Partial<IBaseListParams>) => {
 		const { data } = await axios.post<IListResponse>(
 			`${apiRoute}/list`,
-			params,
+			params
 		);
 
 		dispatch({
@@ -177,8 +177,8 @@ const useListPage = ({ apiRoute }: IConfig) => {
 				totalPage: data.data.totalPage,
 				limit: data.data.limit,
 				total: data.data.total,
-				listResponse: data.data,
-			},
+				listResponse: data.data
+			}
 		});
 	};
 
@@ -193,17 +193,17 @@ const useListPage = ({ apiRoute }: IConfig) => {
 					action: {
 						condition: subResource.condition,
 						label: subResource.label,
-						icon: subResource.icon,
+						icon: subResource.icon
 					},
 					actionKey: subResourceKey,
 					onClick(row) {
 						if (row) {
 							navigate(
-								replacePathParameters(subResourceKey, row),
+								replacePathParameters(subResourceKey, row)
 							);
 						}
 					},
-					callback: fetchData,
+					callback: fetchData
 				});
 			}
 		}
@@ -215,7 +215,7 @@ const useListPage = ({ apiRoute }: IConfig) => {
 					rowActionButtonList.push({
 						action,
 						actionKey: listItemActionKey,
-						callback: fetchData,
+						callback: fetchData
 					});
 				}
 			}
@@ -227,12 +227,12 @@ const useListPage = ({ apiRoute }: IConfig) => {
 		const { state: payloadState } = payload;
 		dispatch({
 			type: 'HANDLE_TABLE_INTERACT',
-			payload: payload,
+			payload: payload
 		});
 		void fetchData({
 			page: payloadState.page,
 			limit: payloadState.pageSize,
-			filter: payload.filter,
+			filter: payload.filter
 		});
 	};
 
@@ -250,7 +250,7 @@ const useListPage = ({ apiRoute }: IConfig) => {
 							actionKey={listActionKey}
 							action={listAction}
 							callback={fetchData}
-						/>,
+						/>
 					);
 				}
 			}
@@ -265,7 +265,7 @@ const useListPage = ({ apiRoute }: IConfig) => {
 		handleInteract,
 		fetchData,
 		rowActionButtons,
-		listActionButtons,
+		listActionButtons
 	};
 };
 

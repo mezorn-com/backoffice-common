@@ -9,6 +9,6 @@ export const buttonize = (handler: Function) => {
 			if (event.key === 'Enter' || event.key === ' ') {
 				handler();
 			}
-		},
+		}
 	} as const;
 };

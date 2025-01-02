@@ -11,7 +11,7 @@ import { MapHelper } from './MapHelper';
 // const INITIAL_LOCATION: LatLngTuple = [47.9189, 106.9176];
 const INITIAL_LOCATION: LatLngLiteral = {
 	lat: 47.9189,
-	lng: 106.9176,
+	lng: 106.9176
 };
 
 interface LocationProps {
@@ -25,11 +25,11 @@ const Location = ({
 	value,
 	onSave,
 	label,
-	withAsterisk = false,
+	withAsterisk = false
 }: LocationProps) => {
 	const [open, setOpen] = React.useState(false);
 	const [location, setLocation] = React.useState<LatLngLiteral | undefined>(
-		undefined,
+		undefined
 	);
 
 	const handleClose = () => {

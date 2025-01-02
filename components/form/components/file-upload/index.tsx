@@ -12,7 +12,7 @@ const IMAGE_MIME_TYPES = [
 	'image/jpeg',
 	'image/svg+xml',
 	'image/webp',
-	'image/avif',
+	'image/avif'
 ];
 
 const FileUpload = ({ value, ...props }: FileUploadProps) => {

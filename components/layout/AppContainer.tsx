@@ -19,7 +19,7 @@ const AppContainer = ({ children }: AppContainerProps) => {
 			navbar={{
 				width: 300,
 				breakpoint: 'sm',
-				collapsed: { mobile: !opened },
+				collapsed: { mobile: !opened }
 			}}
 			classNames={{ main: classes.main }}
 		>

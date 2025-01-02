@@ -28,15 +28,15 @@ const FormRTE = ({ field, onChange, value }: IProps) => {
 							{ list: 'ordered' },
 							{ list: 'bullet' },
 							{ indent: '-1' },
-							{ indent: '+1' },
+							{ indent: '+1' }
 						],
 						['link', 'image', 'video'],
-						['clean'],
+						['clean']
 					],
 					clipboard: {
 						// toggle to add extra line breaks when pasting HTML:
-						matchVisual: false,
-					},
+						matchVisual: false
+					}
 				}}
 				formats={[
 					'header',
@@ -52,7 +52,7 @@ const FormRTE = ({ field, onChange, value }: IProps) => {
 					'indent',
 					'link',
 					'image',
-					'video',
+					'video'
 				]}
 			/>
 		</>

@@ -3,7 +3,7 @@ import type { MetaType } from '@/backoffice-common/types/api/meta';
 import {
 	FieldType,
 	type IFormField,
-	type RenderField,
+	type RenderField
 } from '@/backoffice-common/types/form';
 import type { IStringReplacer } from '@/backoffice-common/types/utils';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -14,11 +14,11 @@ import { clone, isEmpty } from 'ramda';
 export const getMeta = async <T>(
 	url: string,
 	action: MetaType,
-	queryParams?: Record<string, string>,
+	queryParams?: Record<string, string>
 ): Promise<T> => {
 	const queryParameters = qs.stringify(queryParams);
 	const { data } = await axios.get<IResponse<T>>(
-		`${url}/meta?action=${action}&${queryParameters}`,
+		`${url}/meta?action=${action}&${queryParameters}`
 	);
 	return data.data;
 };
@@ -28,7 +28,7 @@ export const isRenderField = (field: IFormField): field is RenderField => {
 };
 
 export const formatColumns = (
-	fields: IFormField[],
+	fields: IFormField[]
 ): ColumnDef<Record<string, unknown>>[] => {
 	const formattedColumns: ColumnDef<Record<string, unknown>>[] = [];
 	for (const field of fields) {
@@ -37,8 +37,8 @@ export const formatColumns = (
 				accessorKey: field.key,
 				header: field.label,
 				meta: {
-					field,
-				},
+					field
+				}
 			};
 			formattedColumns.push(tableColumn);
 		}
@@ -48,7 +48,7 @@ export const formatColumns = (
 
 export const replaceString = (
 	string: string,
-	pattern: IStringReplacer[],
+	pattern: IStringReplacer[]
 ): string => {
 	let result = string;
 	for (const item of pattern) {
@@ -59,7 +59,7 @@ export const replaceString = (
 
 export const combineURL = (
 	url: string,
-	parameters: Record<string, unknown>,
+	parameters: Record<string, unknown>
 ): string => {
 	if (isEmpty(parameters)) {
 		return url;
@@ -92,7 +92,7 @@ export const getArrayObjectByProp = (
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
 	array: Record<any, any>[],
 	key: string,
-	propertyKey = 'key',
+	propertyKey = 'key'
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
 ): Record<any, any> | undefined => {
 	const arrayClone = clone(array);
@@ -102,7 +102,7 @@ export const getArrayObjectByProp = (
 export const replacePathParameters = (
 	url: string,
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
-	object: Record<string, any>,
+	object: Record<string, any>
 ) => {
 	const re = /\{([^}]+)\}/g;
 	const result = url.replace(re, (completeMatch, match) => {

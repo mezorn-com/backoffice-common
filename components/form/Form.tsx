@@ -2,7 +2,7 @@ import type { IMapAddressValue } from '@/backoffice-common/components/form/compo
 import {
 	FieldType,
 	type IFormField,
-	UiType,
+	UiType
 } from '@/backoffice-common/types/form';
 import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
 import {
@@ -19,13 +19,13 @@ import {
 	Select,
 	TextInput,
 	Textarea,
-	Title,
+	Title
 } from '@mantine/core';
 import {
 	DatePickerInput,
 	DateTimePicker,
 	TimeInput,
-	YearPickerInput,
+	YearPickerInput
 } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { randomId } from '@mantine/hooks';
@@ -43,7 +43,7 @@ import {
 	FormRTE,
 	Location,
 	MapAddressPicker,
-	SearchableSelect,
+	SearchableSelect
 } from './components';
 import {
 	type IFormValues,
@@ -55,7 +55,7 @@ import {
 	isFieldRequired,
 	isFieldVisible,
 	transformValuesAsync,
-	validator,
+	validator
 } from './helper';
 
 // TODO: code splitting
@@ -71,7 +71,7 @@ interface IFormProps {
 	onChange?: (value: IFormValues) => void;
 	direction?: React.CSSProperties['flexDirection'];
 	getFetchParams?: (
-		currentParams: Record<string, unknown>,
+		currentParams: Record<string, unknown>
 	) => Record<string, unknown>;
 }
 
@@ -83,7 +83,7 @@ const Form = ({
 	submitButtonProps,
 	onChange,
 	direction = 'column',
-	getFetchParams,
+	getFetchParams
 }: IFormProps) => {
 	const { t } = useTranslation();
 	const { pathname } = useLocation();
@@ -93,7 +93,7 @@ const Form = ({
 		// transformValues,
 		validate(values) {
 			return validator(fields, values);
-		},
+		}
 		// onValuesChange: onChange
 	});
 
@@ -112,7 +112,7 @@ const Form = ({
 		console.log('Form Error>>>', {
 			validationErrors,
 			_values: _values,
-			_event: _event,
+			_event: _event
 		});
 	};
 
@@ -152,11 +152,11 @@ const Form = ({
 												const initialValue =
 													getFormInitialValues(
 														[fieldElement],
-														values,
+														values
 													);
 												form.insertListItem(
 													groupPath,
-													initialValue,
+													initialValue
 												);
 											}
 										}}
@@ -177,7 +177,7 @@ const Form = ({
 								{(
 									path(
 										getFormItemPathByKey(groupPath),
-										form.values,
+										form.values
 										// biome-ignore lint/suspicious/noExplicitAny: TODO: Change
 									) as any[]
 								).map(
@@ -187,7 +187,7 @@ const Form = ({
 										index: number,
 										// biome-ignore lint/suspicious/noExplicitAny: TODO: Change
 										// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
-										array: any[],
+										array: any[]
 									) => {
 										const elementPath =
 											groupPath + SEPARATOR + index;
@@ -214,7 +214,7 @@ const Form = ({
 															onClick={() => {
 																form.removeListItem(
 																	groupPath,
-																	index,
+																	index
 																);
 															}}
 															size='sm'
@@ -234,7 +234,7 @@ const Form = ({
 												</Card.Section>
 											</Card>
 										);
-									},
+									}
 								)}
 							</Card.Section>
 						</Card>
@@ -304,8 +304,8 @@ const Form = ({
 			autoComplete: 'off',
 			withAsterisk: isFieldRequired(field, fields, form.values),
 			...form.getInputProps(valueKey, {
-				type: field.uiType === UiType.CHECKBOX ? 'checkbox' : 'input',
-			}),
+				type: field.uiType === UiType.CHECKBOX ? 'checkbox' : 'input'
+			})
 		};
 		switch (field.uiType) {
 			case UiType.TEXT_INPUT: {
@@ -316,8 +316,8 @@ const Form = ({
 							placeholder={props.label}
 							styles={{
 								label: {
-									display: 'none',
-								},
+									display: 'none'
+								}
 							}}
 							autoComplete='new-password'
 						/>
@@ -330,8 +330,8 @@ const Form = ({
 							placeholder={props.label}
 							styles={{
 								label: {
-									display: 'none',
-								},
+									display: 'none'
+								}
 							}}
 							autosize
 							minRows={2}
@@ -346,8 +346,8 @@ const Form = ({
 							placeholder={props.label}
 							styles={{
 								label: {
-									display: 'none',
-								},
+									display: 'none'
+								}
 							}}
 							autoComplete='off'
 							precision={10}
@@ -361,8 +361,8 @@ const Form = ({
 						placeholder={props.label}
 						styles={{
 							label: {
-								display: 'none',
-							},
+								display: 'none'
+							}
 						}}
 						autoComplete='off'
 						onChange={event => {
@@ -385,7 +385,7 @@ const Form = ({
 						[]) {
 						params[queryParamKey] = getFormValueByKey(
 							queryParamKey,
-							form.values,
+							form.values
 						);
 					}
 
@@ -398,7 +398,7 @@ const Form = ({
 						field.optionsApi?.uri,
 						getFetchParams
 							? mergeDeepLeft(params, getFetchParams(params))
-							: params,
+							: params
 					);
 					return (
 						<FetchSelect
@@ -436,8 +436,8 @@ const Form = ({
 							placeholder={props.label}
 							styles={{
 								label: {
-									display: 'none',
-								},
+									display: 'none'
+								}
 							}}
 							data={formatSelectValue(field.options)}
 						/>
@@ -634,7 +634,7 @@ const FormWrapper = (props: IFormProps) => {
 	const { key, fields } = React.useMemo(() => {
 		return {
 			key: randomId(),
-			fields: props.fields,
+			fields: props.fields
 			// fields: refactorFields(props.fields)
 		};
 	}, [props.fields, props.values]);

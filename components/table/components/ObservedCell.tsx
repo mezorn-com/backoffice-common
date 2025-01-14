@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import * as React from 'react';
+
 import { TableContext } from '../context';
 import { RowGroup } from '../types';
 import { COLUMN_UID_ATTR, ROW_GROUP_UID_ATTR, ROW_UID_ATTR } from '../utils';
@@ -25,7 +26,7 @@ const ObservedCell = ({
 		if (columnObserver && ref.current) {
 			columnObserver.observe(ref.current);
 		}
-	}, [columnObserver]);
+	}, [ columnObserver ]);
 
 	const attributes = React.useMemo(() => {
 		return {
@@ -33,7 +34,7 @@ const ObservedCell = ({
 			[ROW_UID_ATTR]: rowId,
 			[ROW_GROUP_UID_ATTR]: rowGroup
 		};
-	}, [columnId, rowId, rowGroup]);
+	}, [ columnId, rowId, rowGroup ]);
 
 	return (
 		<div {...attributes} className={classes.container}>

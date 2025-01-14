@@ -17,9 +17,9 @@ export const usePathParameter = (): PathParameters => {
 		if (urlParts[1]) {
 			if (urlParts.length >= 3) {
 				if (urlParts.length === 3 && pathname.endsWith('edit')) {
-					/***
+					/**
                      /page/6493dc489c8ff670f045a20azd3/edit
-                     ***/
+                     */
 					return {
 						_id: urlParts[1]
 					};
@@ -29,14 +29,14 @@ export const usePathParameter = (): PathParameters => {
 					_id: urlParts?.[3]
 				};
 			}
-			/***
+			/**
              /page/6493dc489c8ff670f045a20azd3
-             ***/
+             */
 			return {
 				_id: urlParts[1]
 			};
 		}
 
 		return {};
-	}, [pathname]);
+	}, [ pathname ]);
 };

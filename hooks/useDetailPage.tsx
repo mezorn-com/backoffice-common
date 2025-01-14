@@ -1,3 +1,7 @@
+import axios from 'axios';
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import ActionButton from '@/backoffice-common/components/common/action-button';
 import { usePathParameter } from '@/backoffice-common/hooks/usePathParameter';
 import type { IResponse } from '@/backoffice-common/types/api';
@@ -9,9 +13,6 @@ import type {
 } from '@/backoffice-common/types/api/meta';
 import type { IFormField } from '@/backoffice-common/types/form';
 import { getMeta, replacePathParameters } from '@/backoffice-common/utils';
-import axios from 'axios';
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface IConfig {
 	apiRoute: string;
@@ -22,13 +23,14 @@ export interface IDetailPageState {
 	title: string;
 	details: IFormField[];
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix later
+	// eslint-disable-next-line
 	values: Record<string, any>;
 	subResources?: SubResources;
 	actions?: Record<MetaType | string, ItemAction>;
 }
 
 const useDetailPage = ({ apiRoute, id }: IConfig) => {
-	const [state, setState] = React.useState<IDetailPageState>({
+	const [ state, setState ] = React.useState<IDetailPageState>({
 		title: '',
 		details: [],
 		subResources: undefined,
@@ -60,6 +62,7 @@ const useDetailPage = ({ apiRoute, id }: IConfig) => {
 	const fetchDetails = async () => {
 		const { data: formValuesResponse } = await axios.get<
 			// biome-ignore lint/suspicious/noExplicitAny: TODO: Use generic type
+			// eslint-disable-next-line
 			IResponse<Record<string, any>>
 		>(`${apiRoute}/${id}`);
 		setState(prev => ({

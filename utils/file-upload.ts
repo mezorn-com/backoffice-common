@@ -1,8 +1,9 @@
+import axios from 'axios';
+import qs from 'qs';
+
 import type { IFileUploadResponse } from '@/backoffice-common/types/api';
 import { API_UPLOAD_URL } from '@/config';
 import useStore from '@/store';
-import axios from 'axios';
-import qs from 'qs';
 
 interface IFileUploaderConfig {
 	useFileName: boolean;
@@ -120,10 +121,10 @@ export const uploadFileNormally = async (
 		}
 		return response?.data?.result?.[0]?.fileUrl ?? undefined;
 		// resolve(response?.data?.result?.[0]?.fileUrl ?? undefined);
-	} catch (e) {
-		if (e instanceof Error) {
-			console.log('File Upload Error: ', e.message);
-			throw e;
+	} catch (err) {
+		if (err instanceof Error) {
+			console.log('File Upload Error: ', err.message);
+			throw err;
 			// reject();
 		}
 	}
@@ -172,10 +173,10 @@ export const uploadWithSignedURL = async (
 		}
 		throw new Error('File upload error');
 		// reject();
-	} catch (e) {
-		if (e instanceof Error) {
-			console.log('Upload with Signed URL error: ', e.message);
-			throw e;
+	} catch (err) {
+		if (err instanceof Error) {
+			console.log('Upload with Signed URL error: ', err.message);
+			throw err;
 			// reject();
 		}
 	}

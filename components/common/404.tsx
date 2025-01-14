@@ -1,6 +1,7 @@
 import { Button } from '@mantine/core';
 import { IconHome } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+
 import classes from './404.module.scss';
 
 const NotFound = () => {

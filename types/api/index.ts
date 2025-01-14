@@ -15,10 +15,10 @@ export interface IListResponseData<T = Record<string, unknown>> {
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: TODO: fix type
-export interface IListResponse<T = any>
-	extends IResponse<IListResponseData<T>> {}
+// eslint-disable-next-line
+export interface IListResponse<T = any> extends IResponse<IListResponseData<T>> {}
 
-export interface IFormSubmitResponse extends IResponse<string> {}
+// export interface IFormSubmitResponse extends IResponse<string> {}
 
 export type ResourceAction =
 	| 'create'
@@ -43,6 +43,7 @@ export interface IReference {
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
+// eslint-disable-next-line
 export interface IReferenceListResponse extends IResponse<any> {
 	data: IReferenceListData;
 }
@@ -65,6 +66,7 @@ interface FileUploadResult {
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: TODO: use type
+// eslint-disable-next-line
 export interface IFileUploadResponse extends IResponse<any> {
 	status: string;
 	result: FileUploadResult[];

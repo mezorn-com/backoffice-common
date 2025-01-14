@@ -1,6 +1,7 @@
-import { GOOGLE_MAP_KEY } from '@/config';
 import { LayersControl } from 'react-leaflet';
 import ReactLeafletGoogleLayer from 'react-leaflet-google-layer';
+
+import { GOOGLE_MAP_KEY } from '@/config';
 
 const { BaseLayer } = LayersControl;
 

@@ -20,8 +20,8 @@ const CascadingSelect = ({
 	...props
 }: CascadingSelectProps) => {
 	const indexRef = useRef<number | null>(null);
-	const [data, setData] = useState<IReference[][]>([]);
-	const [values, setValues] = useState<(string | null)[]>([]);
+	const [ data, setData ] = useState<IReference[][]>([]);
+	const [ values, setValues ] = useState<(string | null)[]>([]);
 
 	useEffect(() => {
 		void getReference();
@@ -83,7 +83,7 @@ const CascadingSelect = ({
 
 	const renderSelect = (): ReactNode => {
 		const selects: ReactNode[] = [];
-		for (const [index, datum] of data.entries()) {
+		for (const [ index, datum ] of data.entries()) {
 			const key = `${refCode}-${index}`;
 			selects.push(
 				<Select

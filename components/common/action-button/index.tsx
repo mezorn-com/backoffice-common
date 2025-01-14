@@ -1,3 +1,12 @@
+import { ActionIcon, Button, Drawer, useMantineTheme } from '@mantine/core';
+import type { OpenConfirmModal } from '@mantine/modals/lib/context';
+import { IconList, type TablerIconsProps } from '@tabler/icons-react';
+import axios from 'axios';
+import { last } from 'ramda';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import Form from '@/backoffice-common/components/form/Form';
 import { useConfirmModal, usePathParameter } from '@/backoffice-common/hooks';
 import { showMessage } from '@/backoffice-common/lib/notification';
@@ -10,14 +19,6 @@ import type {
 import { replacePathParameters } from '@/backoffice-common/utils';
 import { actionColors } from '@/backoffice-common/utils/styles';
 import * as icons from '@/lib/icons/common';
-import { ActionIcon, Button, Drawer, useMantineTheme } from '@mantine/core';
-import type { OpenConfirmModal } from '@mantine/modals/lib/context';
-import { IconList, type TablerIconsProps } from '@tabler/icons-react';
-import axios from 'axios';
-import { last } from 'ramda';
-import * as React from 'react';
-import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 export interface ActionButtonProps {
 	data?: Record<string, unknown>;
@@ -45,7 +46,7 @@ const ActionButton = ({
 	const pathParameter = usePathParameter();
 	const confirmModal = useConfirmModal();
 
-	const [showDrawer, setShowDrawer] = React.useState(false);
+	const [ showDrawer, setShowDrawer ] = React.useState(false);
 
 	const primaryShade: number =
 		typeof theme.primaryShade !== 'number'
@@ -197,27 +198,29 @@ const ActionButton = ({
 					if (responseData.success) {
 						showMessage(t('success', { ns: 'common' }), 'green');
 						setShowDrawer(false);
-						action.refresh && callback?.();
+						if (action.refresh) {
+							callback?.();
+						}
 					}
 				}
 			};
 		}
 		const handler = onClick
 			? () => {
-					onClick(data);
-				}
+				onClick(data);
+			}
 			: (formValues?: Record<string, unknown>) => {
-					if (confirm) {
-						confirmModal({
-							...confirm,
-							onConfirm() {
-								actionFn?.(formValues);
-							}
-						});
-					} else {
-						actionFn?.(formValues);
-					}
-				};
+				if (confirm) {
+					confirmModal({
+						...confirm,
+						onConfirm() {
+							actionFn?.(formValues);
+						}
+					});
+				} else {
+					actionFn?.(formValues);
+				}
+			};
 		return {
 			icon,
 			label,
@@ -241,9 +244,9 @@ const ActionButton = ({
 	let Icon: ((props: TablerIconsProps) => JSX.Element) | undefined =
 		undefined;
 	if (icon) {
-		// @ts-expect-error
+		// @ts-expect-error using icon dynamically
 		if (icons?.[`Icon${icon}`]) {
-			// @ts-expect-error
+			// @ts-expect-error using icon dynamically
 			Icon = icon ? icons?.[`Icon${icon}`] : undefined;
 		} else {
 			console.warn(`Icon not found: ${icon}`);
@@ -347,24 +350,22 @@ const ActionButton = ({
 	return (
 		<>
 			{getButton()}
-			{
-				<Drawer
-					opened={showDrawer}
-					onClose={() => setShowDrawer(false)}
-					position='right'
-				>
-					{showDrawer && (
-						<Form
-							fields={
-								action === true
-									? []
-									: (action.api?.form?.fields ?? [])
-							}
-							onSubmit={handler}
-						/>
-					)}
-				</Drawer>
-			}
+			<Drawer
+				opened={showDrawer}
+				onClose={() => setShowDrawer(false)}
+				position='right'
+			>
+				{showDrawer && (
+					<Form
+						fields={
+							action === true
+								? []
+								: (action.api?.form?.fields ?? [])
+						}
+						onSubmit={handler}
+					/>
+				)}
+			</Drawer>
 		</>
 	);
 };

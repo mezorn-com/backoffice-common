@@ -1,8 +1,9 @@
+import { Drawer } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
+
 import Form from '@/backoffice-common/components/form/Form';
 import { useConfirmModal } from '@/backoffice-common/hooks';
 import type { BulkAction } from '@/backoffice-common/types/api/meta';
-import { Drawer } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
 
 interface BulkActionModalProps {
 	onClose: () => void;

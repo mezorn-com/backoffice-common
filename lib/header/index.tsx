@@ -1,4 +1,3 @@
-import { APP_NAME } from '@/config';
 import {
 	AppShell,
 	Burger,
@@ -9,6 +8,9 @@ import {
 } from '@mantine/core';
 import type { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { APP_NAME } from '@/config';
+
 import useStore from '../../../store';
 import classes from './Header.module.scss';
 
@@ -35,7 +37,7 @@ const Header = ({ opened, setOpened }: IHeaderProps) => {
 				<div className={classes.burger}>
 					<Burger
 						opened={!opened}
-						onClick={() => setOpened(o => !o)}
+						onClick={() => setOpened(prev => !prev)}
 						size='sm'
 						color={theme.colors.gray[6]}
 						mr='xl'

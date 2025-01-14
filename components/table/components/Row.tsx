@@ -1,6 +1,7 @@
 import { useForceUpdate } from '@mantine/hooks';
 import { clsx } from 'clsx';
 import * as React from 'react';
+
 import { TableContext } from '../context';
 import { RowGroup } from '../types';
 import { ROW_UID_ATTR } from '../utils';
@@ -23,7 +24,7 @@ const TableRow = ({ children, rowId, rowGroup, rowIndex }: TableRowProps) => {
 		if (rowRef.current) {
 			forceUpdate();
 		}
-	}, [rowRef.current]);
+	}, [ rowRef.current ]);
 
 	const renderCell = () => {
 		if (!rowRef.current) {

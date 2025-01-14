@@ -1,10 +1,12 @@
-import type { IReferenceListResponse } from '@/backoffice-common/types/api';
 import axios from 'axios';
+
+import type { IReferenceListResponse } from '@/backoffice-common/types/api';
 
 export default async function fetchReference(
 	refCode: string,
 	parent?: string
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
+	// eslint-disable-next-line
 ): Promise<any[]> {
 	const params = {
 		filter: {

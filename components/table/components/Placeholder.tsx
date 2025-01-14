@@ -1,4 +1,5 @@
 import { IconFileX } from '@tabler/icons-react';
+
 import classes from './Placeholder.module.scss';
 
 const Placeholder = () => {

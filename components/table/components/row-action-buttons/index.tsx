@@ -1,9 +1,11 @@
-import ActionButton, {
-	type ActionButtonProps
-} from '@/backoffice-common/components/common/action-button';
 import { ActionIcon, Menu } from '@mantine/core';
 import { IconDots } from '@tabler/icons-react';
 import type { Row } from '@tanstack/react-table';
+
+import ActionButton, {
+	type ActionButtonProps
+} from '@/backoffice-common/components/common/action-button';
+
 import classes from './RowActionButton.module.scss';
 
 interface RowActionButtonsProps {

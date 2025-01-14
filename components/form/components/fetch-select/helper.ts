@@ -11,7 +11,7 @@ export const getTransformedValue = (
 		if (Array.isArray(value)) {
 			return value;
 		}
-		return [value];
+		return [ value ];
 	}
 	if (Array.isArray(value)) {
 		return value?.[0] ?? null;

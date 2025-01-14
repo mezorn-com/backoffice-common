@@ -1,9 +1,10 @@
+import axios, { type RawAxiosRequestHeaders } from 'axios';
+
 import { showMessage } from '@/backoffice-common/lib/notification';
 import { API_URL } from '@/config';
 import { getConfig } from '@/config/interceptor-config';
 import useStore from '@/store';
-import axios from 'axios';
-import type { RawAxiosRequestHeaders } from 'axios';
+
 import i18n from '../../config/i18n';
 
 const { t, language } = i18n;
@@ -16,9 +17,11 @@ declare module 'axios' {
 }
 
 axios.interceptors.request.use(config => {
-	!config.silent && useStore.setState({ loading: true });
+	if (!config.silent) {
+		useStore.setState({ loading: true });
+	}
 	const state = useStore.getState();
-	// @ts-ignore
+	// @ts-expect-error TODO: declare type
 	config.headers = {
 		'Content-Type': 'application/json',
 		'Accept-Language': language,
@@ -40,7 +43,9 @@ axios.interceptors.request.use(config => {
 
 axios.interceptors.response.use(
 	res => {
-		!res?.config?.silent && useStore.setState({ loading: false });
+		if (!res?.config?.silent) {
+			useStore.setState({ loading: false });
+		}
 		return res;
 	},
 	error => {

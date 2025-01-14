@@ -10,6 +10,7 @@ import {
 	IconChevronsLeft,
 	IconChevronsRight
 } from '@tabler/icons-react';
+
 import classes from './Pagination.module.scss';
 
 interface TablePaginationProps {
@@ -49,8 +50,7 @@ const TablePagination = ({
 			<div>
 				{total !== undefined && (
 					<div className={classes.total}>
-						Нийт:&nbsp;
-						<span>{total}</span>
+						Нийт:&nbsp; <span>{total}</span>
 					</div>
 				)}
 			</div>

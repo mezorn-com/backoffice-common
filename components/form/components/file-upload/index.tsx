@@ -1,5 +1,6 @@
 import { FileInput, type FileInputProps, Image } from '@mantine/core';
 import type { ReactNode } from 'react';
+
 import classes from './FileUpload.module.scss';
 
 interface FileUploadProps extends Omit<FileInputProps, 'value'> {

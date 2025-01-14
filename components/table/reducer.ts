@@ -1,5 +1,6 @@
-import type { BulkAction } from '@/backoffice-common/types/api/meta';
 import { produce } from 'immer';
+
+import type { BulkAction } from '@/backoffice-common/types/api/meta';
 
 interface ITableState {
 	filter: Record<string, unknown>;

@@ -1,3 +1,7 @@
+import { Anchor, Stack } from '@mantine/core';
+import { IconCircleCheckFilled, IconCircleXFilled } from '@tabler/icons-react';
+import type { ReactNode } from 'react';
+
 import ImagePreview from '@/backoffice-common/components/common/image-preview';
 import {
 	FieldType,
@@ -5,15 +9,13 @@ import {
 	RenderType
 } from '@/backoffice-common/types/form';
 import { replacePathParameters } from '@/backoffice-common/utils';
-import { Anchor, Stack } from '@mantine/core';
-import { IconCircleCheckFilled, IconCircleXFilled } from '@tabler/icons-react';
-import type { ReactNode } from 'react';
 
 export const useRenderField = () => {
 	return (
 		field: IFormField,
 		value: unknown,
 		// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
+		// eslint-disable-next-line
 		data: Record<string, any>
 	): ReactNode => {
 		if (field.type !== FieldType.RENDER) {
@@ -136,7 +138,7 @@ export const useRenderField = () => {
 				);
 			}
 			default: {
-				// @ts-expect-error
+				// @ts-expect-error happens rarely
 				console.warn(`Unknown render type "${field.renderType}"`);
 				return '-';
 			}

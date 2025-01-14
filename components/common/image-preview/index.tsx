@@ -1,6 +1,7 @@
 import { Image, Overlay } from '@mantine/core';
 import { IconEye } from '@tabler/icons-react';
 import * as React from 'react';
+
 import classes from './ImagePreview.module.scss';
 
 interface IImagePreviewProps {
@@ -40,7 +41,7 @@ const ImagePreview: React.FC<IImagePreviewProps> = ({
 	radius,
 	previewRadius
 }) => {
-	const [visible, setVisible] = React.useState(false);
+	const [ visible, setVisible ] = React.useState(false);
 
 	const toggleOverlay = () => {
 		setVisible(prev => !prev);
@@ -72,7 +73,12 @@ const ImagePreview: React.FC<IImagePreviewProps> = ({
 			</div>
 
 			{visible && (
-				<Overlay onClick={toggleOverlay} fixed={true} blur={15} center>
+				<Overlay
+					onClick={toggleOverlay}
+					fixed
+					blur={15}
+					center
+				>
 					<Image
 						radius={previewRadius || 0}
 						className={previewClassName}

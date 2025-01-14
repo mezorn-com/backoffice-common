@@ -1,7 +1,8 @@
-import type { IStringReplacer } from '@/backoffice-common/types/utils';
-import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+
+import type { IStringReplacer } from '@/backoffice-common/types/utils';
+import { getSubResourceUrl } from '@/backoffice-common/utils/route';
 
 interface IConfig {
 	apiRoute: string;
@@ -27,7 +28,7 @@ const useRoute = ({ apiRoute }: IConfig) => {
 			}
 		}
 		return getSubResourceUrl(apiRoute, array);
-	}, [params, apiRoute]);
+	}, [ params, apiRoute ]);
 
 	const routes = {
 		new: `${pathname}${pathname.endsWith('/') ? '' : '/'}new`

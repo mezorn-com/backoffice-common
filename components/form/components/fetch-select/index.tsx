@@ -1,13 +1,15 @@
+import { type ComboboxItem, Loader, MultiSelect, Select } from '@mantine/core';
+import type { GetInputProps } from '@mantine/form/lib/types';
+import axios from 'axios';
+import * as React from 'react';
+
 import type {
 	IReference,
 	IResponse,
 	ISelectOption
 } from '@/backoffice-common/types/api';
-import { type ComboboxItem, Loader, MultiSelect, Select } from '@mantine/core';
-import type { GetInputProps } from '@mantine/form/lib/types';
-import axios from 'axios';
-import * as React from 'react';
-import { type SelectValue, getTransformedValue } from './helper';
+
+import { getTransformedValue, type SelectValue } from './helper';
 
 interface CommonProps {
 	multiple?: boolean;
@@ -26,10 +28,13 @@ type IURIFetchSelect = Omit<
 
 type IRefCodeFetchSelect = Omit<
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
+	// eslint-disable TODO: Fix type
+	// eslint-disable-next-line
 	ReturnType<GetInputProps<any>>,
 	'onChange' | 'value'
 > & {
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
+	// eslint-disable-next-line
 	fetchReference?: (code: string, parent?: string) => Promise<any[]>;
 	refCode: string;
 	uri: undefined;
@@ -47,8 +52,8 @@ const FetchSelect = ({
 	...props
 }: Props) => {
 	const isFetchedRef = React.useRef<boolean | string>(false);
-	const [options, setOptions] = React.useState<ComboboxItem[]>([]);
-	const [isLoading, setIsLoading] = React.useState<boolean>(false);
+	const [ options, setOptions ] = React.useState<ComboboxItem[]>([]);
+	const [ isLoading, setIsLoading ] = React.useState<boolean>(false);
 
 	React.useEffect(() => {
 		const fetchData = async () => {
@@ -66,8 +71,8 @@ const FetchSelect = ({
 							silent: true
 						});
 						setOptions(data.data ?? []);
-					} catch (e) {
-						console.log('Fetch Select Error: ', e);
+					} catch (err) {
+						console.log('Fetch Select Error: ', err);
 					} finally {
 						setIsLoading(false);
 					}
@@ -93,7 +98,7 @@ const FetchSelect = ({
 			}
 		};
 		void fetchData();
-	}, [uri, fetchReference, refCode]);
+	}, [ uri, fetchReference, refCode ]);
 
 	const handleChange = (value: SelectValue) => {
 		props?.onChange?.(getTransformedValue(value, multiple));

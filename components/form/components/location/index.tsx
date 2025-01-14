@@ -1,10 +1,12 @@
-import { FormLabel } from '@/backoffice-common/components/form/components';
-import GoogleLayer from '@/backoffice-common/components/map/GoogleLayer';
 import { Button, Modal } from '@mantine/core';
 import { IconMapPin } from '@tabler/icons-react';
 import type { LatLngLiteral } from 'leaflet';
 import * as React from 'react';
 import { MapContainer } from 'react-leaflet';
+
+import { FormLabel } from '@/backoffice-common/components/form/components';
+import GoogleLayer from '@/backoffice-common/components/map/GoogleLayer';
+
 import classes from './Location.module.scss';
 import { MapHelper } from './MapHelper';
 
@@ -27,8 +29,8 @@ const Location = ({
 	label,
 	withAsterisk = false
 }: LocationProps) => {
-	const [open, setOpen] = React.useState(false);
-	const [location, setLocation] = React.useState<LatLngLiteral | undefined>(
+	const [ open, setOpen ] = React.useState(false);
+	const [ location, setLocation ] = React.useState<LatLngLiteral | undefined>(
 		undefined
 	);
 

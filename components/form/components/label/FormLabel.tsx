@@ -1,4 +1,5 @@
 import { Text, type TextProps } from '@mantine/core';
+
 import classes from './Label.module.scss';
 
 interface IProps extends TextProps {

@@ -5,14 +5,15 @@ import L, {
 } from 'leaflet';
 import * as React from 'react';
 import { Marker, useMapEvents } from 'react-leaflet';
+
 import markerIcon2x from './marker-icon-2x.png';
 import markerShadow from './marker-shadow.png';
 
 const icon = L.icon({
 	iconUrl: markerIcon2x,
 	shadowUrl: markerShadow,
-	iconSize: [25, 41],
-	iconAnchor: [12, 41]
+	iconSize: [ 25, 41 ],
+	iconAnchor: [ 12, 41 ]
 });
 
 interface LocationMapHelperProps {
@@ -29,8 +30,8 @@ const tupleToLiteral = (value: LatLngTuple): LatLngLiteral => {
 
 export const MapHelper = ({ location, onDrag }: LocationMapHelperProps) => {
 	useMapEvents({
-		drag(e) {
-			const center = e.target.getCenter() as LatLngExpression;
+		drag(evt) {
+			const center = evt.target.getCenter() as LatLngExpression;
 			if ('lat' in center && 'lng' in center) {
 				onDrag(center);
 			} else {

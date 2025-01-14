@@ -1,6 +1,8 @@
+import type { ColumnDef } from '@tanstack/react-table';
+
 import type { ITableState } from '@/backoffice-common/components/table/types';
 import type { INormalField } from '@/backoffice-common/types/form';
-import type { ColumnDef } from '@tanstack/react-table';
+
 import type { BulkAction, IListMetaResponse } from '../api/meta';
 
 export type ListDoc = Record<string, unknown>;

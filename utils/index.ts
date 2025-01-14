@@ -1,3 +1,8 @@
+import type { ColumnDef } from '@tanstack/react-table';
+import axios from 'axios';
+import qs from 'qs';
+import { clone, isEmpty } from 'ramda';
+
 import type { IResponse } from '@/backoffice-common/types/api';
 import type { MetaType } from '@/backoffice-common/types/api/meta';
 import {
@@ -6,10 +11,6 @@ import {
 	type RenderField
 } from '@/backoffice-common/types/form';
 import type { IStringReplacer } from '@/backoffice-common/types/utils';
-import type { ColumnDef } from '@tanstack/react-table';
-import axios from 'axios';
-import qs from 'qs';
-import { clone, isEmpty } from 'ramda';
 
 export const getMeta = async <T>(
 	url: string,
@@ -79,6 +80,7 @@ export const capitalize = (string: string) => {
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: TODO: Check later
+// eslint-disable-next-line
 export const isNumber = (n: any): boolean => {
 	return !Number.isNaN(Number.parseFloat(n)) && !Number.isNaN(n - 0);
 };
@@ -90,10 +92,12 @@ export const isUserInputNumber = (value: string): boolean => {
 
 export const getArrayObjectByProp = (
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
+	// eslint-disable-next-line
 	array: Record<any, any>[],
 	key: string,
 	propertyKey = 'key'
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
+	// eslint-disable-next-line
 ): Record<any, any> | undefined => {
 	const arrayClone = clone(array);
 	return arrayClone.find(item => item[propertyKey] === key);
@@ -102,6 +106,7 @@ export const getArrayObjectByProp = (
 export const replacePathParameters = (
 	url: string,
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
+	// eslint-disable-next-line
 	object: Record<string, any>
 ) => {
 	const re = /\{([^}]+)\}/g;

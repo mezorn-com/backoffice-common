@@ -1,9 +1,11 @@
-import * as icons from '@/lib/icons/common';
 import { Box, Collapse, Group, UnstyledButton } from '@mantine/core';
 import { IconChevronRight } from '@tabler/icons-react';
 import { clsx } from 'clsx';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import * as icons from '@/lib/icons/common';
+
 import classes from './NavbarItem.module.scss';
 
 interface IProps {
@@ -17,15 +19,15 @@ interface IProps {
 const NavbarItem = ({ children, label, path, icon, isActive }: IProps) => {
 	const hasLinks = !!children?.length;
 	const navigate = useNavigate();
-	const [opened, setOpened] = React.useState(false);
+	const [ opened, setOpened ] = React.useState(false);
 
 	React.useEffect(() => {
 		setOpened(!!isActive);
-	}, [isActive]);
+	}, [ isActive ]);
 
 	const handleClick = () => {
 		if (hasLinks) {
-			setOpened(o => !o);
+			setOpened(prev => !prev);
 		} else {
 			navigate(path ?? '/');
 		}
@@ -35,14 +37,14 @@ const NavbarItem = ({ children, label, path, icon, isActive }: IProps) => {
 		if (!icon) {
 			return null;
 		}
-		// @ts-expect-error
+		// @ts-expect-error using icon dynamically
 		const Icon = icons[`Icon${icon}`];
 		if (!Icon) {
 			console.warn(`Icon not found: ${icon}`);
 			return null;
 		}
 		return <Icon size='24px' stroke={1.5} style={{ flexShrink: 0 }} />;
-	}, [icon]);
+	}, [ icon ]);
 
 	return (
 		<div

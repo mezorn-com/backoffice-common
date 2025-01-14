@@ -17,10 +17,11 @@ const ChangePassword = ({ onClose, opened, onSubmit }: IProps) => {
 			confirmPassword: ''
 		},
 		validate: {
-			confirmPassword: (value, values) =>
+			confirmPassword: (value, values) => (
 				value !== values.password
 					? t('passwordDidNotMatch', { ns: 'auth' })
 					: null
+			)
 		},
 		validateInputOnChange: true
 	});

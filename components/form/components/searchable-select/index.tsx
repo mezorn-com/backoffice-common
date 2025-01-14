@@ -1,5 +1,3 @@
-import { FormLabel } from '@/backoffice-common/components/form/components';
-import type { IResponse } from '@/backoffice-common/types/api';
 import { ActionIcon, Button, Chip, Loader, Popover } from '@mantine/core';
 import { useDebouncedValue, useElementSize } from '@mantine/hooks';
 import { IconSearch, IconX } from '@tabler/icons-react';
@@ -7,6 +5,10 @@ import axios from 'axios';
 import qs from 'qs';
 import { clone } from 'ramda';
 import * as React from 'react';
+
+import { FormLabel } from '@/backoffice-common/components/form/components';
+import type { IResponse } from '@/backoffice-common/types/api';
+
 import classes from './SearchableSelect.module.scss';
 
 interface Option {
@@ -51,11 +53,11 @@ const SearchableSelect = ({
 	const { ref, width } = useElementSize();
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
-	const [searchValue, setSearchValue] = React.useState('');
-	const [debounced] = useDebouncedValue(searchValue, 500);
-	const [data, setData] = React.useState<Option[]>([]);
-	const [loading, setLoading] = React.useState(false);
-	const [selectedValue, setSelectedValue] = React.useState<null | Option[]>(
+	const [ searchValue, setSearchValue ] = React.useState('');
+	const [ debounced ] = useDebouncedValue(searchValue, 500);
+	const [ data, setData ] = React.useState<Option[]>([]);
+	const [ loading, setLoading ] = React.useState(false);
+	const [ selectedValue, setSelectedValue ] = React.useState<null | Option[]>(
 		null
 	);
 
@@ -71,11 +73,11 @@ const SearchableSelect = ({
 				setSelectedValue(value);
 				props.onChange(value.map(item => item.value));
 			} else if (isValueOption(props.value)) {
-				setSelectedValue([props.value]);
+				setSelectedValue([ props.value ]);
 				props.onChange(props.value.value);
 			}
 		}
-	}, [props.value, props.multiple, props.onChange]);
+	}, [ props.value, props.multiple, props.onChange ]);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: TODO: check later
 	React.useEffect(() => {
@@ -98,6 +100,8 @@ const SearchableSelect = ({
 						parsed = (responseData.data ?? []).map(parser);
 					} else {
 						// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
+						// eslint-disable TODO: Fix type
+						// eslint-disable-next-line
 						parsed = (responseData.data ?? []).map((item: any) => {
 							return {
 								value: item.value,
@@ -111,13 +115,13 @@ const SearchableSelect = ({
 				};
 				void fetchData();
 			}
-		} catch (e) {
-			if (e instanceof Error) {
-				console.log('ERR::', e.message);
+		} catch (err) {
+			if (err instanceof Error) {
+				console.log('ERR::', err.message);
 			}
 			setLoading(false);
 		}
-	}, [debounced]);
+	}, [ debounced ]);
 
 	const handleSelect = (item: Option) => {
 		let updatedValue: Option[] | null = clone(selectedValue);
@@ -125,10 +129,10 @@ const SearchableSelect = ({
 			if (updatedValue) {
 				updatedValue.push(item);
 			} else {
-				updatedValue = [item];
+				updatedValue = [ item ];
 			}
 		} else {
-			updatedValue = [item];
+			updatedValue = [ item ];
 		}
 
 		setSelectedValue(updatedValue);
@@ -151,6 +155,7 @@ const SearchableSelect = ({
 
 	const removeSelectedItem = (value: string) => {
 		const clonedValue = clone(selectedValue);
+		// eslint-disable-next-line
 		const index = (clonedValue ?? []).findIndex(v => v.value === value);
 		if (index > -1) {
 			clonedValue?.splice(index, 1);
@@ -192,17 +197,13 @@ const SearchableSelect = ({
 									key={option.value}
 									radius='md'
 									checked={false}
-									onClick={() =>
-										removeSelectedItem(option.value)
-									}
+									onClick={() => removeSelectedItem(option.value)}
 									size='xs'
 								>
 									{option.label}
 									<ActionIcon
 										size='xs'
-										onClick={() =>
-											removeSelectedItem(option.value)
-										}
+										onClick={() => removeSelectedItem(option.value)}
 									>
 										<IconX size={14} />
 									</ActionIcon>
@@ -213,9 +214,7 @@ const SearchableSelect = ({
 							className={classes.input}
 							ref={inputRef}
 							value={searchValue}
-							onChange={e =>
-								setSearchValue(e.currentTarget.value)
-							}
+							onChange={err => setSearchValue(err.currentTarget.value)}
 							placeholder={placeholder}
 						/>
 					</button>
@@ -224,9 +223,8 @@ const SearchableSelect = ({
 
 			<Popover.Dropdown className={classes.dropdown}>
 				{data.map(item => {
-					const isSelected = !!(selectedValue ?? []).find(
-						v => v.value === item.value
-					);
+					// eslint-disable-next-line
+					const isSelected = !!(selectedValue ?? []).find(v => v.value === item.value);
 					return (
 						<Button
 							key={item.value}

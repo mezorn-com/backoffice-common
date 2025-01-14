@@ -7,15 +7,15 @@ export type SubResources = Record<string, WithCondition & WithIcon & WithLabel>;
 type Conditional = {
 	key: string;
 } & (
-	| {
+	{
 			value: unknown;
-	  }
+	}
 	| {
 			hasValue: boolean;
-	  }
+	}
 	| {
 			valueNotEquals: unknown;
-	  }
+	}
 );
 
 interface WithCondition {

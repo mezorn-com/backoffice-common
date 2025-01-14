@@ -1,3 +1,16 @@
+import { Button, Menu } from '@mantine/core';
+import { IconDots } from '@tabler/icons-react';
+import {
+	getCoreRowModel,
+	getPaginationRowModel,
+	type TableState,
+	useReactTable
+} from '@tanstack/react-table';
+import axios from 'axios';
+import { allPass, eqProps, equals } from 'ramda';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import Form from '@/backoffice-common/components/form/Form';
 import type { IFormValues } from '@/backoffice-common/components/form/helper';
 import { TableContext } from '@/backoffice-common/components/table/context';
@@ -8,24 +21,13 @@ import {
 	isRenderField,
 	replacePathParameters
 } from '@/backoffice-common/utils';
-import { Button, Menu } from '@mantine/core';
-import { IconDots } from '@tabler/icons-react';
-import {
-	type TableState,
-	getCoreRowModel,
-	getPaginationRowModel,
-	useReactTable
-} from '@tanstack/react-table';
-import axios from 'axios';
-import { allPass, eqProps, equals } from 'ramda';
-import * as React from 'react';
-import { useTranslation } from 'react-i18next';
-import classes from './Table.module.scss';
+
 import BulkActionDrawer from './components/BulkActionDrawer';
-import TableSection from './components/TableSection';
 import TablePagination from './components/pagination/TablePagination';
+import TableSection from './components/TableSection';
 import { useFixedColumns } from './hooks';
 import { initialState, reducer } from './reducer';
+import classes from './Table.module.scss';
 import {
 	type ITableInteraction,
 	type ITableProps,
@@ -35,25 +37,24 @@ import {
 import { getCellObserver, resizeTable } from './utils';
 
 // compare 2 objects' given props values.
-const check = allPass([eqProps('page'), eqProps('pageSize')]);
+const check = allPass([ eqProps('page'), eqProps('pageSize') ]);
 
-const eqValues = (a1: unknown[], a2: unknown[]) =>
-	equals(new Set(a1), new Set(a2));
+const eqValues = (a1: unknown[], a2: unknown[]) => equals(new Set(a1), new Set(a2));
 
 const Table = ({
 	onInteract,
 	rowActionButtons,
 	state: externalState,
-	pageSizes = [10, 20, 50],
+	pageSizes = [ 10, 20, 50 ],
 	dispatch: dispatchExternalState,
 	hideBulkActions = false,
 	bulkActionUrlParser
 }: ITableProps) => {
 	const { t } = useTranslation();
-	const [state, dispatch] = React.useReducer(reducer, initialState);
+	const [ state, dispatch ] = React.useReducer(reducer, initialState);
 	const tablesContainerRef = React.useRef<HTMLDivElement>(null);
 	const columnObserverRef = React.useRef<ResizeObserver | null>(null);
-	const [rowHoverIndex, setRowHoverIndex] = React.useState<number | null>(
+	const [ rowHoverIndex, setRowHoverIndex ] = React.useState<number | null>(
 		null
 	);
 
@@ -79,8 +80,8 @@ const Table = ({
 		if (!externalState.docs.length) {
 			return externalState.columns;
 		}
-		return [...fixedColumns, ...externalState.columns];
-	}, [externalState.columns, fixedColumns, externalState.docs.length]);
+		return [ ...fixedColumns, ...externalState.columns ];
+	}, [ externalState.columns, fixedColumns, externalState.docs.length ]);
 
 	const table = useReactTable({
 		data: externalState.docs,
@@ -92,7 +93,7 @@ const Table = ({
 		},
 		initialState: {
 			columnPinning: {
-				right: ['table-actions-column']
+				right: [ 'table-actions-column' ]
 			}
 		},
 		defaultColumn: {
@@ -157,7 +158,7 @@ const Table = ({
 				payload: ids
 			});
 		}
-	}, [table.getSelectedRowModel, externalState.selectedRows]);
+	}, [ table.getSelectedRowModel, externalState.selectedRows ]);
 
 	React.useEffect(() => {
 		table.setOptions(prev => ({
@@ -168,7 +169,7 @@ const Table = ({
 				pageIndex: externalState.page - 1
 			}
 		}));
-	}, [externalState, table.setOptions]);
+	}, [ externalState, table.setOptions ]);
 
 	const handleTableStateChange = (updatedTableState: TableState) => {
 		const updatedState: ITableState = {
@@ -239,8 +240,9 @@ const Table = ({
 								type: 'HANDLE_ROW_SELECT_CHANGE',
 								payload: []
 							});
-							state.selectedBulkAction?.refresh &&
+							if (state.selectedBulkAction?.refresh) {
 								handleInteraction();
+							}
 							showMessage(
 								t('success', { ns: 'common' }),
 								'green'

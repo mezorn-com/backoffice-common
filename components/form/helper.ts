@@ -1,16 +1,17 @@
-import type { SelectOption } from '@/backoffice-common/types/form';
+import type { ComboboxItem } from '@mantine/core';
+import dayjs from 'dayjs';
+import { clone, drop, head, isNil, path, values as objectValues } from 'ramda';
+
 import {
 	FieldType,
 	type IFormField,
 	type INormalField,
+	type SelectOption,
 	UiType
 } from '@/backoffice-common/types/form';
 import { getArrayObjectByProp } from '@/backoffice-common/utils';
 import { uploadFile } from '@/backoffice-common/utils/file-upload';
 import i18n from '@/config/i18n';
-import type { ComboboxItem } from '@mantine/core';
-import dayjs from 'dayjs';
-import { path, clone, drop, head, isNil, values as objectValues } from 'ramda';
 
 const { t } = i18n;
 
@@ -18,6 +19,7 @@ const REGEX_NUMERIC = /^\d+$/;
 
 export interface IFormValues {
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
+	// eslint-disable-next-line
 	[key: string]: any;
 }
 
@@ -31,6 +33,7 @@ export const getFormItemPathByKey = (key: string): string[] => {
 export const getFormInitialValues = (
 	fields: IFormField[],
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
+	// eslint-disable-next-line
 	initialValues?: Record<string, any>
 ): IFormValues => {
 	// TODO: make clone get value from there.
@@ -63,9 +66,10 @@ export const getFormInitialValues = (
 					const arrayInitialValues = initialValues?.[field.key] ?? [];
 					const arrayValues = arrayInitialValues.map(
 						// biome-ignore lint/suspicious/noExplicitAny: TODO: Check later
+						// eslint-disable-next-line
 						(arrayValue: Record<string, any>) => {
 							return getFormInitialValues(
-								[fieldElement],
+								[ fieldElement ],
 								arrayValue
 							);
 						}
@@ -93,6 +97,7 @@ export const getFormInitialValues = (
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: use type
+// eslint-disable-next-line
 export const getInitialValue = (field: INormalField, initialValue?: any) => {
 	switch (field.uiType) {
 		case UiType.TEXT_INPUT: {
@@ -163,6 +168,7 @@ export const validator = (fields: IFormField[], values: IFormValues) => {
 		}
 		const targetPath = getFormItemPathByKey(field.key);
 		// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
+		// eslint-disable-next-line
 		const value: any = path(targetPath, values);
 		const isRequired = isFieldRequired(field, fields, values);
 		if (isRequired) {
@@ -175,6 +181,7 @@ export const validator = (fields: IFormField[], values: IFormValues) => {
 export const getErrorMessage = (
 	field: IFormField,
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
+	// eslint-disable-next-line
 	value: any
 ): null | string => {
 	// if normal
@@ -313,6 +320,7 @@ export const isFieldRequired = (
 
 		if (typeof parentValues === 'object' && parentValues !== null) {
 			// biome-ignore lint/correctness/noUnusedVariables: TODO: remove
+			// eslint-disable-next-line
 			for (const [key, value] of Object.entries(parentValues)) {
 				if (value) {
 					return true;
@@ -428,6 +436,7 @@ export const transformValuesAsync = async (
 					const fieldElement = clone(field.element);
 					fieldElement.isArrayElement = true;
 					// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
+					// eslint-disable-next-line
 					const arrayValues: any = [];
 					if ('fields' in field.element && field.element.fields) {
 						for await (const elementValue of values[field.key]) {

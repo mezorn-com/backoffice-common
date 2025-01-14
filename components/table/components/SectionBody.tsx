@@ -8,7 +8,7 @@ interface SectionBodyProps {
 const SectionBody = ({ className, children }: SectionBodyProps) => {
 	const handleScroll = (event: UIEvent<HTMLDivElement>) => {
 		if (event.target instanceof HTMLDivElement) {
-			const scrollTop = event.target.scrollTop;
+			const { scrollTop } = event.target;
 			const { target } = event;
 			if (target) {
 				// TODO: remove selectors...

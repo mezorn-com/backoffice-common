@@ -1,17 +1,20 @@
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
+import '@mantine/dates/styles.css';
+import 'dayjs/locale/mn';
+
 import { LoadingOverlay, MantineProvider, Modal } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import * as React from 'react';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import useStore from '../store';
-import '@mantine/core/styles.css';
-import '@mantine/notifications/styles.css';
-import '@mantine/dates/styles.css';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
 import ErrorPage from '@/backoffice-common/components/common/Error';
+
+import useStore from '../store';
+import classes from './App.module.scss';
 import AuthRouter from './routes/AuthRouter';
 import ProtectedRoutes from './routes/Protected';
-import 'dayjs/locale/mn';
-import classes from './App.module.scss';
 
 const authRoutes = createBrowserRouter([
 	{

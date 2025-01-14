@@ -1,6 +1,8 @@
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+
 import AppContainer from '@/backoffice-common/components/layout/AppContainer';
 import useStore from '@/store';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+
 import routes from '../../routes';
 
 // const standAloneRoutes = routes.filter(route => route.standAlone);

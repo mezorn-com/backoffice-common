@@ -108,13 +108,13 @@ type SelectField = {
 	uiType: UiType.SELECT;
 	multiple?: boolean;
 } & (
-	| {
+	{
 			options: SelectOption[];
-	  }
+	}
 	| WithOptionsApi
 	| {
 			refCode: string;
-	  }
+	}
 ) &
 	NormalFieldCore;
 
@@ -202,6 +202,7 @@ interface TimeInput extends NormalFieldCore {
 }
 
 // biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
+// eslint-disable-next-line
 interface ImageInput extends NormalFieldCore {
 	uiType: UiType.IMAGE;
 	multiple?: boolean;

@@ -1,7 +1,9 @@
-import type { ActionButtonProps } from '@/backoffice-common/components/common/action-button';
-import type { ListDoc } from '@/backoffice-common/types/common/list';
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
+
+import type { ActionButtonProps } from '@/backoffice-common/components/common/action-button';
+import type { ListDoc } from '@/backoffice-common/types/common/list';
+
 import RowActionButtons from '../components/row-action-buttons';
 
 const columnHelper = createColumnHelper<ListDoc>();
@@ -27,5 +29,5 @@ export const useFixedColumns = (
 		}
 
 		return [];
-	}, [rowActionButtons]);
+	}, [ rowActionButtons ]);
 };

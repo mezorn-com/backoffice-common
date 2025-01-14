@@ -1,3 +1,10 @@
+import { Button, Modal, Text, TextInput } from '@mantine/core';
+import { IconSearch } from '@tabler/icons-react';
+import axios from 'axios';
+import qs from 'qs';
+import * as React from 'react';
+import { MapContainer, ZoomControl } from 'react-leaflet';
+
 import { FormLabel } from '@/backoffice-common/components/form/components';
 import Helper from '@/backoffice-common/components/form/components/map-address-picker/Helper';
 import type { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
@@ -10,12 +17,7 @@ import {
 	MAP_MAX_ZOOM,
 	MAP_MIN_ZOOM
 } from '@/config';
-import { Button, Modal, Text, TextInput } from '@mantine/core';
-import { IconSearch } from '@tabler/icons-react';
-import axios from 'axios';
-import qs from 'qs';
-import * as React from 'react';
-import { MapContainer, ZoomControl } from 'react-leaflet';
+
 import classes from './MapAddressPicker.module.scss';
 
 interface IProps {
@@ -45,9 +47,9 @@ interface IDetailResponseData {
 }
 
 const MapAddressPicker = ({ field, onChange, value }: IProps) => {
-	const [showModal, setShowModal] = React.useState(false);
-	const [searchValue, setSearchValue] = React.useState('');
-	const [suggestions, setSuggestions] = React.useState<ISuggestion[]>([]);
+	const [ showModal, setShowModal ] = React.useState(false);
+	const [ searchValue, setSearchValue ] = React.useState('');
+	const [ suggestions, setSuggestions ] = React.useState<ISuggestion[]>([]);
 
 	const handleSearch = async () => {
 		if (field.suggestApi) {
@@ -70,7 +72,7 @@ const MapAddressPicker = ({ field, onChange, value }: IProps) => {
 				field.retrieveApi.uri,
 				params
 			);
-			const [address] = data.data;
+			const [ address ] = data.data;
 			onChange?.({
 				address: address.address,
 				lat: address.coordinates.latitude,
@@ -112,8 +114,8 @@ const MapAddressPicker = ({ field, onChange, value }: IProps) => {
 						data-autofocus
 						className={classes.input}
 						value={searchValue}
-						onChange={e => setSearchValue(e.currentTarget.value)}
-						onKeyDown={e => e.key === 'Enter' && handleSearch()}
+						onChange={event => setSearchValue(event.currentTarget.value)}
+						onKeyDown={event => event.key === 'Enter' && handleSearch()}
 					/>
 					<Button
 						leftSection={<IconSearch size='1rem' />}
@@ -132,9 +134,7 @@ const MapAddressPicker = ({ field, onChange, value }: IProps) => {
 								<button
 									type='button'
 									key={suggestion.value}
-									onClick={() =>
-										handleSuggestionClick(suggestion)
-									}
+									onClick={() => handleSuggestionClick(suggestion)}
 									className={classes.address}
 									style={{
 										fontWeight: isSelected(suggestion)

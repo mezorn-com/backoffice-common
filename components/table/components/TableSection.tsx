@@ -1,14 +1,14 @@
-import type { ListDoc } from '@/backoffice-common/types/common/list';
 import { Checkbox, type CheckboxProps } from '@mantine/core';
-import {
-	type Cell,
+import { type Cell,
+	flexRender,
 	type HeaderGroup,
 	type Row,
-	type Table,
-	flexRender
-} from '@tanstack/react-table';
+	type Table } from '@tanstack/react-table';
 import { clsx } from 'clsx';
 import * as React from 'react';
+
+import type { ListDoc } from '@/backoffice-common/types/common/list';
+
 import SectionBody from '../components/SectionBody';
 import { TableContext } from '../context';
 import { RowGroup, TableSectionType } from '../types';
@@ -127,12 +127,12 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 		};
 
 		if (isHeader) {
+			// eslint-disable-next-line prefer-destructuring
 			rowId = rowId.split('_')[1];
 			props.checked = table.getIsAllPageRowsSelected();
-			props.onChange = () =>
-				table.toggleAllPageRowsSelected(
-					!table.getIsAllPageRowsSelected()
-				);
+			props.onChange = () => table.toggleAllPageRowsSelected(
+				!table.getIsAllPageRowsSelected()
+			);
 		} else {
 			props.checked = row.getIsSelected();
 			props.onChange = () => row.toggleSelected(!row.getIsSelected());
@@ -175,6 +175,7 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 			>
 				<div className={classes.head}>
 					{getHeaderGroups().map((headerGroup, index) => {
+						// eslint-disable-next-line
 						const rowId = headerGroup.id.split('_')[1];
 						return (
 							<TableRow
@@ -194,11 +195,7 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 										>
 											{header.isPlaceholder
 												? null
-												: flexRender(
-														header.column.columnDef
-															.header,
-														header.getContext()
-													)}
+												: flexRender(header.column.columnDef.header, header.getContext())}
 										</ObservedCell>
 									);
 								})}
@@ -206,6 +203,7 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 						);
 					})}
 				</div>
+				{/* eslint-disable-next-line */}
 				{table.getRowModel().rows.length ? (
 					<SectionBody
 						className={clsx({
@@ -255,11 +253,7 @@ const TableSection = ({ section, table, rowSelect }: TableElementProps) => {
 										<div key={header.id}>
 											{header.isPlaceholder
 												? null
-												: flexRender(
-														header.column.columnDef
-															.footer,
-														header.getContext()
-													)}
+												: flexRender(header.column.columnDef.footer, header.getContext())}
 										</div>
 									);
 								})}

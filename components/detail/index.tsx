@@ -1,10 +1,11 @@
-import { useRenderField } from '@/backoffice-common/hooks';
-import type { IDetailPageState } from '@/backoffice-common/hooks/useDetailPage';
-import type { IFormField } from '@/backoffice-common/types/form';
-import { FieldType, RenderType } from '@/backoffice-common/types/form';
 import { SimpleGrid } from '@mantine/core';
 import { path } from 'ramda';
 import type { ReactNode } from 'react';
+
+import { useRenderField } from '@/backoffice-common/hooks';
+import type { IDetailPageState } from '@/backoffice-common/hooks/useDetailPage';
+import { FieldType, type IFormField, RenderType } from '@/backoffice-common/types/form';
+
 import classes from './Detail.module.scss';
 
 interface IDetailProps {
@@ -16,11 +17,15 @@ interface IDetailProps {
 
 const Detail = ({
 	// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
+	// eslint-disable TODO: Remove
+	// eslint-disable-next-line
 	id,
 	head,
 	// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
+	// eslint-disable-next-line
 	apiUrl,
 	// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
+	// eslint-disable-next-line
 	state: { values, details, actions }
 }: IDetailProps) => {
 	const renderField = useRenderField();
@@ -40,6 +45,7 @@ const Detail = ({
 	const renderDetails = (
 		renderFields: IFormField[],
 		// biome-ignore lint/suspicious/noExplicitAny: TODO: fix type
+		// eslint-disable-next-line
 		renderValues: Record<string, any>
 	) => {
 		return (

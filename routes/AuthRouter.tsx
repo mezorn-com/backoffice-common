@@ -1,12 +1,13 @@
-import authRoutes from '@/routes/AuthRoutes';
 import * as React from 'react';
 import {
+	matchRoutes,
 	Route,
 	Routes,
-	matchRoutes,
 	useLocation,
 	useNavigate
 } from 'react-router-dom';
+
+import authRoutes from '@/routes/AuthRoutes';
 
 const AuthRouter = () => {
 	const location = useLocation();
@@ -19,7 +20,7 @@ const AuthRouter = () => {
 				replace: true
 			});
 		}
-	}, [location.pathname, navigate]);
+	}, [ location.pathname, navigate ]);
 
 	return (
 		<Routes>

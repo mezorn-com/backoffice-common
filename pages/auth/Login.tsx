@@ -1,7 +1,3 @@
-import { showMessage } from '@/backoffice-common/lib/notification';
-import ChangePassword from '@/backoffice-common/pages/auth/ChangePassword';
-import { APP_NAME } from '@/config';
-import useStore from '@/store';
 import {
 	Box,
 	Button,
@@ -16,11 +12,16 @@ import { IconAt, IconChevronRight, IconKey } from '@tabler/icons-react';
 import axios from 'axios';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import classes from './Login.module.scss';
 
 import { Lock } from '@/backoffice-common/components/icon/Lock';
+import { showMessage } from '@/backoffice-common/lib/notification';
+import ChangePassword from '@/backoffice-common/pages/auth/ChangePassword';
 import type { IResponse } from '@/backoffice-common/types/api';
+import { APP_NAME } from '@/config';
+import useStore from '@/store';
 import type { ILoginResponse } from '@/types';
+
+import classes from './Login.module.scss';
 
 interface IRightSection {
 	children?: React.ReactNode;
@@ -33,10 +34,11 @@ interface ILoginProps {
 }
 
 // biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
+// eslint-disable-next-line
 const Login = ({ right, forgotPasswordButton }: ILoginProps) => {
 	const { t } = useTranslation();
 	const setLoginInfo = useStore(store => store.setAuth);
-	const [loginResponse, setLoginResponse] =
+	const [ loginResponse, setLoginResponse ] =
 		React.useState<ILoginResponse | null>(null);
 
 	const form = useForm({
@@ -125,7 +127,12 @@ const Login = ({ right, forgotPasswordButton }: ILoginProps) => {
 						<Title order={2} size='h1'>
 							{t('welcome', { ns: 'auth' })}!
 						</Title>
-						<Text c='dimmed' fz='sm' fw={500} mb='lg'>
+						<Text
+							c='dimmed'
+							fz='sm'
+							fw={500}
+							mb='lg'
+						>
 							{t('loginDescription', { ns: 'auth' })}
 						</Text>
 						<TextInput

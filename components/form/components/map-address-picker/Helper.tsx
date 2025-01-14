@@ -1,7 +1,8 @@
-import type { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
-import IconMarker from '@/backoffice-common/lib/icon-marker/Marker';
 import * as React from 'react';
 import { useMap } from 'react-leaflet';
+
+import type { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
+import IconMarker from '@/backoffice-common/lib/icon-marker/Marker';
 
 interface IProps {
 	value?: IMapAddressValue;
@@ -17,7 +18,7 @@ const Helper = ({ value }: IProps) => {
 				lat: value.lat
 			});
 		}
-	}, [value, map.flyTo]);
+	}, [ value, map.flyTo ]);
 
 	return (
 		<div>

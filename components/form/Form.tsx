@@ -1,10 +1,3 @@
-import type { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
-import {
-	FieldType,
-	type IFormField,
-	UiType
-} from '@/backoffice-common/types/form';
-import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
 import {
 	ActionIcon,
 	Button,
@@ -17,8 +10,8 @@ import {
 	NumberInput,
 	PasswordInput,
 	Select,
-	TextInput,
 	Textarea,
+	TextInput,
 	Title
 } from '@mantine/core';
 import {
@@ -31,11 +24,19 @@ import { useForm } from '@mantine/form';
 import { randomId } from '@mantine/hooks';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import { path, clone, mergeDeepLeft, omit } from 'ramda';
+import { clone, mergeDeepLeft, omit, path } from 'ramda';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import classes from './Form.module.scss';
+
+import type { IMapAddressValue } from '@/backoffice-common/components/form/components/map-address-picker/types';
+import {
+	FieldType,
+	type IFormField,
+	UiType
+} from '@/backoffice-common/types/form';
+import { combineURL, isUserInputNumber } from '@/backoffice-common/utils';
+
 import {
 	CascadingSelect,
 	FetchSelect,
@@ -45,15 +46,16 @@ import {
 	MapAddressPicker,
 	SearchableSelect
 } from './components';
+import classes from './Form.module.scss';
 import {
-	type IFormValues,
-	SEPARATOR,
 	formatSelectValue,
 	getFormInitialValues,
 	getFormItemPathByKey,
 	getFormValueByKey,
+	type IFormValues,
 	isFieldRequired,
 	isFieldVisible,
+	SEPARATOR,
 	transformValuesAsync,
 	validator
 } from './helper';
@@ -64,8 +66,11 @@ interface IFormProps {
 	fields: IFormField[];
 	onSubmit: (values: IFormValues) => void;
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
+	// eslint-disable TODO: use types
+	// eslint-disable-next-line
 	values?: Record<string, any>;
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
+	// eslint-disable-next-line
 	getReferences?: (code: string, parent?: string) => Promise<any[]>;
 	submitButtonProps?: ButtonProps;
 	onChange?: (value: IFormValues) => void;
@@ -102,12 +107,13 @@ const Form = ({
 		if (onChange) {
 			onChange(form.values);
 		}
-	}, [form.values]);
+	}, [ form.values ]);
 
 	// console.log('form initial Values>>>>', getFormInitialValues(fields, values));
 	console.log('FORM VALUES>>>>', form.values);
 
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix types
+	// eslint-disable-next-line
 	const handleError = (validationErrors: any, _values: any, _event: any) => {
 		console.log('Form Error>>>', {
 			validationErrors,
@@ -151,7 +157,7 @@ const Form = ({
 											if (field.element) {
 												const initialValue =
 													getFormInitialValues(
-														[fieldElement],
+														[ fieldElement ],
 														values
 													);
 												form.insertListItem(
@@ -179,6 +185,7 @@ const Form = ({
 										getFormItemPathByKey(groupPath),
 										form.values
 										// biome-ignore lint/suspicious/noExplicitAny: TODO: Change
+										// eslint-disable-next-line
 									) as any[]
 								).map(
 									(
@@ -187,6 +194,7 @@ const Form = ({
 										index: number,
 										// biome-ignore lint/suspicious/noExplicitAny: TODO: Change
 										// biome-ignore lint/correctness/noUnusedVariables: TODO: Remove
+										// eslint-disable-next-line
 										array: any[]
 									) => {
 										const elementPath =
@@ -250,6 +258,7 @@ const Form = ({
 						(field.groupPath ? field.groupPath + SEPARATOR : '') +
 						key;
 				}
+				// eslint-disable-next-line
 				const fieldClone = (field.fields ?? []).map(f => {
 					const child = clone(f);
 					child.groupPath = groupPath;
@@ -264,6 +273,7 @@ const Form = ({
 			}
 			case FieldType.GROUP: {
 				const groupPath = field.groupPath ?? '';
+				// eslint-disable-next-line
 				const clonedField = (field.fields ?? []).map(f => {
 					const child = clone(f);
 					child.groupPath = groupPath;
@@ -297,6 +307,7 @@ const Form = ({
 			(field.groupPath ? field.groupPath + SEPARATOR : '') + field.key;
 
 		// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
+		// eslint-disable-next-line
 		const props: any = {
 			key: valueKey,
 			label: field.label ?? '-',
@@ -367,8 +378,9 @@ const Form = ({
 						autoComplete='off'
 						onChange={event => {
 							if (field.numeric) {
-								isUserInputNumber(event.currentTarget.value) &&
+								if (isUserInputNumber(event.currentTarget.value)) {
 									props.onChange(event);
+								}
 							} else {
 								props.onChange(event);
 							}
@@ -478,6 +490,7 @@ const Form = ({
 						{...props}
 						valueFormat={format}
 						onChange={(value: Date) => {
+							// eslint-disable-next-line
 							const v = value
 								? dayjs(value).format(format)
 								: undefined;
@@ -511,6 +524,7 @@ const Form = ({
 						{...props}
 						valueFormat={format}
 						onChange={(value: Date) => {
+							// eslint-disable-next-line
 							const v = value
 								? dayjs(value).format(format)
 								: undefined;
@@ -525,7 +539,7 @@ const Form = ({
 				return (
 					<Checkbox
 						className={classes.checkboxContainer}
-						{...omit(['withAsterisk'], props)}
+						{...omit([ 'withAsterisk' ], props)}
 						label={
 							<div className={classes.checkboxLabel}>
 								{props.label}
@@ -637,7 +651,7 @@ const FormWrapper = (props: IFormProps) => {
 			fields: props.fields
 			// fields: refactorFields(props.fields)
 		};
-	}, [props.fields, props.values]);
+	}, [ props.fields, props.values ]);
 
 	return <Form key={key} {...props} fields={fields} />;
 };

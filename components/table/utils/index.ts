@@ -69,7 +69,7 @@ const getColumnSizes = (horizontalScrollItem: Element) => {
 
 const getColumnResizes = (centerElement: HTMLElement): ColumnSize[] => {
 	const centerSectionWrapper = centerElement.getBoundingClientRect().width;
-	const horizontalScrollItem = centerElement.children[0];
+	const [ horizontalScrollItem ] = centerElement.children;
 	const columnSizes: ColumnSize[] = getColumnSizes(horizontalScrollItem);
 
 	const exceededWidth: number =
@@ -92,7 +92,7 @@ const getRowSizes = (table: Element): RowSizes => {
 	};
 
 	for (const section of table.children) {
-		const sectionScroll = section.children[0];
+		const [ sectionScroll ] = section.children;
 		for (const rowGroup of sectionScroll.children) {
 			for (const row of rowGroup.children) {
 				for (const cell of row.children) {
@@ -130,6 +130,7 @@ const getRowSizes = (table: Element): RowSizes => {
 export const resizeTable = (tableElement: HTMLElement) => {
 	let columnSizes: ColumnSize[] = [];
 
+	// eslint-disable-next-line
 	const center = tableElement.children[1];
 	if (center instanceof HTMLElement) {
 		columnSizes = getColumnResizes(center);
@@ -137,7 +138,7 @@ export const resizeTable = (tableElement: HTMLElement) => {
 	const rowSizes = getRowSizes(tableElement);
 
 	for (const section of tableElement.children) {
-		const scrollElement = section.children[0];
+		const [ scrollElement ] = section.children;
 		for (const rowGroup of scrollElement.children) {
 			for (const row of rowGroup.children) {
 				for (const cellContainer of row.children) {

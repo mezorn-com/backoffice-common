@@ -1,26 +1,29 @@
-import type { IFormValues } from '@/backoffice-common/components/form/helper';
-import { showMessage } from '@/backoffice-common/lib/notification';
-import type { IResponse } from '@/backoffice-common/types/api';
-import type { IFormMetaResponse } from '@/backoffice-common/types/api/meta';
-import type { IFormField } from '@/backoffice-common/types/form';
-import { getMeta } from '@/backoffice-common/utils';
 import axios from 'axios';
 import { dropLast } from 'ramda';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import type { IFormValues } from '@/backoffice-common/components/form/helper';
+import { showMessage } from '@/backoffice-common/lib/notification';
+import type { IResponse } from '@/backoffice-common/types/api';
+import type { IFormMetaResponse } from '@/backoffice-common/types/api/meta';
+import type { IFormField } from '@/backoffice-common/types/form';
+import { getMeta } from '@/backoffice-common/utils';
+
 interface IConfig {
 	apiRoute: string;
 	clientRoute: string;
 	id: string;
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	onFetch?: (response: IResponse<Record<any, any>>) => void;
 }
 
 interface IEditPageState {
 	fields: IFormField[];
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix type
+	// eslint-disable-next-line
 	values: Record<string, any>;
 	title: string;
 	ready: boolean;
@@ -31,7 +34,7 @@ const useEditPage = ({ apiRoute, clientRoute, id, onFetch }: IConfig) => {
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
 
-	const [state, setState] = React.useState<IEditPageState>({
+	const [ state, setState ] = React.useState<IEditPageState>({
 		fields: [],
 		values: {},
 		title: '',
@@ -48,6 +51,7 @@ const useEditPage = ({ apiRoute, clientRoute, id, onFetch }: IConfig) => {
 		});
 		const { data: formValuesResponse } = await axios.get<
 			// biome-ignore lint/suspicious/noExplicitAny: TODO: use types
+			// eslint-disable-next-line
 			IResponse<Record<string, any>>
 		>(`${apiRoute}/${id}`);
 		setState({
@@ -61,6 +65,7 @@ const useEditPage = ({ apiRoute, clientRoute, id, onFetch }: IConfig) => {
 
 	const submitHandler = async (values: IFormValues) => {
 		// biome-ignore lint/suspicious/noExplicitAny: TODO: use type
+		// eslint-disable-next-line
 		const { data } = await axios.put<IResponse<any>>(
 			`${apiRoute}/${id}`,
 			values

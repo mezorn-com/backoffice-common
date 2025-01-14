@@ -1,3 +1,9 @@
+import type { ColumnDef } from '@tanstack/react-table';
+import axios from 'axios';
+import { produce } from 'immer';
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import ActionButton, {
 	type ActionButtonProps
 } from '@/backoffice-common/components/common/action-button';
@@ -14,11 +20,6 @@ import {
 	getMeta,
 	replacePathParameters
 } from '@/backoffice-common/utils';
-import type { ColumnDef } from '@tanstack/react-table';
-import axios from 'axios';
-import { produce } from 'immer';
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface IConfig {
 	apiRoute: string;
@@ -28,12 +29,12 @@ export type IRowActionButton = {
 	onClick?: (record: Record<string, unknown>) => void;
 	visibility?: IVisibility;
 } & (
-	| {
+	{
 			label(row: Record<string, unknown>): React.ReactNode;
-	  }
+	}
 	| {
 			label: React.ReactNode;
-	  }
+	}
 );
 
 type SetListResponse = {
@@ -140,7 +141,7 @@ const reducer = produce((draft: IListState, action: Action) => {
 const useListPage = ({ apiRoute }: IConfig) => {
 	const navigate = useNavigate();
 
-	const [state, dispatch] = React.useReducer(reducer, initialState);
+	const [ state, dispatch ] = React.useReducer(reducer, initialState);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Check
 	React.useEffect(() => {
@@ -221,7 +222,7 @@ const useListPage = ({ apiRoute }: IConfig) => {
 			}
 		}
 		return rowActionButtonList;
-	}, [state.subResources, state.listItemActions, navigate]);
+	}, [ state.subResources, state.listItemActions, navigate ]);
 
 	const handleInteract = (payload: ITableInteraction) => {
 		const { state: payloadState } = payload;
@@ -257,7 +258,7 @@ const useListPage = ({ apiRoute }: IConfig) => {
 		}
 
 		return buttonList;
-	}, [state.listActions]);
+	}, [ state.listActions ]);
 
 	return {
 		state,

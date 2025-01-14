@@ -1,7 +1,8 @@
+import type { Dispatch } from 'react';
+
 import type { ActionButtonProps } from '@/backoffice-common/components/common/action-button';
 import type { Action } from '@/backoffice-common/hooks/useListPage';
 import type { IListState } from '@/backoffice-common/types/common/list';
-import type { Dispatch } from 'react';
 
 export interface ITableState {
 	page: number;
@@ -13,6 +14,7 @@ export interface ITableState {
 export interface ITableInteraction {
 	state: ITableState;
 	// biome-ignore lint/suspicious/noExplicitAny: TODO: Fix later
+	// eslint-disable-next-line
 	filter?: Record<string, any>;
 	selectedRows?: string[];
 }

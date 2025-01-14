@@ -2,6 +2,7 @@ import { ActionIcon, Flex, Title } from '@mantine/core';
 import { IconChevronLeft } from '@tabler/icons-react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import classes from './Layout.module.scss';
 
 interface ISubHeaderProps {
@@ -22,7 +23,12 @@ const SubHeader = ({ title, backButton = true, children }: ISubHeaderProps) => {
 
 	return (
 		<div className={classes.pageHeader}>
-			<Flex gap='md' justify='flex-start' align='center' direction='row'>
+			<Flex
+				gap='md'
+				justify='flex-start'
+				align='center'
+				direction='row'
+			>
 				{backButton ||
 					(title && (
 						<ActionIcon onClick={goBack} variant='light' size='xl'>

@@ -1,13 +1,14 @@
-import { useConfigItems } from '@/lib/config-items';
-import useStore from '@/store';
 import { Avatar, Button, Menu, Title } from '@mantine/core';
 import { IconChevronDown, IconUser } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+
+import { useConfigItems } from '@/lib/config-items';
+import useStore from '@/store';
+
 import classes from './Profile.module.scss';
 
 const Profile = ({ compact = false }) => {
 	const { t } = useTranslation();
-	// @ts-ignore
 	const { items, render } = useConfigItems();
 	const userName = useStore(state => state.auth.name);
 	const clearStore = useStore(state => state.clearStore);

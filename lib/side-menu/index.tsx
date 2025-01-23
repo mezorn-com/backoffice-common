@@ -82,7 +82,7 @@ const SideMenu = () => {
 	};
 
 	return (
-		<AppShell.Navbar>
+		<AppShell.Navbar className={classes.container}>
 			<AppShell.Section visibleFrom='sm'>
 				<Profile />
 			</AppShell.Section>

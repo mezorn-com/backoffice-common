@@ -12,6 +12,7 @@ import {
 } from '@tabler/icons-react';
 
 import classes from './Pagination.module.scss';
+import type { ReactNode } from 'react';
 
 interface TablePaginationProps {
 	canPreviousPage: boolean;
@@ -25,6 +26,7 @@ interface TablePaginationProps {
 	onNextPage: () => void;
 	onPreviousPage: () => void;
 	pageSizes: number[];
+	children: ReactNode;
 }
 
 const actionIconProps: ActionIconProps = {
@@ -43,16 +45,18 @@ const TablePagination = ({
 	onNextPage,
 	onPreviousPage,
 	pageSizes,
-	total
+	total,
+	children
 }: TablePaginationProps) => {
 	return (
 		<div className={classes.wrapper}>
-			<div>
+			<div className={classes.children}>
 				{total !== undefined && (
 					<div className={classes.total}>
 						Нийт:&nbsp; <span>{total}</span>
 					</div>
 				)}
+				{children}
 			</div>
 			<div className={classes.pagination}>
 				<div className={classes.paginationControls}>

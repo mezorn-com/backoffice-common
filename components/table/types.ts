@@ -1,4 +1,4 @@
-import type { Dispatch } from 'react';
+import type { Dispatch, ReactNode } from 'react';
 
 import type { ActionButtonProps } from '@/backoffice-common/components/common/action-button';
 import type { Action } from '@/backoffice-common/hooks/useListPage';
@@ -27,6 +27,7 @@ export interface ITableProps {
 	dispatch: Dispatch<Action>;
 	hideBulkActions?: boolean;
 	bulkActionUrlParser?: (url: string) => string;
+	paginationContent?: ReactNode;
 }
 
 export enum TableSectionType {

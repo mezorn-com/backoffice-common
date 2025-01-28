@@ -48,7 +48,8 @@ const Table = ({
 	pageSizes = [ 10, 20, 50 ],
 	dispatch: dispatchExternalState,
 	hideBulkActions = false,
-	bulkActionUrlParser
+	bulkActionUrlParser,
+	paginationContent
 }: ITableProps) => {
 	const { t } = useTranslation();
 	const [ state, dispatch ] = React.useReducer(reducer, initialState);
@@ -350,6 +351,7 @@ const Table = ({
 					onNextPage={table.nextPage}
 					pageSizes={pageSizes}
 					total={externalState.total}
+					content={paginationContent}
 				/>
 			</div>
 		</TableContext.Provider>

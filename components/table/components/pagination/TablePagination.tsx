@@ -26,7 +26,7 @@ interface TablePaginationProps {
 	onNextPage: () => void;
 	onPreviousPage: () => void;
 	pageSizes: number[];
-	children?: ReactNode;
+	content?: ReactNode;
 }
 
 const actionIconProps: ActionIconProps = {
@@ -46,17 +46,17 @@ const TablePagination = ({
 	onPreviousPage,
 	pageSizes,
 	total,
-	children
+	content
 }: TablePaginationProps) => {
 	return (
 		<div className={classes.wrapper}>
-			<div className={classes.children}>
+			<div className={classes.content}>
 				{total !== undefined && (
 					<div className={classes.total}>
 						Нийт:&nbsp; <span>{total}</span>
 					</div>
 				)}
-				{children}
+				{content}
 			</div>
 			<div className={classes.pagination}>
 				<div className={classes.paginationControls}>

@@ -10,9 +10,9 @@ import {
 	IconChevronsLeft,
 	IconChevronsRight
 } from '@tabler/icons-react';
+import type { ReactNode } from 'react';
 
 import classes from './Pagination.module.scss';
-import type { ReactNode } from 'react';
 
 interface TablePaginationProps {
 	canPreviousPage: boolean;
@@ -26,7 +26,7 @@ interface TablePaginationProps {
 	onNextPage: () => void;
 	onPreviousPage: () => void;
 	pageSizes: number[];
-	children: ReactNode;
+	children?: ReactNode;
 }
 
 const actionIconProps: ActionIconProps = {

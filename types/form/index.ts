@@ -190,6 +190,7 @@ interface DateInput extends NormalFieldCore {
 	format: string;
 	startDate?: string;
 	endDate?: string;
+	multiple?: boolean;
 }
 
 interface DatetimeInput extends NormalFieldCore {

@@ -478,7 +478,7 @@ const Form = ({
 			}
 			case UiType.DATE: {
 				const format = field.format ?? 'YYYY/MM/DD';
-				let value: Date | Date[] | null = null;
+				let value: Date | Date[] | null = field.multiple ? [] : null;
 				if (props.value) {
 					if (Array.isArray(props.value)) {
 						// @ts-expect-error use form type
@@ -490,47 +490,41 @@ const Form = ({
 					}
 				}
 				// const value = props.value ? (Array.isArray(props.value) ? [] : new Date(props.value)) : null;
-				const startDate = field.startDate
-					? dayjs(field.startDate)
-					: undefined;
-				const endDate = field.endDate
-					? dayjs(field.endDate)
-					: undefined;
+				const startDate = field.startDate ? dayjs(field.startDate) : undefined;
+				const endDate = field.endDate ? dayjs(field.endDate) : undefined;
 				return (
 					<DatePickerInput
 						{...props}
 						valueFormat={format}
 						onChange={(value: Date | Date[]) => {
-							if (Array.isArray(value)) {
-								props?.onChange(value.map(date => {
-									return dayjs(date).format(format);
-								}));
+							if (field.multiple) {
+								if (Array.isArray(value)) {
+									props?.onChange(
+										value.map(date => {
+											return dayjs(date).format(format);
+										})
+									);
+								}
 							} else {
-								// eslint-disable-next-line
-								const v = value
-									? dayjs(value).format(format)
-									: undefined;
-								props?.onChange?.(v);
+								if (!Array.isArray(value)) {
+									// eslint-disable-next-line
+									const v = value ? dayjs(value).format(format) : undefined;
+									props?.onChange?.(v);
+								}
 							}
 						}}
 						value={value}
 						excludeDate={date => {
-							if (
-								endDate &&
-								dayjs(date).isAfter(endDate, 'day')
-							) {
+							if (endDate && dayjs(date).isAfter(endDate, 'day')) {
 								return true;
 							}
-							if (
-								startDate &&
-								dayjs(date).isBefore(startDate, 'day')
-							) {
+							if (startDate && dayjs(date).isBefore(startDate, 'day')) {
 								return true;
 							}
 							return false;
 						}}
 						clearable
-						type={props.multiple ? 'multiple' : 'default'}
+						type={field.multiple ? 'multiple' : 'default'}
 					/>
 				);
 			}

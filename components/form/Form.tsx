@@ -478,7 +478,18 @@ const Form = ({
 			}
 			case UiType.DATE: {
 				const format = field.format ?? 'YYYY/MM/DD';
-				const value = props.value ? new Date(props.value) : null;
+				let value: Date | Date[] | null = null;
+				if (props.value) {
+					if (Array.isArray(props.value)) {
+						// @ts-expect-error use form type
+						value = props.value.map(dateVal => {
+							return new Date(dateVal);
+						});
+					} else {
+						value = new Date(props.value);
+					}
+				}
+				// const value = props.value ? (Array.isArray(props.value) ? [] : new Date(props.value)) : null;
 				const startDate = field.startDate
 					? dayjs(field.startDate)
 					: undefined;

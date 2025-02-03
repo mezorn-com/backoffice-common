@@ -125,6 +125,14 @@ export const getInitialValue = (field: INormalField, initialValue?: any) => {
 			if (initialValue === undefined) {
 				return undefined;
 			}
+			if (Array.isArray(initialValue)) {
+				return initialValue.map(value => {
+					const date = dayjs(value);
+					return date.isValid()
+						? date.format(field.format ?? 'YYYY-MM-DD')
+						: undefined;
+				});
+			}
 			const date = dayjs(initialValue);
 			return date.isValid()
 				? date.format(field.format ?? 'YYYY-MM-DD')

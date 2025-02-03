@@ -489,12 +489,18 @@ const Form = ({
 					<DatePickerInput
 						{...props}
 						valueFormat={format}
-						onChange={(value: Date) => {
-							// eslint-disable-next-line
-							const v = value
-								? dayjs(value).format(format)
-								: undefined;
-							props?.onChange?.(v);
+						onChange={(value: Date | Date[]) => {
+							if (Array.isArray(value)) {
+								props?.onChange(value.map(date => {
+									return dayjs(date).format(format);
+								}));
+							} else {
+								// eslint-disable-next-line
+								const v = value
+									? dayjs(value).format(format)
+									: undefined;
+								props?.onChange?.(v);
+							}
 						}}
 						value={value}
 						excludeDate={date => {
@@ -513,6 +519,7 @@ const Form = ({
 							return false;
 						}}
 						clearable
+						type={props.multiple ? 'multiple' : 'default'}
 					/>
 				);
 			}

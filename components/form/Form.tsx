@@ -531,6 +531,12 @@ const Form = ({
 						}}
 						clearable
 						type={props.multiple ? 'multiple' : 'default'}
+						placeholder={props.label}
+						styles={{
+							label: {
+								display: 'none'
+							}
+						}}
 					/>
 				);
 			}

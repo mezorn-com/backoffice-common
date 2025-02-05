@@ -529,6 +529,9 @@ const Form = ({
 						styles={{
 							label: {
 								display: 'none'
+							},
+							wrapper: {
+								minWidth: 100
 							}
 						}}
 					/>

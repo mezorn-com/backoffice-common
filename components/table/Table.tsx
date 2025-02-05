@@ -159,7 +159,7 @@ const Table = ({
 				payload: ids
 			});
 		}
-	}, [ table.getSelectedRowModel, externalState.selectedRows ]);
+	}, [ table.getSelectedRowMode().rows, externalState.selectedRows ]);
 
 	React.useEffect(() => {
 		table.setOptions(prev => ({

@@ -1,6 +1,6 @@
 import { AppShell, Box, Burger, Group } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
 import Profile from '@/backoffice-common/components/profile';
 import SideMenu from '@/backoffice-common/lib/side-menu';
@@ -12,13 +12,22 @@ interface AppContainerProps {
 
 const AppContainer = ({ children }: AppContainerProps) => {
 	const [ opened, { toggle } ] = useDisclosure();
+	const [ collapse, setCollapse ] = useState(true);
+
 	const isDesktop = useMediaQuery('(min-width: 48em)');
+
+	// When the screen size changes from desktop to mobile, the collapse state will change.
+	useEffect(() => {
+		if(!isDesktop) {
+			setCollapse(!isDesktop);
+		}
+	}, [ isDesktop ]);
 
 	return (
 		<AppShell
 			header={{ height: { base: 60 }, collapsed: isDesktop }}
 			navbar={{
-				width: 300,
+				width: collapse ? 300 : 80,
 				breakpoint: 'sm',
 				collapsed: { mobile: !opened }
 			}}
@@ -42,7 +51,7 @@ const AppContainer = ({ children }: AppContainerProps) => {
 					/>
 				</Group>
 			</AppShell.Header>
-			<SideMenu />
+			<SideMenu toggle={() => setCollapse(!collapse)} collapse={collapse}/>
 			<AppShell.Main>
 				<div style={{ height: '100dvh' }}>{children}</div>
 			</AppShell.Main>

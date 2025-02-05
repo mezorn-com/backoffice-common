@@ -7,7 +7,7 @@ import useStore from '@/store';
 
 import classes from './Profile.module.scss';
 
-const Profile = ({ compact = false }) => {
+const Profile = ({ compact = false, collapse = true }) => {
 	const { t } = useTranslation();
 	const { items, render } = useConfigItems();
 	const userName = useStore(state => state.auth.name);
@@ -23,11 +23,13 @@ const Profile = ({ compact = false }) => {
 						fullWidth={!compact}
 						justify='space-between'
 						leftSection={
-							<Avatar radius='sm' size={compact ? 30 : 44}>
-								<IconUser size={compact ? 18 : 24} />
-							</Avatar>
+							collapse && (
+								<Avatar radius='sm' size={compact ? 30 : 44}>
+									<IconUser size={compact ? 18 : 24} />
+								</Avatar>
+							)
 						}
-						rightSection={<IconChevronDown size={16} />}
+						rightSection={collapse ? <IconChevronDown size={16} /> : undefined}
 						size={compact ? 'md' : 'xl'}
 						styles={{
 							root: {
@@ -38,7 +40,11 @@ const Profile = ({ compact = false }) => {
 							}
 						}}
 					>
-						<Title order={6}>{userName}</Title>
+						{collapse ? <Title order={6}>{userName}</Title> : (
+							<Avatar radius='sm' size={compact ? 30 : 44}>
+								<IconUser size={compact ? 18 : 24} />
+							</Avatar>
+						)}
 					</Button>
 					{/* <ActionIcon size={'xl'} variant={'light'} >
 						<IconSettings/>

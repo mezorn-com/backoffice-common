@@ -524,7 +524,7 @@ const Form = ({
 							return false;
 						}}
 						clearable
-						type={props.multiple ? 'multiple' : 'default'}
+						type={field.multiple ? 'multiple' : 'default'}
 						placeholder={props.label}
 						styles={{
 							label: {

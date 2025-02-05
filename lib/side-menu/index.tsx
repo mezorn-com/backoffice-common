@@ -1,4 +1,5 @@
-import { AppShell } from '@mantine/core';
+import { ActionIcon, AppShell } from '@mantine/core';
+import { IconArrowLeft } from '@tabler/icons-react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
@@ -17,7 +18,12 @@ const getRouteObjectByPath = (path: string): IRoute | undefined => {
 	return routes.find(route => route.path === path);
 };
 
-const SideMenu = () => {
+interface SideMenuProps {
+	toggle: (width:number) => void
+	collapse : boolean
+}
+
+const SideMenu = ({ toggle, collapse }:SideMenuProps) => {
 	const location = useLocation();
 	const menu = useStore(state => state.auth.sideMenu);
 	const { i18n } = useTranslation();
@@ -71,10 +77,11 @@ const SideMenu = () => {
 		return (
 			<NavbarItem
 				key={index}
-				label={label}
+				label={collapse ? label : ''}
 				isActive={isActive}
 				path={redirectPath}
 				icon={menuItem.icon.value}
+
 			>
 				{children}
 			</NavbarItem>
@@ -84,17 +91,25 @@ const SideMenu = () => {
 	return (
 		<AppShell.Navbar className={classes.container}>
 			<AppShell.Section visibleFrom='sm'>
-				<Profile />
+				<Profile compact collapse={collapse}/>
 			</AppShell.Section>
 			<AppShell.Section grow>
 				<div className={classes.menus}>{menu.map(getNavbarItem)}</div>
 			</AppShell.Section>
 			<AppShell.Section>
 				<div className={classes.logo}>
-					<div>{APP_NAME}</div>
-					<div className={classes.divider} />
-					<div className={classes.headerText}>OFFICE</div>
-					<div className={classes.version}>{/* v1.3.5 */}</div>
+					<div className={classes.headerText}>
+						<ActionIcon onClick={() => toggle(115)} size='xl' variant='outline'>
+							<IconArrowLeft />
+						</ActionIcon>
+					</div>
+					{collapse ? (
+						<>
+							<div>{APP_NAME}</div>
+							<div className={classes.divider} />
+							<div className={classes.version}>{/* v1.3.5 */}</div>
+						</>
+					) : null }
 				</div>
 			</AppShell.Section>
 		</AppShell.Navbar>

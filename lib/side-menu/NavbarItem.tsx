@@ -77,7 +77,8 @@ const NavbarItem = ({ children, label, path, icon, isActive }: IProps) => {
 							size='1rem'
 							stroke={1.5}
 							style={{
-								transform: opened ? 'rotate(90deg)' : 'none'
+								transform: opened ? 'rotate(90deg)' : 'none',
+								minWidth: 16
 							}}
 						/>
 					)}

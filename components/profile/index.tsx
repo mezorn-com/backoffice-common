@@ -7,7 +7,15 @@ import useStore from '@/store';
 
 import classes from './Profile.module.scss';
 
-const Profile = ({ compact = false }) => {
+const getInitialsLetter = (name:string) => {
+	const parts:string[] = name.trim().split(' ');
+	if (parts.length < 2) {
+		return parts[0].charAt(0).toUpperCase(); 
+	}
+	return (`${parts[0].charAt(0)}.${parts[1].charAt(0)}`).toUpperCase();
+};
+
+const Profile = ({ compact = false, collapse = true }) => {
 	const { t } = useTranslation();
 	const { items, render } = useConfigItems();
 	const userName = useStore(state => state.auth.name);
@@ -27,7 +35,7 @@ const Profile = ({ compact = false }) => {
 								<IconUser size={compact ? 18 : 24} />
 							</Avatar>
 						}
-						rightSection={<IconChevronDown size={16} />}
+						rightSection={collapse ? <IconChevronDown size={16} /> : undefined}
 						size={compact ? 'md' : 'xl'}
 						styles={{
 							root: {
@@ -38,7 +46,7 @@ const Profile = ({ compact = false }) => {
 							}
 						}}
 					>
-						<Title order={6}>{userName}</Title>
+						<Title order={6}>{collapse ? userName : getInitialsLetter(userName)}</Title>
 					</Button>
 					{/* <ActionIcon size={'xl'} variant={'light'} >
 						<IconSettings/>

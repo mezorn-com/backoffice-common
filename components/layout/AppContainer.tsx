@@ -16,21 +16,18 @@ const AppContainer = ({ children }: AppContainerProps) => {
 
 	const isDesktop = useMediaQuery('(min-width: 48em)');
 
+	// When the screen size changes from desktop to mobile, the collapse state will change.
 	useEffect(() => {
 		if(!isDesktop) {
 			setCollapse(!isDesktop);
 		}
 	}, [ isDesktop ]);
 
-	const changeCollapseWidth = () => {
-		setCollapse(!collapse);
-	};
-
 	return (
 		<AppShell
 			header={{ height: { base: 60 }, collapsed: isDesktop }}
 			navbar={{
-				width: collapse ? 300 : 115,
+				width: collapse ? 300 : 80,
 				breakpoint: 'sm',
 				collapsed: { mobile: !opened }
 			}}
@@ -54,7 +51,7 @@ const AppContainer = ({ children }: AppContainerProps) => {
 					/>
 				</Group>
 			</AppShell.Header>
-			<SideMenu toggle={changeCollapseWidth} collapse={collapse}/>
+			<SideMenu toggle={() => setCollapse(!collapse)} collapse={collapse}/>
 			<AppShell.Main>
 				<div style={{ height: '100dvh' }}>{children}</div>
 			</AppShell.Main>

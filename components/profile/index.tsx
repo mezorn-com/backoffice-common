@@ -7,14 +7,6 @@ import useStore from '@/store';
 
 import classes from './Profile.module.scss';
 
-const getInitialsLetter = (name:string) => {
-	const parts:string[] = name.trim().split(' ');
-	if (parts.length < 2) {
-		return parts[0].charAt(0).toUpperCase(); 
-	}
-	return (`${parts[0].charAt(0)}.${parts[1].charAt(0)}`).toUpperCase();
-};
-
 const Profile = ({ compact = false, collapse = true }) => {
 	const { t } = useTranslation();
 	const { items, render } = useConfigItems();
@@ -31,9 +23,11 @@ const Profile = ({ compact = false, collapse = true }) => {
 						fullWidth={!compact}
 						justify='space-between'
 						leftSection={
-							<Avatar radius='sm' size={compact ? 30 : 44}>
-								<IconUser size={compact ? 18 : 24} />
-							</Avatar>
+							collapse && (
+								<Avatar radius='sm' size={compact ? 30 : 44}>
+									<IconUser size={compact ? 18 : 24} />
+								</Avatar>
+							)
 						}
 						rightSection={collapse ? <IconChevronDown size={16} /> : undefined}
 						size={compact ? 'md' : 'xl'}
@@ -46,7 +40,11 @@ const Profile = ({ compact = false, collapse = true }) => {
 							}
 						}}
 					>
-						<Title order={6}>{collapse ? userName : getInitialsLetter(userName)}</Title>
+						{collapse ? <Title order={6}>{userName}</Title> : (
+							<Avatar radius='sm' size={compact ? 30 : 44}>
+								<IconUser size={compact ? 18 : 24} />
+							</Avatar>
+						)}
 					</Button>
 					{/* <ActionIcon size={'xl'} variant={'light'} >
 						<IconSettings/>

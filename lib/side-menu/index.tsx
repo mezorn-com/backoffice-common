@@ -77,10 +77,11 @@ const SideMenu = ({ toggle, collapse }:SideMenuProps) => {
 		return (
 			<NavbarItem
 				key={index}
-				label={collapse ? label : ''}
+				label={label}
 				isActive={isActive}
 				path={redirectPath}
 				icon={menuItem.icon.value}
+				collapse={collapse}
 
 			>
 				{children}
@@ -99,7 +100,16 @@ const SideMenu = ({ toggle, collapse }:SideMenuProps) => {
 			<AppShell.Section>
 				<div className={classes.logo}>
 					<div className={classes.headerText}>
-						<ActionIcon onClick={() => toggle(115)} size='xl' variant='outline'>
+						<ActionIcon
+							onClick={() => toggle(115)}
+							size='lg'
+							variant='transparent'
+							style={{
+								transform: !collapse ? 'rotate(180deg)' : 'none',
+								transition: 'transform 200ms ease',
+								minWidth: 16
+							}}
+						>
 							<IconArrowLeft />
 						</ActionIcon>
 					</div>

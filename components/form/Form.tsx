@@ -325,11 +325,6 @@ const Form = ({
 						<PasswordInput
 							{...props}
 							placeholder={props.label}
-							styles={{
-								label: {
-									display: 'none'
-								}
-							}}
 							autoComplete='new-password'
 						/>
 					);
@@ -339,11 +334,6 @@ const Form = ({
 						<Textarea
 							{...props}
 							placeholder={props.label}
-							styles={{
-								label: {
-									display: 'none'
-								}
-							}}
 							autosize
 							minRows={2}
 							autoComplete='off'
@@ -355,11 +345,6 @@ const Form = ({
 						<NumberInput
 							{...props}
 							placeholder={props.label}
-							styles={{
-								label: {
-									display: 'none'
-								}
-							}}
 							autoComplete='off'
 							precision={10}
 							thousandSeparator=','
@@ -370,11 +355,6 @@ const Form = ({
 					<TextInput
 						{...props}
 						placeholder={props.label}
-						styles={{
-							label: {
-								display: 'none'
-							}
-						}}
 						autoComplete='off'
 						onChange={event => {
 							if (field.numeric) {
@@ -446,11 +426,6 @@ const Form = ({
 							clearable
 							{...props}
 							placeholder={props.label}
-							styles={{
-								label: {
-									display: 'none'
-								}
-							}}
 							data={formatSelectValue(field.options)}
 						/>
 					);
@@ -527,9 +502,6 @@ const Form = ({
 						type={field.multiple ? 'multiple' : 'default'}
 						placeholder={props.label}
 						styles={{
-							label: {
-								display: 'none'
-							},
 							wrapper: {
 								minWidth: 100
 							}

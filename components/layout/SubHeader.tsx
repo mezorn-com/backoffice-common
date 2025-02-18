@@ -29,7 +29,7 @@ const SubHeader = ({ title, backButton = true, children }: ISubHeaderProps) => {
 				align='center'
 				direction='row'
 			>
-				{backButton ||
+				{backButton &&
 					(title && (
 						<ActionIcon onClick={goBack} variant='light' size='xl'>
 							{/* {t('back', { ns: 'common' })} */}

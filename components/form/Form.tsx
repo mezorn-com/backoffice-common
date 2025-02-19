@@ -525,6 +525,11 @@ const Form = ({
 						}}
 						value={value}
 						clearable
+						styles={{
+							wrapper: {
+								minWidth: 100
+							}
+						}}
 					/>
 				);
 			}

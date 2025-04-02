@@ -569,7 +569,7 @@ const Form = ({
 						key={valueKey}
 						field={field}
 						value={
-							getFormValueByKey(valueKey, form.values) as
+							(getFormValueByKey(valueKey, form.values) ?? '') as
 								| string
 								| undefined
 						}

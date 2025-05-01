@@ -45,6 +45,23 @@ function App() {
 			setLoading(false);
 		}
 	}, []);
+	
+	const renderRoutes = () => {
+		if (token) {
+			return (
+				<RouterProvider
+					key='protected'
+					router={protectedRoutes}
+				/>
+			)
+		}
+		return (
+			<RouterProvider
+				key='auth'
+				router={authRoutes}
+			/>
+		)
+	}
 
 	// import.meta.env.DEV && console.log('store>>>', store);
 
@@ -229,7 +246,7 @@ function App() {
 					}
 				}}
 			>
-				<RouterProvider router={token ? protectedRoutes : authRoutes} />
+				{renderRoutes()}
 			</ModalsProvider>
 			<LoadingOverlay visible={loading} />
 		</MantineProvider>

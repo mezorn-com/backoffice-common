@@ -1,3 +1,4 @@
+import { getToken } from '@mezorn-com/mzrn-bo-sso';
 import axios, { type RawAxiosRequestHeaders } from 'axios';
 
 import { showMessage } from '@/backoffice-common/lib/notification';
@@ -16,11 +17,10 @@ declare module 'axios' {
 	}
 }
 
-axios.interceptors.request.use(config => {
+axios.interceptors.request.use(async config => {
 	if (!config.silent) {
 		useStore.setState({ loading: true });
 	}
-	const state = useStore.getState();
 	// @ts-expect-error TODO: declare type
 	config.headers = {
 		'Content-Type': 'application/json',
@@ -29,8 +29,9 @@ axios.interceptors.request.use(config => {
 	};
 
 	if (!config.noAuthorization && !config.headers.authorization) {
-		config.headers.authorization = state?.auth?.token
-			? `Bearer ${state?.auth?.token}`
+		const token = await getToken(60);
+		config.headers.authorization = token
+			? `Bearer ${token}`
 			: undefined;
 	}
 

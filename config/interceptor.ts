@@ -49,16 +49,24 @@ axios.interceptors.response.use(
 		return res;
 	},
 	error => {
-		showMessage(
-			error?.response?.data?.error?.message ??
+		if(error.status === 400 && error.response.statusText === 'Bad Request') {
+			error.response.data.error.data.validationIssues.forEach((issue:any) => {
+				showMessage(issue.message);
+			})
+		} else {
+			showMessage(
+				error?.response?.data?.error?.message ??
 				t('messages.error', { ns: 'common' })
-		);
+			);
+		}
 		if (
 			error?.response?.status === 401 &&
 			!error.config.url.endsWith('/login')
 		) {
 			useStore.getState().clearStore();
 		}
+		
+		
 		useStore.setState({ loading: false });
 		return Promise.reject(error);
 	}

@@ -23,6 +23,7 @@ import {
 
 interface IConfig {
 	apiRoute: string;
+	metaRoute?: string;
 }
 
 export type IRowActionButton = {
@@ -138,7 +139,7 @@ const reducer = produce((draft: IListState, action: Action) => {
 	}
 });
 
-const useListPage = ({ apiRoute }: IConfig) => {
+const useListPage = ({ apiRoute, metaRoute }: IConfig) => {
 	const navigate = useNavigate();
 
 	const [ state, dispatch ] = React.useReducer(reducer, initialState);
@@ -146,7 +147,7 @@ const useListPage = ({ apiRoute }: IConfig) => {
 	// biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Check
 	React.useEffect(() => {
 		const fetchColumns = async () => {
-			const response = await getMeta<IListMetaResponse>(apiRoute, 'list');
+			const response = await getMeta<IListMetaResponse>(metaRoute ?? apiRoute, 'list');
 			dispatch({
 				type: 'SET_META_DATA',
 				payload: {

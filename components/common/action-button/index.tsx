@@ -1,6 +1,6 @@
 import { ActionIcon, Button, Drawer, useMantineTheme } from '@mantine/core';
 import type { OpenConfirmModal } from '@mantine/modals/lib/context';
-import { IconList, type TablerIconsProps } from '@tabler/icons-react';
+import { IconList, IconProps } from '@tabler/icons-react';
 import axios from 'axios';
 import { last } from 'ramda';
 import * as React from 'react';
@@ -241,7 +241,7 @@ const ActionButton = ({
 		actionKey
 	]);
 
-	let Icon: ((props: TablerIconsProps) => JSX.Element) | undefined =
+	let Icon: ((props: IconProps) => JSX.Element) | undefined =
 		undefined;
 	if (icon) {
 		// @ts-expect-error using icon dynamically

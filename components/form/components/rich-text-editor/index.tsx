@@ -1,6 +1,9 @@
 import 'react-quill/dist/quill.snow.css';
 
+import Quill from 'quill';
+import { useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
+const Delta = Quill.import('delta');
 
 import { FormLabel } from '@/backoffice-common/components/form/components';
 import type { HtmlInput } from '@/backoffice-common/types/form';
@@ -14,10 +17,24 @@ interface IProps {
 }
 
 const FormRTE = ({ field, onChange, value }: IProps) => {
+	const quillRef = useRef<ReactQuill>(null);
+
+	useEffect(() => {
+		if (quillRef.current) {
+			const quill = quillRef.current.getEditor();
+			
+			quill.clipboard.addMatcher('pre', (node: Element) => {
+				const text = node.textContent || '';
+				return new Delta().insert(text, { 'code-block': true });
+			});
+		}
+	}, []);
+
 	return (
 		<>
 			<FormLabel label={field.label} withAsterisk={field.required} />
 			<ReactQuill
+				ref={quillRef}
 				theme='snow'
 				onChange={onChange}
 				defaultValue={value}
@@ -27,7 +44,7 @@ const FormRTE = ({ field, onChange, value }: IProps) => {
 					toolbar: [
 						[ { header: '1' }, { header: '2' }, { font: [] } ],
 						[ { size: [] } ],
-						[ 'bold', 'italic', 'underline', 'strike', 'blockquote' ],
+						[ 'bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block' ],
 						[
 							{ list: 'ordered' },
 							{ list: 'bullet' },
@@ -38,8 +55,7 @@ const FormRTE = ({ field, onChange, value }: IProps) => {
 						[ 'clean' ]
 					],
 					clipboard: {
-						// toggle to add extra line breaks when pasting HTML:
-						// matchVisual: false
+						matchVisual: false
 					}
 				}}
 				formats={[
@@ -56,7 +72,8 @@ const FormRTE = ({ field, onChange, value }: IProps) => {
 					'indent',
 					'link',
 					'image',
-					'video'
+					'video',
+					'code-block'
 				]}
 			/>
 		</>

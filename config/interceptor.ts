@@ -50,9 +50,10 @@ axios.interceptors.response.use(
 	},
 	error => {
 		if(error.status === 400 && error.response.statusText === 'Bad Request') {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			error.response.data.error.data.validationIssues.forEach((issue:any) => {
 				showMessage(issue.message);
-			})
+			});
 		} else {
 			showMessage(
 				error?.response?.data?.error?.message ??

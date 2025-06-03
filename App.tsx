@@ -53,15 +53,15 @@ function App() {
 					key='protected'
 					router={protectedRoutes}
 				/>
-			)
+			);
 		}
 		return (
 			<RouterProvider
 				key='auth'
 				router={authRoutes}
 			/>
-		)
-	}
+		);
+	};
 
 	// import.meta.env.DEV && console.log('store>>>', store);
 

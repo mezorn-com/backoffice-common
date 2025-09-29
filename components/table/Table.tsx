@@ -49,7 +49,8 @@ const Table = ({
 	dispatch: dispatchExternalState,
 	hideBulkActions = false,
 	bulkActionUrlParser,
-	paginationContent
+	paginationContent,
+	showPagination = true,
 }: ITableProps) => {
 	const { t } = useTranslation();
 	const [ state, dispatch ] = React.useReducer(reducer, initialState);
@@ -339,20 +340,22 @@ const Table = ({
 						/>
 					</div>
 				</div>
-				<TablePagination
-					canPreviousPage={table.getCanPreviousPage()}
-					canNextPage={table.getCanNextPage()}
-					pageSize={externalState.pageSize.toString()}
-					pageCount={externalState.totalPage || table.getPageCount()}
-					page={externalState.page}
-					onPageSizeChange={value => table.setPageSize(value)}
-					onPageIndexChange={value => table.setPageIndex(value)}
-					onPreviousPage={table.previousPage}
-					onNextPage={table.nextPage}
-					pageSizes={pageSizes}
-					total={externalState.total}
-					content={paginationContent}
-				/>
+				{showPagination && (
+					<TablePagination
+						canPreviousPage={table.getCanPreviousPage()}
+						canNextPage={table.getCanNextPage()}
+						pageSize={externalState.pageSize.toString()}
+						pageCount={externalState.totalPage || table.getPageCount()}
+						page={externalState.page}
+						onPageSizeChange={value => table.setPageSize(value)}
+						onPageIndexChange={value => table.setPageIndex(value)}
+						onPreviousPage={table.previousPage}
+						onNextPage={table.nextPage}
+						pageSizes={pageSizes}
+						total={externalState.total}
+						content={paginationContent}
+					/>
+				)}
 			</div>
 		</TableContext.Provider>
 	);

@@ -28,6 +28,7 @@ export interface ITableProps {
 	hideBulkActions?: boolean;
 	bulkActionUrlParser?: (url: string) => string;
 	paginationContent?: ReactNode;
+    showPagination?: boolean;
 }
 
 export enum TableSectionType {

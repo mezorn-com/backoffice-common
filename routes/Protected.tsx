@@ -32,6 +32,8 @@ const ProtectedRoutes = () => {
 	const location = useLocation();
 	const sideMenu = useStore(state => state.auth.sideMenu);
 
+	console.log('location>>>', location);
+
 	if (location.pathname === '/') {
 		const redirectMenuItem = sideMenu?.[0];
 		if (redirectMenuItem) {

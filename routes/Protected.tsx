@@ -45,7 +45,7 @@ const ProtectedRoutes = () => {
 		}
 	}
 
-	if (location.pathname.endsWith('/') && location.pathname !== '/') {
+	if (location.pathname.endsWith('/') && location.pathname !== '/' && !location.search) {
 		return <Navigate to={location.pathname.slice(0, -1)} replace={true} />;
 	}
 

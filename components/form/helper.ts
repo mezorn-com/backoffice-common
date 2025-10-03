@@ -107,7 +107,7 @@ export const getInitialValue = (field: INormalField, initialValue?: any) => {
 			return initialValue ?? field.value ?? null;
 		}
 		case UiType.SELECT: {
-			return initialValue ?? null;
+			return initialValue ?? field.value ?? null;
 		}
 		case UiType.TIME: {
 			return initialValue ?? field.value ?? undefined;

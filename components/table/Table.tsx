@@ -51,6 +51,7 @@ const Table = ({
 	bulkActionUrlParser,
 	paginationContent,
 	showPagination = true,
+	filterValues,
 }: ITableProps) => {
 	const { t } = useTranslation();
 	const [ state, dispatch ] = React.useReducer(reducer, initialState);
@@ -312,6 +313,7 @@ const Table = ({
 								direction='row'
 								onSubmit={() => undefined}
 								onChange={handleFilterChange}
+								values={filterValues}
 							/>
 						)}
 					</div>

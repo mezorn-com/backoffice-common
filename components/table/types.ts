@@ -29,6 +29,10 @@ export interface ITableProps {
 	bulkActionUrlParser?: (url: string) => string;
 	paginationContent?: ReactNode;
     showPagination?: boolean;
+    // Optional initial values for the filter form
+    // biome-ignore lint/suspicious/noExplicitAny: Allow external pages to pass any shape here
+    // eslint-disable-next-line
+    filterValues?: Record<string, any>;
 }
 
 export enum TableSectionType {

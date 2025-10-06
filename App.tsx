@@ -3,7 +3,7 @@ import '@mantine/notifications/styles.css';
 import '@mantine/dates/styles.css';
 import 'dayjs/locale/mn';
 
-import { LoadingOverlay, MantineProvider, Modal } from '@mantine/core';
+import { LoadingOverlay, MantineColor, MantineProvider, Modal } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import * as React from 'react';
@@ -32,7 +32,11 @@ const protectedRoutes = createBrowserRouter([
 	}
 ]);
 
-function App() {
+interface AppProps {
+	primaryColor?: MantineColor;
+}
+
+function App({ primaryColor = 'blue' }: AppProps) {
 	const token = useStore(state => state.auth.token);
 	const loading = useStore(state => state.loading);
 	const setLoading = useStore(state => state.setLoading);
@@ -93,7 +97,7 @@ function App() {
 				 *  Determines which color will be used in all components by default.
 				 *  Default value – `blue`.
 				 * */
-				primaryColor: 'blue',
+				primaryColor: primaryColor,
 
 				/** Function to resolve colors based on variant.
 				 *  Can be used to deeply customize how colors are applied to `Button`, `ActionIcon`, `ThemeIcon`

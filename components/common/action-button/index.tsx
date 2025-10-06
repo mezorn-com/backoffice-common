@@ -55,7 +55,7 @@ const ActionButton = ({
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: TODO: optimize
 	const { icon, label, handler, color } = React.useMemo(() => {
-		const actionColor = actionColors?.[actionKey] || 'blue';
+		const actionColor = actionColors?.[actionKey] || theme.primaryColor || 'blue';
 
 		// const color = theme.colors[actionColor][primaryShade];
 		const color = actionColor;

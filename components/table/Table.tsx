@@ -199,11 +199,7 @@ const Table = ({
 
 	// TODO: Split into its' own file
 	const renderBulkActions = () => {
-		if (
-			!externalState.bulkItemActions ||
-			!externalState.selectedRows?.length ||
-			hideBulkActions
-		) {
+		if (!externalState.bulkItemActions || !externalState.selectedRows?.length || hideBulkActions || Object.keys(externalState.bulkItemActions).length === 0) {
 			return null;
 		}
 		return (

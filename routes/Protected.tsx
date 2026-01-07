@@ -7,8 +7,6 @@ import useStore from '@/store';
 
 import routes from '../../routes';
 
-// const standAloneRoutes = routes.filter(route => route.standAlone);
-
 const getRoutes = () => {
 	const array: JSX.Element[] = [];
 	const routeKeys: string[] = [];
@@ -31,22 +29,24 @@ const getRoutes = () => {
 };
 
 const ProtectedRoutes = () => {
-	console.log('hiiihhihih');
-	
 	const location = useLocation();
 	const sideMenu = useStore(state => state.auth.sideMenu);
 	const clearStore = useStore(state => state.clearStore);
 
+	const isAuthenticated = useStore(state => state.isAuthenticated);
+
 	const { keycloak } = useKeycloak();
 	
 	const roles = keycloak?.tokenParsed?.resource_access[SSO_CLIENT_ID]?.roles;
-	console.log(roles, 'roles');
 
 	if (!roles || roles.length === 0) {
-		console.log('hiiihhihih');
 		return (
 			<RoleNotFound onLogout={clearStore}	/>
 		);
+	}
+
+	if (!isAuthenticated) {
+		return null;
 	}
 	
 	if (location.pathname === '/') {

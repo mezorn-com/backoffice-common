@@ -16,11 +16,12 @@ declare module 'axios' {
 	}
 }
 
-axios.interceptors.request.use(config => {
+import { getToken } from '@mezorn-com/mzrn-bo-sso';
+
+axios.interceptors.request.use(async config => {
 	if (!config.silent) {
 		useStore.setState({ loading: true });
 	}
-	const state = useStore.getState();
 	// @ts-expect-error TODO: declare type
 	config.headers = {
 		'Content-Type': 'application/json',
@@ -28,10 +29,10 @@ axios.interceptors.request.use(config => {
 		...(config.headers as RawAxiosRequestHeaders) // <<<< this here
 	};
 
+	const token = await getToken(60);
+
 	if (!config.noAuthorization && !config.headers.authorization) {
-		config.headers.authorization = state?.auth?.token
-			? `Bearer ${state?.auth?.token}`
-			: undefined;
+		config.headers.authorization = `Bearer ${token}`;
 	}
 
 	if (config.url && !config.url.startsWith('http')) {

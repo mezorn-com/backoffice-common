@@ -27,9 +27,10 @@ axios.interceptors.request.use(async config => {
 		'Accept-Language': language,
 		...(config.headers as RawAxiosRequestHeaders) // <<<< this here
 	};
+	
+	const token = await getToken(60);
 
 	if (!config.noAuthorization && !config.headers.authorization) {
-		const token = await getToken(60);
 		config.headers.authorization = `Bearer ${token}`;
 	}
 

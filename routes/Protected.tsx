@@ -1,11 +1,11 @@
+import { RoleNotFound, useKeycloak } from '@mezorn-com/mzrn-bo-sso';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
 import AppContainer from '@/backoffice-common/components/layout/AppContainer';
+import { SSO_CLIENT_ID } from '@/config';
 import useStore from '@/store';
 
 import routes from '../../routes';
-
-// const standAloneRoutes = routes.filter(route => route.standAlone);
 
 const getRoutes = () => {
 	const array: JSX.Element[] = [];
@@ -31,7 +31,24 @@ const getRoutes = () => {
 const ProtectedRoutes = () => {
 	const location = useLocation();
 	const sideMenu = useStore(state => state.auth.sideMenu);
+	const clearStore = useStore(state => state.clearStore);
 
+	const isAuthenticated = useStore(state => state.isAuthenticated);
+
+	const { keycloak } = useKeycloak();
+	
+	const roles = keycloak?.tokenParsed?.resource_access[SSO_CLIENT_ID]?.roles;
+
+	if (!roles || roles.length === 0) {
+		return (
+			<RoleNotFound onLogout={clearStore}	/>
+		);
+	}
+
+	if (!isAuthenticated) {
+		return null;
+	}
+	
 	if (location.pathname === '/') {
 		const redirectMenuItem = sideMenu?.[0];
 		if (redirectMenuItem) {

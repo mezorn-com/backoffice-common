@@ -1,4 +1,4 @@
-export { useConfirmModal } from './useConfirmModal';
+export { type OpenConfirmModal, useConfirmModal } from './useConfirmModal';
 export { default as useCreatePage } from './useCreatePage';
 export { default as useDetailPage } from './useDetailPage';
 export { default as useEditPage } from './useEditPage';

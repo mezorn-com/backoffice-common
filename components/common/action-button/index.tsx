@@ -1,5 +1,4 @@
 import { ActionIcon, Button, Drawer, useMantineTheme } from '@mantine/core';
-import type { OpenConfirmModal } from '@mantine/modals/lib/context';
 import { IconList } from '@tabler/icons-react';
 import axios from 'axios';
 import { last } from 'ramda';
@@ -8,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import Form from '@/backoffice-common/components/form/Form';
-import { useConfirmModal, usePathParameter } from '@/backoffice-common/hooks';
+import { type OpenConfirmModal, useConfirmModal, usePathParameter } from '@/backoffice-common/hooks';
 import { showMessage } from '@/backoffice-common/lib/notification';
 import type { IResponse } from '@/backoffice-common/types/api';
 import type {
@@ -68,8 +67,8 @@ const ActionButton = ({
 			| ((formValues?: Record<string, unknown>) => void);
 		let confirm: Pick<
 			OpenConfirmModal,
-			'children' | 'title' | 'labels' | 'confirmProps'
-		> | null = null;
+			'children' | 'labels' | 'confirmProps'
+		> & Partial<Pick<OpenConfirmModal, 'title'>> | null = null;
 		// TODO: Need to implement merging...
 
 		switch (actionKey) {

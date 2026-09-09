@@ -1,5 +1,7 @@
 import { type ComboboxItem, Loader, MultiSelect, Select } from '@mantine/core';
-import type { GetInputProps } from '@mantine/form/lib/types';
+import type { UseFormReturnType } from '@mantine/form';
+
+type GetInputProps<T> = UseFormReturnType<T>['getInputProps'];
 import axios from 'axios';
 import * as React from 'react';
 

@@ -1,6 +1,7 @@
 import { openConfirmModal } from '@mantine/modals';
-import type { OpenConfirmModal } from '@mantine/modals/lib/context';
 import { useTranslation } from 'react-i18next';
+
+export type OpenConfirmModal = Parameters<typeof openConfirmModal>[0];
 
 export const useConfirmModal = () => {
 	const { t } = useTranslation();
